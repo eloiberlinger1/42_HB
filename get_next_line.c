@@ -6,28 +6,35 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/07 10:14:17 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/07 10:42:47 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int save_buffer(char *result, char *buffer)
+char *save_buffer(char *result, char *buffer, size_t buffer_size)
 {
     char *temp;
+    size_t result_len;
 
-    // prendre la longueuur de result
-    // prendre la longueur du buffer
-
-    // additionner les deux
-
-    // 
+    temp = result;
+    while (result++)
+        result_len++;
+    result = temp;
+    temp = malloc(result_len + buffer_size);
+    while (result++)
+        *temp++ = result;
+    while (buffer++)
+        *temp++ = buffer;
+        
+    free (result);
+    return (temp);
 
 }
 
 char *get_next_line(int fd)
 {
-    int     buffer_size;
+    size_t     buffer_size;
     int     read_ret;
     char    *buffer;
     char    *result;
@@ -39,12 +46,14 @@ char *get_next_line(int fd)
         if (buffer_size == 0)
         {
             buffer_size = 5;
-            
+            result = save_buffer(result, buffer, buffer_size);
+            if (contains(buffer, '\n'))
+                break ;
         }
         read_ret = read(fd, buffer, buffer_size);
     }
-
-    
+    free(buffer);
+    return (result);
 }
 
 int main(void)
