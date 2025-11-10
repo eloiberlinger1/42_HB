@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/07 13:12:38 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/07 13:20:03 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,11 @@ static char *save_buffer(char *result, char *buffer, size_t buffer_size)
         temp[i] = result[i];
     i = -1;
     while (++i < buffer_size)
-        temp[result_len + i] = buffer[i];    
+    {
+        if (buffer[i] == '\n')
+            break;
+        temp[result_len + i] = buffer[i];
+    }
     free (result);
     return (temp);
 }
@@ -47,7 +51,6 @@ static char *save_buffer(char *result, char *buffer, size_t buffer_size)
 char *get_next_line(int fd)
 {
     size_t     buffer_size;
-    static char *stock;
     char    *buffer;
     char    *result;
 
@@ -79,7 +82,8 @@ int main(void)
         perror("Erreur lors de l'ouverture du fichier");
         return (1);
     }
-    printf("\ngetnextlien result : \n\n%s\n\n", get_next_line(fd));
+    printf("\ngetnextlien result1 : \n\n%s\n\n", get_next_line(fd));
+    printf("\ngetnextlien result2 : \n\n%s\n\n", get_next_line(fd));
     if (close(fd) == -1)
     {
         perror("Erreur lors de la fermeture du fichier");
