@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/11 11:40:24 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/11 12:37:38 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ int	ft_strlen(const char *s)
 	return (i);
 }
 
-
-
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	size_t	s1_len;
@@ -58,23 +56,42 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (ret);
 }
 
+char	*get_remainder(char *line)
+{
+	int		i;
+	char	*rest;
+
+	i = 0;
+	while (*line++ != '\n');
+	*line++;
+	rest = malloc(ft_strlen(line) + 1);
+	while (line[i] != '\0')
+	{
+		rest[i] = line[i];
+		i++;
+	}
+	rest[i] = '\0';
+	return (rest);
+}
+
 char	*ft_cut_line(char *result)
 {
 	int		i;
-	char	*ret;
+	char	*line;
 
 	i = 0;
-	while(result[i] != '\n')
+	while(result[i] != '\n' && result[i] != '\0')
 		i++;
-	ret = malloc(i + 1);
+	line = malloc(i + 1);
 	i = 0;
 	while (result[i] != '\n')
 	{
-		ret[i] = result[i];
+		line[i] = result[i];
 		i++;
 	}
-	ret[i] = '\0';
-	return (ret);
+	line[i] = '\n';
+	line[i + 1] = '\0';
+	return (line);
 }
 
 
@@ -84,6 +101,7 @@ char	*get_next_line(int fd)
 	int				read_i;
 	char			buffer[BUFFER_SIZE + 1];
 	char			*tmp;
+	char			*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
@@ -93,7 +111,7 @@ char	*get_next_line(int fd)
         result = malloc(1);
         if (result == NULL)
             return (NULL);
-        result[0] = '\0';
+		result[0] = '\0';
     }
 	while ((result == NULL || !contains('\n', result)) && read_i > 0)
 	{
@@ -111,8 +129,33 @@ char	*get_next_line(int fd)
 	}
 	if (read_i == -1)
 		return (NULL);
-	return (ft_cut_line(result));
+	line = ft_cut_line(result);
+	free (result);
+	result = get_remainder(result);
+	return (line);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 int	main(void)
 {
