@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/11 12:37:38 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/11 12:50:36 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,19 @@ char	*get_remainder(char *line)
 {
 	int		i;
 	char	*rest;
+	char	*ptr;
 
+	ptr = line;
 	i = 0;
-	while (*line++ != '\n');
-	*line++;
-	rest = malloc(ft_strlen(line) + 1);
-	while (line[i] != '\0')
+	while (*ptr != '\n' && *ptr != '\0')
+		ptr++;
+	if (*ptr == '\0')
+		return (NULL);
+	ptr++;	
+	rest = malloc(ft_strlen(ptr) + 1);
+	while (ptr[i] != '\0')
 	{
-		rest[i] = line[i];
+		rest[i] = ptr[i];
 		i++;
 	}
 	rest[i] = '\0';
@@ -77,20 +82,23 @@ char	*get_remainder(char *line)
 char	*ft_cut_line(char *result)
 {
 	int		i;
+	int		len;
 	char	*line;
 
 	i = 0;
 	while(result[i] != '\n' && result[i] != '\0')
 		i++;
-	line = malloc(i + 1);
+	len = i;
+	if(result[i] == '\n')
+		len++;
+	line = malloc(len + 1);
 	i = 0;
 	while (result[i] != '\n')
 	{
 		line[i] = result[i];
 		i++;
 	}
-	line[i] = '\n';
-	line[i + 1] = '\0';
+	line[i] = '\0';
 	return (line);
 }
 
@@ -129,9 +137,10 @@ char	*get_next_line(int fd)
 	}
 	if (read_i == -1)
 		return (NULL);
+	tmp = result;
 	line = ft_cut_line(result);
-	free (result);
-	result = get_remainder(result);
+	result = get_remainder(tmp);
+	free(tmp);
 	return (line);
 }
 
