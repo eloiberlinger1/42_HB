@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/11 12:50:36 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/11 12:53:30 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,11 @@ char	*ft_cut_line(char *result)
 	len = i;
 	if(result[i] == '\n')
 		len++;
+	if (len == 0)
+		return (NULL);
 	line = malloc(len + 1);
+	if (!line)
+		return (NULL);
 	i = 0;
 	while (result[i] != '\n')
 	{
