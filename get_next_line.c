@@ -6,69 +6,112 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/10 12:21:28 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/11 11:40:24 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static int	contains(char c, char *set)
+int	contains(char c, char *set)
 {
+	if (set == NULL)
+        return (0);
 	while (*set)
 		if (c == *set++)
 			return (1);
 	return (0);
 }
 
-static char	*save_buffer(char *result, char *buffer, size_t buffer_size)
+int	ft_strlen(const char *s)
 {
-	char	*temp;
-	size_t	result_len;
-	size_t	i;
+	int	i;
 
-	result_len = 0;
-	if (result != NULL)
-		while (result[result_len])
-			result_len++;
-	temp = malloc(result_len + buffer_size + 1);
-	if (temp == NULL)
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
+}
+
+
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	size_t	s1_len;
+	size_t	s2_len;
+	size_t	i;
+	size_t	i_ret;
+	char	*ret;
+
+	s1_len = ft_strlen(s1);
+	s2_len = ft_strlen(s2);
+	ret = malloc(((s1_len + s2_len) + 1) * sizeof(char));
+	if (ret == NULL)
 		return (NULL);
 	i = -1;
-	while (++i < result_len)
-		temp[i] = result[i];
+	while (++i < s1_len)
+		ret[i] = s1[i];
+	i_ret = i;
 	i = -1;
-	while (++i < buffer_size)
-	{
-		if (buffer[i] == '\n')
-			break ;
-		temp[result_len + i] = buffer[i];
-	}
-	free(result);
-	return (temp);
+	while (++i < s2_len)
+		ret[i_ret + i] = s2[i];
+	ret[i_ret + i] = '\0';
+	return (ret);
 }
+
+char	*ft_cut_line(char *result)
+{
+	int		i;
+	char	*ret;
+
+	i = 0;
+	while(result[i] != '\n')
+		i++;
+	ret = malloc(i + 1);
+	i = 0;
+	while (result[i] != '\n')
+	{
+		ret[i] = result[i];
+		i++;
+	}
+	ret[i] = '\0';
+	return (ret);
+}
+
 
 char	*get_next_line(int fd)
 {
-	size_t	buffer_size;
-	char	*buffer;
-	char	*result;
+	static char		*result;
+	int				read_i;
+	char			buffer[BUFFER_SIZE + 1];
+	char			*tmp;
 
-	buffer_size = BUFFER_SIZE;
-	result = NULL;
-	buffer = malloc(buffer_size);
-	while (1)
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	read_i = 1;
+	if (result == NULL)
+    {
+        result = malloc(1);
+        if (result == NULL)
+            return (NULL);
+        result[0] = '\0';
+    }
+	while ((result == NULL || !contains('\n', result)) && read_i > 0)
 	{
-		if (buffer_size == 0)
+		read_i = read(fd, buffer, BUFFER_SIZE);
+		if (read_i == -1)
 		{
-			buffer_size = BUFFER_SIZE;
-			result = save_buffer(result, buffer, buffer_size);
-			if (contains('\n', buffer))
-				break ;
+			free(result);
+			result = NULL;
+			return (NULL);
 		}
-		buffer_size -= read(fd, buffer, buffer_size);
+		buffer[read_i] = '\0';
+		tmp = result;
+		result = ft_strjoin(tmp, buffer);
+		free(tmp);
 	}
-	free(buffer);
-	return (result);
+	if (read_i == -1)
+		return (NULL);
+	return (ft_cut_line(result));
 }
 
 int	main(void)
