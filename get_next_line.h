@@ -6,14 +6,14 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:40:12 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/12 11:36:17 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/12 15:48:50 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-#ifndef BUFFER_SIZE
+# ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 5
 # endif
 

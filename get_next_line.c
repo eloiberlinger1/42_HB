@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/12 11:27:41 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/12 15:53:36 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,15 +92,17 @@ static char	*ft_cut_line(char *result)
 }
 
 /*
- * Writing the buffer in the result by using
- * strjoin or strdup for the first time.
- *
- *Input:
+ * join the readed buffer to the result
+ * 1. put result into another variable (tmp)
+ * 2. write result using strjoin (first time : strdup)
+ * 3. make sure to free malloc variables & return result
+ * 
+ * Input:
  *	char *result : 
  *	char *buffer : 
  *
- *Output:
- *	char* : 
+ * Output:
+ *	char* : the previous result + buffer
  */
 static char	*join_and_free(char *result, char *buffer)
 {
@@ -121,14 +123,15 @@ static char	*join_and_free(char *result, char *buffer)
 }
 
 /*
- * Reading the file and writing the result in the buffer
+ * Reading the file and writing the buffer in the result
  *
- *Input:
- *	char *result : 
- *	char *buffer : 
+ * Input:
+ *	int fd : file descriptor
+ *	char *result : static result variable from entrypoint
  *
- *Output:
- *	char* : 
+ * Output:
+ *	char* : all the buffer joined together to make one string
+ *	representing the readed line.
  */
 static char	*ft_read(int fd, char *result)
 {
