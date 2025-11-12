@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/12 16:38:37 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:39:09 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,56 +186,56 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-int main(void)
-{
-    int fd1;
-    int fd2;
-    char *line1;
-    char *line2;
+// int main(void)
+// {
+//     int fd1;
+//     int fd2;
+//     char *line1;
+//     char *line2;
 
-    fd1 = open("test.txt", O_RDONLY);
-    if (fd1 == -1)
-    {
-        perror("Erreur lors de l'ouverture de test1.txt");
-        return (1);
-    }
+//     fd1 = open("test.txt", O_RDONLY);
+//     if (fd1 == -1)
+//     {
+//         perror("Erreur lors de l'ouverture de test1.txt");
+//         return (1);
+//     }
 
-    fd2 = open("test2.txt", O_RDONLY);
-    if (fd2 == -1)
-    {
-        perror("Erreur lors de l'ouverture de test2.txt");
-        close(fd1);
-        return (1);
-    }
+//     fd2 = open("test2.txt", O_RDONLY);
+//     if (fd2 == -1)
+//     {
+//         perror("Erreur lors de l'ouverture de test2.txt");
+//         close(fd1);
+//         return (1);
+//     }
 
-    printf("--- Début de la lecture simultanée ---\n\n");
+//     printf("--- Début de la lecture simultanée ---\n\n");
 
-    line1 = get_next_line(fd1);
-    printf("FD1 (L1) : %s", line1 ? line1 : "(NULL - EOF ou Erreur)\n");
-    free(line1); 
+//     line1 = get_next_line(fd1);
+//     printf("FD1 (L1) : %s", line1 ? line1 : "(NULL - EOF ou Erreur)\n");
+//     free(line1); 
 
-    line2 = get_next_line(fd2);
-    printf("FD2 (L1) : %s", line2 ? line2 : "(NULL - EOF ou Erreur)\n");
-    free(line2);
+//     line2 = get_next_line(fd2);
+//     printf("FD2 (L1) : %s", line2 ? line2 : "(NULL - EOF ou Erreur)\n");
+//     free(line2);
 
-    line1 = get_next_line(fd1);
-    printf("FD1 (L2) : %s", line1 ? line1 : "(NULL - EOF ou Erreur)\n");
-    free(line1);
+//     line1 = get_next_line(fd1);
+//     printf("FD1 (L2) : %s", line1 ? line1 : "(NULL - EOF ou Erreur)\n");
+//     free(line1);
 
-    line2 = get_next_line(fd2);
-    printf("FD2 (L2) : %s", line2 ? line2 : "(NULL - EOF ou Erreur)\n");
-    free(line2);
+//     line2 = get_next_line(fd2);
+//     printf("FD2 (L2) : %s", line2 ? line2 : "(NULL - EOF ou Erreur)\n");
+//     free(line2);
 
-    if (close(fd1) == -1)
-    {
-        perror("Erreur lors de la fermeture de test1.txt");
-        return (1);
-    }
-    if (close(fd2) == -1)
-    {
-        perror("Erreur lors de la fermeture de test2.txt");
-        return (1);
-    }
-    printf("\n--- Terminé : Les descripteurs sont fermés. ---\n");
-    return (0);
-}
+//     if (close(fd1) == -1)
+//     {
+//         perror("Erreur lors de la fermeture de test1.txt");
+//         return (1);
+//     }
+//     if (close(fd2) == -1)
+//     {
+//         perror("Erreur lors de la fermeture de test2.txt");
+//         return (1);
+//     }
+//     printf("\n--- Terminé : Les descripteurs sont fermés. ---\n");
+//     return (0);
+// }
