@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/11 12:53:30 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/12 08:55:46 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	contains(char c, char *set)
 {
 	if (set == NULL)
-        return (0);
+		return (0);
 	while (*set)
 		if (c == *set++)
 			return (1);
@@ -56,29 +56,50 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (ret);
 }
 
+/*
+Get the rest of a line after the first occurence of '\n'
+1. Take a backup of the line pointer
+2. Loop over it untill you reach newline or EOS
+3. Malloc for only what's after it
+4. Loop over it and copy from ptr to previously allocated string (3)
+
+Input: 
+    char *line: a pointer to an array caracters that represent the line of the function
+    int size: the number of elements in the array
+
+Output: 
+	char* : The part of the inputed line. (only including what's after the first \n starting from left)
+	(Returend string is allocated with malloc so has to be free())
+*/
 char	*get_remainder(char *line)
 {
 	int		i;
+	int		j;
 	char	*rest;
-	char	*ptr;
 
-	ptr = line;
 	i = 0;
-	while (*ptr != '\n' && *ptr != '\0')
-		ptr++;
-	if (*ptr == '\0')
-		return (NULL);
-	ptr++;	
-	rest = malloc(ft_strlen(ptr) + 1);
-	while (ptr[i] != '\0')
-	{
-		rest[i] = ptr[i];
+	j = 0;
+	while (line[i] != '\n' && line[i] != '\0')
 		i++;
-	}
-	rest[i] = '\0';
+	if (line[i] == '\0')
+		return (NULL);
+	i++;
+	rest = malloc(ft_strlen(line + i) + 1);
+	while (line[i])
+		rest[j++] = line[i++];
+	rest[j] = '\0';
 	return (rest);
 }
 
+/*
+This function is like get_remainder but get the first part before '\n' or '\0'
+
+Input: 
+    char *result : readed line from the read() function
+    
+Output: 
+	char* : An allocated string with malloc that has to be free() containing the first part of (result)
+*/
 char	*ft_cut_line(char *result)
 {
 	int		i;
@@ -86,10 +107,10 @@ char	*ft_cut_line(char *result)
 	char	*line;
 
 	i = 0;
-	while(result[i] != '\n' && result[i] != '\0')
+	while (result[i] != '\n' && result[i] != '\0')
 		i++;
 	len = i;
-	if(result[i] == '\n')
+	if (result[i] == '\n')
 		len++;
 	if (len == 0)
 		return (NULL);
@@ -106,25 +127,24 @@ char	*ft_cut_line(char *result)
 	return (line);
 }
 
-
 char	*get_next_line(int fd)
 {
-	static char		*result;
-	int				read_i;
-	char			buffer[BUFFER_SIZE + 1];
-	char			*tmp;
-	char			*line;
+	static char	*result;
+	int			read_i;
+	char		buffer[BUFFER_SIZE + 1];
+	char		*tmp;
+	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	read_i = 1;
 	if (result == NULL)
-    {
-        result = malloc(1);
-        if (result == NULL)
-            return (NULL);
+	{
+		result = malloc(1);
+		if (result == NULL)
+			return (NULL);
 		result[0] = '\0';
-    }
+	}
 	while ((result == NULL || !contains('\n', result)) && read_i > 0)
 	{
 		read_i = read(fd, buffer, BUFFER_SIZE);
@@ -148,45 +168,23 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
+// int	main(void)
+// {
+// 	int fd;
+// 	fd = open("test.txt", O_RDONLY);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-int	main(void)
-{
-	int fd;
-	fd = open("test.txt", O_RDONLY);
-
-	if (fd == -1)
-	{
-		perror("Erreur lors de l'ouverture du fichier");
-		return (1);
-	}
-	printf("\ngetnextlien result1 : \n\n%s\n\n", get_next_line(fd));
-	printf("\ngetnextlien result2 : \n\n%s\n\n", get_next_line(fd));
-	if (close(fd) == -1)
-	{
-		perror("Erreur lors de la fermeture du fichier");
-		return (1);
-	}
-	printf("Termine.\n");
-	return (0);
-}
+// 	if (fd == -1)
+// 	{
+// 		perror("Erreur lors de l'ouverture du fichier");
+// 		return (1);
+// 	}
+// 	printf("\ngetnextlien result1 : \n\n%s\n\n", get_next_line(fd));
+// 	printf("\ngetnextlien result2 : \n\n%s\n\n", get_next_line(fd));
+// 	if (close(fd) == -1)
+// 	{
+// 		perror("Erreur lors de la fermeture du fichier");
+// 		return (1);
+// 	}
+// 	printf("Termine.\n");
+// 	return (0);
+// }
