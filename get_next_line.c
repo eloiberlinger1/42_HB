@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/12 15:53:36 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:07:10 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
  *		char* : The part of the inputed line.
  *		(only including what's after the first \n starting from left)
  *		(Returend string is allocated with malloc so has to be free())
- */
+*/
 static char	*get_remainder(char *line)
 {
 	int		i;

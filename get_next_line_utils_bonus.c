@@ -6,11 +6,11 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:38:31 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/12 16:06:02 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:07:39 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 int	contains(char c, char *set)
 {

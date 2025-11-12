@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/12 15:53:36 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:38:37 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 /*
  * Get the rest of a line after the first occurence of '\n'
@@ -164,45 +164,78 @@ static char	*ft_read(int fd, char *result)
 
 char	*get_next_line(int fd)
 {
-	static char	*result;
+	static char	*result[1024];
 	char		*tmp;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd > 1024 || BUFFER_SIZE <= 0)
 		return (NULL);
-	result = ft_read(fd, result);
-	if (result == NULL)
+	result[fd] = ft_read(fd, result[fd]);
+	if (result[fd] == NULL)
 		return (NULL);
-	tmp = result;
-	line = ft_cut_line(result);
+	tmp = result[fd];
+	line = ft_cut_line(result[fd]);
 	if (line == NULL)
 	{
 		free(tmp);
-		result = NULL;
+		result[fd] = NULL;
 		return (NULL);
 	}
-	result = get_remainder(tmp);
+	result[fd] = get_remainder(tmp);
 	free(tmp);
 	return (line);
 }
 
-// int	main(void)
-// {
-// 	int fd;
-// 	fd = open("test.txt", O_RDONLY);
+int main(void)
+{
+    int fd1;
+    int fd2;
+    char *line1;
+    char *line2;
 
-// 	if (fd == -1)
-// 	{
-// 		perror("Erreur lors de l'ouverture du fichier");
-// 		return (1);
-// 	}
-// 	printf("\ngetnextlien result1 : \n\n%s\n\n", get_next_line(fd));
-// 	printf("\ngetnextlien result2 : \n\n%s\n\n", get_next_line(fd));
-// 	if (close(fd) == -1)
-// 	{
-// 		perror("Erreur lors de la fermeture du fichier");
-// 		return (1);
-// 	}
-// 	printf("Termine.\n");
-// 	return (0);
-// }
+    fd1 = open("test.txt", O_RDONLY);
+    if (fd1 == -1)
+    {
+        perror("Erreur lors de l'ouverture de test1.txt");
+        return (1);
+    }
+
+    fd2 = open("test2.txt", O_RDONLY);
+    if (fd2 == -1)
+    {
+        perror("Erreur lors de l'ouverture de test2.txt");
+        close(fd1);
+        return (1);
+    }
+
+    printf("--- Début de la lecture simultanée ---\n\n");
+
+    line1 = get_next_line(fd1);
+    printf("FD1 (L1) : %s", line1 ? line1 : "(NULL - EOF ou Erreur)\n");
+    free(line1); 
+
+    line2 = get_next_line(fd2);
+    printf("FD2 (L1) : %s", line2 ? line2 : "(NULL - EOF ou Erreur)\n");
+    free(line2);
+
+    line1 = get_next_line(fd1);
+    printf("FD1 (L2) : %s", line1 ? line1 : "(NULL - EOF ou Erreur)\n");
+    free(line1);
+
+    line2 = get_next_line(fd2);
+    printf("FD2 (L2) : %s", line2 ? line2 : "(NULL - EOF ou Erreur)\n");
+    free(line2);
+
+    if (close(fd1) == -1)
+    {
+        perror("Erreur lors de la fermeture de test1.txt");
+        return (1);
+    }
+    if (close(fd2) == -1)
+    {
+        perror("Erreur lors de la fermeture de test2.txt");
+        return (1);
+    }
+    printf("\n--- Terminé : Les descripteurs sont fermés. ---\n");
+    return (0);
+}
