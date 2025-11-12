@@ -6,12 +6,11 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:38:31 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/12 09:27:04 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/12 09:54:15 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
 
 int	contains(char c, char *set)
 {
@@ -59,12 +58,12 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 char	*ft_strdup(const char *s)
 {
-	size_t		len;
-	size_t		i;
-	char		*ret;
+	size_t	len;
+	size_t	i;
+	char	*ret;
 
 	len = ft_strlen(s);
-	ret = (char *) malloc((len + 1) * sizeof(char));
+	ret = (char *)malloc((len + 1) * sizeof(char));
 	if (ret == NULL)
 		return (NULL);
 	i = 0;

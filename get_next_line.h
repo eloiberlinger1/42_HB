@@ -6,13 +6,12 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:40:12 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/12 09:47:46 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/12 09:53:39 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE
-# define GET_NEXT_LINE
-
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
 # include <fcntl.h>
 # include <stdarg.h>

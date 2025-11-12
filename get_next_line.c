@@ -6,12 +6,11 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/12 09:47:39 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/12 09:53:56 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
 
 /*
 Get the rest of a line after the first occurence of '\n'
@@ -20,15 +19,15 @@ Get the rest of a line after the first occurence of '\n'
 3. Malloc for only what's after it
 4. Loop over it and copy from ptr to previously allocated string (3)
 
-Input: 
-    char *line: a pointer to an array caracters that represent the line of the function
-    int size: the number of elements in the array
+Input:
+	char *line: a pointer to an array caracters that represent the line of the function
+	int size: the number of elements in the array
 
-Output: 
+Output:
 	char* : The part of the inputed line. (only including what's after the first \n starting from left)
 	(Returend string is allocated with malloc so has to be free())
 */
-char	*get_remainder(char *line)
+static char	*get_remainder(char *line)
 {
 	int		i;
 	int		j;
@@ -51,13 +50,13 @@ char	*get_remainder(char *line)
 /*
 This function is like get_remainder but get the first part before '\n' or '\0'
 
-Input: 
-    char *result : readed line from the read() function
-    
-Output: 
+Input:
+	char *result : readed line from the read() function
+
+Output:
 	char* : An allocated string with malloc that has to be free() containing the first part of (result)
 */
-char	*ft_cut_line(char *result)
+static char	*ft_cut_line(char *result)
 {
 	int		i;
 	int		len;
@@ -86,11 +85,11 @@ char	*ft_cut_line(char *result)
 	return (line);
 }
 
-char *ft_read(int fd, char *result)
+static char	*ft_read(int fd, char *result)
 {
-	char		buffer[BUFFER_SIZE + 1];
-	char		*tmp;
-	int			read_i;
+	char	buffer[BUFFER_SIZE + 1];
+	char	*tmp;
+	int		read_i;
 
 	read_i = 1;
 	while ((result == NULL || !contains('\n', result)) && read_i > 0)
@@ -133,7 +132,7 @@ char	*get_next_line(int fd)
 	line = ft_cut_line(result);
 	if (line == NULL)
 	{
-		free (tmp);
+		free(tmp);
 		result = NULL;
 		return (NULL);
 	}
