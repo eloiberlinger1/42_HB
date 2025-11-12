@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/12 10:45:40 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/12 11:27:41 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,11 @@ static char	*get_remainder(char *line)
 		i++;
 	if (line[i] == '\0')
 		return (NULL);
-	i++;
+	if (line[i++] == '\0')
+		return (NULL);
 	rest = malloc(ft_strlen(line + i) + 1);
+	if (rest == NULL)
+		return (NULL);
 	while (line[i])
 		rest[j++] = line[i++];
 	rest[j] = '\0';
@@ -50,7 +53,7 @@ static char	*get_remainder(char *line)
 }
 
 /*
- *This function is like get_remainder but get the first part before '\n' or '\0'
+ * Like get_remainder but get the first part before '\n' or '\0'
  *
  *Input:
  *	char *result : readed line from the read() function
@@ -88,6 +91,17 @@ static char	*ft_cut_line(char *result)
 	return (line);
 }
 
+/*
+ * Writing the buffer in the result by using
+ * strjoin or strdup for the first time.
+ *
+ *Input:
+ *	char *result : 
+ *	char *buffer : 
+ *
+ *Output:
+ *	char* : 
+ */
 static char	*join_and_free(char *result, char *buffer)
 {
 	char	*tmp;
@@ -106,6 +120,16 @@ static char	*join_and_free(char *result, char *buffer)
 	return (result);
 }
 
+/*
+ * Reading the file and writing the result in the buffer
+ *
+ *Input:
+ *	char *result : 
+ *	char *buffer : 
+ *
+ *Output:
+ *	char* : 
+ */
 static char	*ft_read(int fd, char *result)
 {
 	char	*buffer;
@@ -115,7 +139,7 @@ static char	*ft_read(int fd, char *result)
 	if (buffer == NULL)
 		return (free(result), NULL);
 	read_i = 1;
-	while ((result == NULL || !contains('\n', result)) && read_i > 0)
+	while (result == NULL || read_i > 0)
 	{
 		read_i = read(fd, buffer, BUFFER_SIZE);
 		if (read_i == -1)
@@ -124,9 +148,11 @@ static char	*ft_read(int fd, char *result)
 			free(result);
 			return (NULL);
 		}
+		if (read_i == 0)
+			break ;
 		buffer[read_i] = '\0';
 		result = join_and_free(result, buffer);
-		if (result == NULL)
+		if (result == NULL || contains('\n', buffer))
 			break ;
 	}
 	free(buffer);
