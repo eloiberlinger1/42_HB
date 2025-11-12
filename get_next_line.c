@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/12 10:26:49 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/12 10:32:07 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,10 +99,10 @@ static char	*join_and_free(char *result, char *buffer)
 		result = ft_strjoin(tmp, buffer);
 	if (result == NULL)
 	{
-		free(buffer);
 		free(tmp);
 		return (NULL);
 	}
+	free(tmp);
 	return (result);
 }
 
@@ -126,8 +126,8 @@ static char	*ft_read(int fd, char *result)
 		}
 		buffer[read_i] = '\0';
 		result = join_and_free(result, buffer);
-		if (result != NULL)
-			free(result);
+		if (result == NULL)
+			break ;
 	}
 	free(buffer);
 	return (result);
