@@ -6,14 +6,12 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:40:12 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/12 10:24:39 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/12 10:26:46 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-
-# define BFR_SIZE 5
 
 # include <fcntl.h>
 # include <stdarg.h>
