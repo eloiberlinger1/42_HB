@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/12 10:32:07 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/12 10:45:40 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ static char	*ft_read(int fd, char *result)
 
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (buffer == NULL)
-		return (NULL);
+		return (free(result), NULL);
 	read_i = 1;
 	while ((result == NULL || !contains('\n', result)) && read_i > 0)
 	{
