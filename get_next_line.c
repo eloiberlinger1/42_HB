@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/12 09:53:56 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/12 10:07:41 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static char	*ft_cut_line(char *result)
 	i = 0;
 	while (result[i] != '\n' && result[i] != '\0')
 		i++;
-	if (i == 0)
+	if (i == 0 && result[i] == '\0')
 		return (NULL);
 	len = i;
 	if (result[i] == '\n')
@@ -87,16 +87,19 @@ static char	*ft_cut_line(char *result)
 
 static char	*ft_read(int fd, char *result)
 {
-	char	buffer[BUFFER_SIZE + 1];
+	char	*buffer;
 	char	*tmp;
 	int		read_i;
 
+	if ((buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1))) == NULL)
+		return (NULL);
 	read_i = 1;
 	while ((result == NULL || !contains('\n', result)) && read_i > 0)
 	{
 		read_i = read(fd, buffer, BUFFER_SIZE);
 		if (read_i == -1)
 		{
+			free(buffer);
 			free(result);
 			return (NULL);
 		}
@@ -108,12 +111,14 @@ static char	*ft_read(int fd, char *result)
 			result = ft_strjoin(tmp, buffer);
 		if (result == NULL)
 		{
+			free(buffer);
 			free(tmp);
 			return (NULL);
 		}
 		if (tmp != NULL)
 			free(tmp);
 	}
+	free(buffer);
 	return (result);
 }
 
