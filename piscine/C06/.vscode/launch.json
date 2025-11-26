@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/eberling/Documents/piscine/C06/ex02",
+      "program": "/Users/eberling/Documents/piscine/C06/ex02/build/Debug/outDebug"
+    }
+  ]
+}

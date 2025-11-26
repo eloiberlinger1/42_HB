@@ -1,0 +1,7 @@
+build/
+bot
+logs/
+old-logs/
+.DS_Store
+
+devpod
