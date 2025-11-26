@@ -164,7 +164,7 @@ static char	*ft_read(int fd, char *result)
 
 char	*get_next_line(int fd)
 {
-	static char	*result;
+	static char	result[BUFFER_SIZE + 1];
 	char		*tmp;
 	char		*line;
 
