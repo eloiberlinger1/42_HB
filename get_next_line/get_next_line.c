@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/12 16:07:10 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/28 14:23:20 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,23 +186,23 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-// int	main(void)
-// {
-// 	int fd;
-// 	fd = open("test.txt", O_RDONLY);
+int	main(void)
+{
+	int fd;
+	fd = open("test.txt", O_RDONLY);
 
-// 	if (fd == -1)
-// 	{
-// 		perror("Erreur lors de l'ouverture du fichier");
-// 		return (1);
-// 	}
-// 	printf("\ngetnextlien result1 : \n\n%s\n\n", get_next_line(fd));
-// 	printf("\ngetnextlien result2 : \n\n%s\n\n", get_next_line(fd));
-// 	if (close(fd) == -1)
-// 	{
-// 		perror("Erreur lors de la fermeture du fichier");
-// 		return (1);
-// 	}
-// 	printf("Termine.\n");
-// 	return (0);
-// }
+	if (fd == -1)
+	{
+		perror("Erreur lors de l'ouverture du fichier");
+		return (1);
+	}
+	printf("\ngetnextlien result1 : \n\n%s\n\n", get_next_line(fd));
+	printf("\ngetnextlien result2 : \n\n%s\n\n", get_next_line(fd));
+	if (close(fd) == -1)
+	{
+		perror("Erreur lors de la fermeture du fichier");
+		return (1);
+	}
+	printf("Termine.\n");
+	return (0);
+}
