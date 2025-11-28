@@ -6,183 +6,66 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/28 14:23:20 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/28 15:42:20 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-/*
- * Get the rest of a line after the first occurence of '\n'
- *	1. Take a backup of the line pointer
- *	2. Loop over it untill you reach newline or EOS
- *	3. Malloc for only what's after it
- *	4. Loop over it and copy from ptr to previously allocated string (3)
- *
- *	Input:
- *		char *line: a pointer to an array caracters that
- *		represent the line of the function
- *		int size: the number of elements in the array
- *
- *	Output:
- *		char* : The part of the inputed line.
- *		(only including what's after the first \n starting from left)
- *		(Returend string is allocated with malloc so has to be free())
-*/
-static char	*get_remainder(char *line)
-{
-	int		i;
-	int		j;
-	char	*rest;
-
-	i = 0;
-	j = 0;
-	while (line[i] != '\n' && line[i] != '\0')
-		i++;
-	if (line[i] == '\0')
-		return (NULL);
-	if (line[i++] == '\0')
-		return (NULL);
-	rest = malloc(ft_strlen(line + i) + 1);
-	if (rest == NULL)
-		return (NULL);
-	while (line[i])
-		rest[j++] = line[i++];
-	rest[j] = '\0';
-	return (rest);
-}
-
-/*
- * Like get_remainder but get the first part before '\n' or '\0'
- *
- *Input:
- *	char *result : readed line from the read() function
- *
- *Output:
- *	char* : An allocated string with malloc that has to be free()
- *	containing the first part of (result)
- */
-static char	*ft_cut_line(char *result)
-{
-	int		i;
-	int		len;
-	char	*line;
-
-	i = 0;
-	while (result[i] != '\n' && result[i] != '\0')
-		i++;
-	if (i == 0 && result[i] == '\0')
-		return (NULL);
-	len = i;
-	if (result[i] == '\n')
-		len++;
-	if (len == 0)
-		return (NULL);
-	line = malloc(len + 1);
-	if (!line)
-		return (NULL);
-	i = 0;
-	while (i < len)
-	{
-		line[i] = result[i];
-		i++;
-	}
-	line[i] = '\0';
-	return (line);
-}
-
-/*
- * join the readed buffer to the result
- * 1. put result into another variable (tmp)
- * 2. write result using strjoin (first time : strdup)
- * 3. make sure to free malloc variables & return result
- * 
- * Input:
- *	char *result : 
- *	char *buffer : 
- *
- * Output:
- *	char* : the previous result + buffer
- */
-static char	*join_and_free(char *result, char *buffer)
+static char	*get_line(char *line)
 {
 	char	*tmp;
+	int		i;
 
-	tmp = result;
-	if (result == NULL)
-		result = ft_strdup(buffer);
-	else
-		result = ft_strjoin(tmp, buffer);
-	if (result == NULL)
-	{
-		free(tmp);
-		return (NULL);
-	}
-	free(tmp);
-	return (result);
+	i = 0;
+	while(line[i] && line[i] != '\n')
+		i++;
+	if (line[i] == '\n')
+		i++;
+	tmp = malloc(1);
+	// a finir
 }
 
-/*
- * Reading the file and writing the buffer in the result
- *
- * Input:
- *	int fd : file descriptor
- *	char *result : static result variable from entrypoint
- *
- * Output:
- *	char* : all the buffer joined together to make one string
- *	representing the readed line.
- */
-static char	*ft_read(int fd, char *result)
+static char *ft_read(char *buffer, int fd)
 {
-	char	*buffer;
-	int		read_i;
+	int			read_i;
+	char		*line;
+	char		*tmp;
 
-	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (buffer == NULL)
-		return (free(result), NULL);
 	read_i = 1;
-	while (result == NULL || read_i > 0)
+	line = ft_strjoin(buffer, "");
+	if (line == NULL)
+		return (NULL);
+	while (read_i > 0)
 	{
-		read_i = read(fd, buffer, BUFFER_SIZE);
-		if (read_i == -1)
-		{
-			free(buffer);
-			free(result);
+		tmp = ft_strjoin(line, buffer);
+		if (tmp == NULL)
 			return (NULL);
-		}
-		if (read_i == 0)
-			break ;
+		free (line);
+		line = tmp;
+
+		read_i = read(fd, buffer, BUFFER_SIZE);
 		buffer[read_i] = '\0';
-		result = join_and_free(result, buffer);
-		if (result == NULL || contains('\n', buffer))
-			break ;
+
+		if (contains('\n', buffer))
+			return (line);
+		
 	}
-	free(buffer);
-	return (result);
+	if (read_i == -1)
+		return (free(line), NULL);
+	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	result[BUFFER_SIZE + 1];
-	char		*tmp;
+	char		buffer[BUFFER_SIZE + 1];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	result = ft_read(fd, result);
-	if (result == NULL)
-		return (NULL);
-	tmp = result;
-	line = ft_cut_line(result);
-	if (line == NULL)
-	{
-		free(tmp);
-		result = NULL;
-		return (NULL);
-	}
-	result = get_remainder(tmp);
-	free(tmp);
+
+	line = ft_read(buffer, fd)
+
 	return (line);
 }
 
