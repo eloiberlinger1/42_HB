@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:37:49 by eberling          #+#    #+#             */
-/*   Updated: 2025/11/28 15:42:20 by eberling         ###   ########.fr       */
+/*   Updated: 2025/11/28 21:17:26 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ static char *ft_read(char *buffer, int fd)
 
 		if (contains('\n', buffer))
 			return (line);
-		
 	}
 	if (read_i == -1)
 		return (free(line), NULL);
@@ -64,7 +63,11 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 
-	line = ft_read(buffer, fd)
+	line = ft_read(buffer, fd);
+
+	printf("%s", line);
+
+	//buffer = get_line(buffer);
 
 	return (line);
 }
