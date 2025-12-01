@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 09:38:42 by nluchini          #+#    #+#             */
-/*   Updated: 2025/11/28 15:51:52 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/01 09:26:51 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,6 @@ static char	*ft_read(char *static_buff, int fd)
 	if (ft_strchr(line, '\n') != NULL)
 		return (line);
 	bytes_read = read(fd, static_buff, BUFFER_SIZE);
-
-
-
-
 	while (bytes_read > 0)
 	{
 		static_buff[bytes_read] = '\0';
@@ -89,10 +85,6 @@ static char	*ft_read(char *static_buff, int fd)
 			return (line);
 		bytes_read = read(fd, static_buff, BUFFER_SIZE);
 	}
-
-
-
-	
 	if (bytes_read == -1)
 		return (free(line), NULL);
 	return (line);
