@@ -6,11 +6,33 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:53 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/04 20:11:44 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/04 21:00:28 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+int ft_check_dobble(t_list *list)
+{
+    t_list *current;
+    t_list *runner;
+
+    current = list;
+    while (current != NULL && current->next != NULL)
+    {
+        runner = current;
+        while (runner->next)
+        {
+            if(runner->content == current->content)
+            {
+                return (1);
+            }
+            runner = runner->next;
+        }
+        current = current->next;
+    }
+    return (0);
+}
 
 int main(int argc, char **argv)
 {
@@ -29,16 +51,18 @@ int main(int argc, char **argv)
         while (argv[i][p]){
             if(!ft_isdigit(argv[i][p]))
                 ft_printf("Quelque chose ici n'est pas un nombre.\n");
-            // ajouter dans la liste a le nombre
-            current = ft_atoi(argv[i]);
-            ft_lstadd_back(&a, ft_lstnew(current));
             p++;
         }
-
         
-        
-        // checking for two times the same time
+        // Adding int numbers in the link list
+        current = ft_atoi(argv[i]);
+        ft_lstadd_back(&a, ft_lstnew(current));
 
         i++;
+    }
+
+    if (!ft_check_dobble(a))
+    {
+        printf("Comme une impression de schongesehn");
     }
 }
