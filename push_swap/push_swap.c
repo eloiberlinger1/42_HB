@@ -6,13 +6,14 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:53 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/01 12:21:10 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/01 15:05:06 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int main()
+int main(int argc, char **argv)
 {
-    printf("bonjour");
+    if (argc > 1)
+        ft_printf("test %s", argv[1]);
 }

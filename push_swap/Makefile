@@ -18,7 +18,7 @@ $(PRINTF_PATH):
 
 $(NAME): $(O_FILES) $(PRINTF_PATH)
 	@echo "--------- LINKING -------"
-	$(CC) $(CFLAGS) $(O_FILES) -L$(PRINTF_D) -o $(NAME)
+	$(CC) $(CFLAGS) $(O_FILES) -L$(PRINTF_D) -lftprintf -o $(NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -31,7 +31,6 @@ fclean: clean
 	rm -f $(NAME)
 	$(MAKE) -C $(PRINTF_D) fclean
 
-re:
-	fclean all
+re: fclean all
 
 .PHONY: all clean fclean re
