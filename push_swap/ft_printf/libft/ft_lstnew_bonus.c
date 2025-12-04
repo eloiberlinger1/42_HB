@@ -6,13 +6,13 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 13:49:17 by eberling          #+#    #+#             */
-/*   Updated: 2025/10/18 17:26:47 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/04 20:14:18 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_list	*ft_lstnew(void *content)
+t_list	*ft_lstnew(int content)
 {
 	t_list	*ret;
 

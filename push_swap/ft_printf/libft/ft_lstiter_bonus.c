@@ -6,13 +6,13 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 15:15:56 by eberling          #+#    #+#             */
-/*   Updated: 2025/10/16 15:52:09 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/04 20:17:05 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstiter(t_list *lst, void (*f)(void *))
+void	ft_lstiter(t_list *lst, void (*f)(int))
 {
 	if (!lst || !f)
 		return ;
