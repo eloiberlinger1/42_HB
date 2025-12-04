@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:55 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/04 12:35:34 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/04 12:40:47 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 
 typedef struct s_int_list
 {
-    int value;
-    struct s_int_list *next;
+    int                 value;
+    struct s_int_list   *next;
 } t_int_list;
 
 #endif
