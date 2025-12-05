@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:53 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/05 10:06:10 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/05 11:30:32 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,14 @@ int ft_check_dobble(t_list *list)
 int main(int argc, char **argv)
 {
     t_list *a;
-    // t_int_list *b;
+    t_list *b;
     int i;
     int p;
     int current;
 
     i = 1;
     a = NULL;
+    b = NULL;
     // Recuperer les valeurs entree
     while (i < argc)
     {
@@ -65,4 +66,6 @@ int main(int argc, char **argv)
     {
         printf("Comme une impression de schongesehn");
     }
+
+    ft_sa(a); // PROBLEME DE POINTEURS
 }

@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 13:49:17 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/04 20:14:18 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/05 10:43:29 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_list	*ft_lstnew(int content)
 		return (NULL);
 	ret->content = content;
 	ret->next = NULL;
+	ret->prev = NULL;
 	return (ret);
 }
 
