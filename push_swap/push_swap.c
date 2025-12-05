@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:53 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/04 21:00:28 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/05 10:06:10 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ int ft_check_dobble(t_list *list)
     current = list;
     while (current != NULL && current->next != NULL)
     {
-        runner = current;
-        while (runner->next)
+        runner = current->next;
+        while (runner != NULL)
         {
             if(runner->content == current->content)
             {
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
         i++;
     }
 
-    if (!ft_check_dobble(a))
+    if (ft_check_dobble(a))
     {
         printf("Comme une impression de schongesehn");
     }
