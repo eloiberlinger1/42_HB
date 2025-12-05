@@ -6,23 +6,15 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:53 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/05 16:16:32 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/05 16:19:45 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void printlist(t_list *list)
+void affiche(int current)
 {
-    printf("--- DEBUG LIST --- (PID: %p)\n", (void *)list);
-    while (list != NULL)
-    {
-        printf("VAL: %d | THIS: %p | PREV: %p | NEXT: %p\n",
-               list->content, (void *)list, (void *)list->prev, (void *)list->next);
-
-        list = list->next;
-    }
-    printf("------------------\n");
+    printf("--- DEBUG LIST --- (valeur: %d)\n", current);
 }
 
 int ft_check_dobble(t_list *list)
@@ -83,5 +75,5 @@ int main(int argc, char **argv)
     }
 
     ft_sa(&a); // PROBLEME DE POINTEURS
-    printlist(a);
+    ft_lstiter(a, affiche);
 }
