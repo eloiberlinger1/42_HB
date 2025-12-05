@@ -6,11 +6,24 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:53 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/05 11:30:32 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/05 16:16:32 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+void printlist(t_list *list)
+{
+    printf("--- DEBUG LIST --- (PID: %p)\n", (void *)list);
+    while (list != NULL)
+    {
+        printf("VAL: %d | THIS: %p | PREV: %p | NEXT: %p\n",
+               list->content, (void *)list, (void *)list->prev, (void *)list->next);
+
+        list = list->next;
+    }
+    printf("------------------\n");
+}
 
 int ft_check_dobble(t_list *list)
 {
@@ -38,9 +51,9 @@ int main(int argc, char **argv)
 {
     t_list *a;
     t_list *b;
+    t_list *temp;
     int i;
     int p;
-    int current;
 
     i = 1;
     a = NULL;
@@ -56,8 +69,10 @@ int main(int argc, char **argv)
         }
         
         // Adding int numbers in the link list
-        current = ft_atoi(argv[i]);
-        ft_lstadd_back(&a, ft_lstnew(current));
+        temp = ft_lstnew(ft_atoi(argv[i]));
+        if(!temp)
+            return (0);
+        ft_lstadd_back(&a, temp);
 
         i++;
     }
@@ -67,5 +82,6 @@ int main(int argc, char **argv)
         printf("Comme une impression de schongesehn");
     }
 
-    ft_sa(a); // PROBLEME DE POINTEURS
+    ft_sa(&a); // PROBLEME DE POINTEURS
+    printlist(a);
 }

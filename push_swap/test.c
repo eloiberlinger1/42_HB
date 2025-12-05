@@ -48,12 +48,26 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 	last->next = new;
 }
 
-void    ft_lstadd_front(t_list **lst, t_list *new)
+void	ft_lstadd_front(t_list **lst, t_list *new)
 {
-        if (!lst || !new)
-                return ;
-        new->next = *lst;
-        *lst = new;
+	t_list *current;
+
+	if (!lst || !new)
+		return ;
+
+	if (*lst == NULL)
+	{
+		new->next = NULL;
+        new->prev = NULL;
+	}
+	else
+	{
+		current = *lst;
+		new->next = current;
+		current->prev = new;
+		new->prev = NULL;
+	}
+	*lst = new;
 }
 
 

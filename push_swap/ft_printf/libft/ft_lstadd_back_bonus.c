@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 21:29:34 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/05 15:18:39 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/05 16:07:41 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,5 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 
 	new->prev = last;
 	last->next = new;
+	new->next = NULL;
 }
