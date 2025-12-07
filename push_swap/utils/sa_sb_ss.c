@@ -6,7 +6,7 @@
 /*   By: eloi <eloi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 10:08:27 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/07 17:34:48 by eloi             ###   ########.fr       */
+/*   Updated: 2025/12/07 17:37:41 by eloi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,12 @@ void ft_swap(t_list **list)
     b = a->next;
     c = b->next;
     b->prev = NULL;
-    a->prev = b;
     b->next = a;
+    a->prev = b;
     a->next = c;
     if (c != NULL)
         c->prev = a;
+    *list = b;
 }
 
 void ft_sa(t_list **a)
