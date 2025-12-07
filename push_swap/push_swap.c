@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: eloi <eloi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:53 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/05 16:19:45 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/07 17:29:11 by eloi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
         p = 0;
         while (argv[i][p]){
             if(!ft_isdigit(argv[i][p]))
-                ft_printf("Quelque chose ici n'est pas un nombre.\n");
+                ft_printf("Quelque chose ici n'est %ppas un nombre.\n", b);
             p++;
         }
         
@@ -74,6 +74,6 @@ int main(int argc, char **argv)
         printf("Comme une impression de schongesehn");
     }
 
-    ft_sa(&a); // PROBLEME DE POINTEURS
+    ft_swap(&a); // PROBLEME DE POINTEURS
     ft_lstiter(a, affiche);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sa_sb_ss.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: eloi <eloi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 10:08:27 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/05 16:02:01 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/07 17:34:48 by eloi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,30 +17,30 @@
 */
 void ft_swap(t_list **list)
 {
-    int i;
-    t_list *first;
-    t_list *second;
+    t_list *a;
+    t_list *b;
+    t_list *c;
 
-    i = 0;
-    if (*list == NULL || (*list)->next == NULL)// WRONG CONDITION TO BE CORRECTED
+    if (*list == NULL || (*list)->next == NULL)
     {
         printf("un seul element");
         return ;
     }
     
-    first = *list;
-    second = (*list)->next;
-    second = first;
-    first = second;
-    second->prev = first;
-    first->next = second;
-    first->prev = NULL;
+    a = *list;
+    b = a->next;
+    c = b->next;
+    b->prev = NULL;
+    a->prev = b;
+    b->next = a;
+    a->next = c;
+    if (c != NULL)
+        c->prev = a;
 }
 
 void ft_sa(t_list **a)
 {
     ft_swap(a);
-
 }
 
 // int ft_sb(t_list a, t_list b)
