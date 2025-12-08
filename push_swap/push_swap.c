@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:53 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/08 18:11:44 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/08 23:07:48 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,11 @@ int main(int argc, char **argv)
     {
         p = 0;
         while (argv[i][p]){
-            if(!ft_isdigit(argv[i][p]))
+            if(!ft_isdigit(argv[i][p])) // Ajouter pour les + ou - ?? ==================================== ATTENTION
                 ft_printf("Quelque chose ici n'est %ppas un nombre.\n", b);
             p++;
         }
-        
+
         // Adding int numbers in the link list
         temp = ft_lstnew(ft_atoi(argv[i]));
         if(!temp)
@@ -71,13 +71,16 @@ int main(int argc, char **argv)
 
     if (ft_check_dobble(a))
     {
-        printf("Comme une impression de schongesehn");
+        printf("ERROR : 2 times same value");
+        return (0);
     }
 
     //ft_swap(&a);
-    ft_push(&a, &b);
+    //ft_push(&a, &b);
     //display list
+    ft_printf("===============VALEURS======================\n");
     ft_lstiter(a, affiche);
     ft_printf("=====================================\n");
     ft_lstiter(b, affiche);
+    ft_printf("====================is sorted ? ==  %d ===========\n", check_sort(a));
 }
