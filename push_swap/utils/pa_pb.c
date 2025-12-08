@@ -1,22 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.h                                        :+:      :+:    :+:   */
+/*   pa_pb.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/01 11:41:55 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/08 09:22:48 by eberling         ###   ########.fr       */
+/*   Created: 2025/12/08 09:18:29 by eloi              #+#    #+#             */
+/*   Updated: 2025/12/08 09:25:11 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../push_swap.h"
 
-#ifndef FT_PUSH_SWAP_H
-# define FT_PUSH_SWAP_H
+void ft_push(t_list **l1, t_list **l2)
+{
+    t_list  *temp;
 
-# include "ft_printf/ft_printf.h"
+    temp = ft_lstlast(*l2);
+    temp = ft_lstlast(*l1);
 
-void ft_swap(t_list **list);
-void ft_push(t_list **l1, t_list **l2);
+    //check if b is not empty
 
-#endif
+    printf("t1 last value = %d\n", temp->content);
+}

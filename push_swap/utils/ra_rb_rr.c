@@ -1,22 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.h                                        :+:      :+:    :+:   */
+/*   ra_rb_rr.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/01 11:41:55 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/08 09:22:48 by eberling         ###   ########.fr       */
+/*   Created: 2025/12/08 09:25:45 by eberling          #+#    #+#             */
+/*   Updated: 2025/12/08 09:26:16 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../push_swap.h"
 
-#ifndef FT_PUSH_SWAP_H
-# define FT_PUSH_SWAP_H
-
-# include "ft_printf/ft_printf.h"
-
-void ft_swap(t_list **list);
-void ft_push(t_list **l1, t_list **l2);
-
-#endif
+void ft_rotate()
+{
+    
+}

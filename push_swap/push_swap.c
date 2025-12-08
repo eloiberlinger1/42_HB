@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eloi <eloi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:53 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/07 17:29:11 by eloi             ###   ########.fr       */
+/*   Updated: 2025/12/08 09:24:15 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ int main(int argc, char **argv)
         printf("Comme une impression de schongesehn");
     }
 
-    ft_swap(&a); // PROBLEME DE POINTEURS
+    //ft_swap(&a);
+    ft_push(&a, &b);
+    //display list
     ft_lstiter(a, affiche);
 }
