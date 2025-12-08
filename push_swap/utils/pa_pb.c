@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 09:18:29 by eloi              #+#    #+#             */
-/*   Updated: 2025/12/08 18:18:18 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/08 18:40:59 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,13 @@ void ft_push(t_list **a, t_list **b)
         return ;
     }
 
-    ft_lstadd_front(b, *a);
     first_a = *a;
+    *a = (*a)->next;
+    if(*a != NULL)
+        (*a)->prev = NULL;
+        
+    ft_lstadd_front(b, first_a);
     
     // supprimer premier elemenet de a
-    *a = (*a)->next;
-    (*a)->prev = NULL;
+    
 }
