@@ -1,7 +1,7 @@
 NAME = push_swap
 CC = cc
 CFLAGS = -Wextra -Wall -Werror -g
-C_FILES = push_swap.c utils/check_sort.c utils/sa_sb_ss.c utils/pa_pb.c
+C_FILES = push_swap.c utils/check_sort.c utils/sa_sb_ss.c utils/pa_pb.c utils/ra_rb_rr.c
 
 O_FILES = $(C_FILES:.c=.o)
 
