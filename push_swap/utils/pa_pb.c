@@ -6,20 +6,26 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 09:18:29 by eloi              #+#    #+#             */
-/*   Updated: 2025/12/08 09:25:11 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/08 18:18:18 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../push_swap.h"
 
-void ft_push(t_list **l1, t_list **l2)
+// Take the first element at the top of b and put it at the top of a.
+void ft_push(t_list **a, t_list **b)
 {
-    t_list  *temp;
+    t_list *first_a;
+    if (*a == NULL)
+    {
+        printf("a est vide pas de vleur a prendre pour mettre dans b");
+        return ;
+    }
 
-    temp = ft_lstlast(*l2);
-    temp = ft_lstlast(*l1);
-
-    //check if b is not empty
-
-    printf("t1 last value = %d\n", temp->content);
+    ft_lstadd_front(b, *a);
+    first_a = *a;
+    
+    // supprimer premier elemenet de a
+    *a = (*a)->next;
+    (*a)->prev = NULL;
 }

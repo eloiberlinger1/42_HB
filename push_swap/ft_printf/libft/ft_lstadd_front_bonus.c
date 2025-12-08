@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 14:35:30 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/05 15:31:04 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/08 18:23:22 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 void	ft_lstadd_front(t_list **lst, t_list *new)
 {
-	t_list *current;
-
 	if (!lst || !new)
 		return ;
 
@@ -26,9 +24,8 @@ void	ft_lstadd_front(t_list **lst, t_list *new)
 	}
 	else
 	{
-		current = *lst;
-		new->next = current;
-		current->prev = new;
+		new->next = *lst;
+		(*lst)->prev = new;
 		new->prev = NULL;
 	}
 	*lst = new;
