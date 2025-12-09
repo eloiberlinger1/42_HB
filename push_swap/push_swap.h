@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:55 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/09 21:34:40 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/09 22:14:59 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "ft_printf/ft_printf.h"
 
 int		check_sort(t_list *list);
+t_list  *ft_lstgetmin(t_list *list);
 
 void	ft_swap(t_list **list);
 void	ft_sswap(t_list **a, t_list **b);

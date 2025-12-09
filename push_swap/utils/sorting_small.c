@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 10:47:34 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/09 21:33:51 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/09 23:48:18 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,47 @@ static void	sort_three_elmts(t_list **current)
 	}
 }
 
+static void sort_more_three_l5(t_list **a, t_list **b)
+{
+	t_list *smallest;
+	size_t a_size;
+	size_t smallest_i;
+
+	a_size = ft_lstsize(*a);
+
+	while (a_size > 3)
+	{
+		smallest = ft_lstgetmin(*a);
+		smallest_i = ft_lstsize(smallest);
+
+		printf("index du plus petit : %d\n", (int)(a_size - smallest_i));
+		if (a_size == 4)
+		{
+			if ((a_size - smallest_i) == 1)
+				ft_rotate(a);
+			if ((a_size - smallest_i) == 2)
+			{
+				ft_rotate(a);
+				ft_rotate(a);
+			}
+			if ((a_size - smallest_i) == 3)
+				ft_rev_rotate(a);
+		}
+		if (a_size == 5)
+		{
+			if ((a_size - smallest_i) >= 2) 
+			{
+				ft_rev_rotate(a);
+				ft_rev_rotate(a);
+			}
+		}
+		(void)b;
+		//ft_push(&smallest, b);
+		a_size--;
+	}
+	
+}
+
 void	sort_small(t_list **a, t_list **b)
 {
 	size_t	list_size;
@@ -37,11 +78,11 @@ void	sort_small(t_list **a, t_list **b)
 	list_size = ft_lstsize(*a);
 	printf("lstsize:%d\n", ft_lstsize(*a));
 	printf("lstsize:%d\n", ft_lstsize(*b));
+
 	if (list_size <= 3)
-	{
 		sort_three_elmts(a);
-	}
+		
 	else if (list_size > 3 && list_size <= 5)
-	{
-	}
+		sort_more_three_l5(a, b);
+
 }
