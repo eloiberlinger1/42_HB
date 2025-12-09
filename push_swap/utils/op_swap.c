@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sa_sb_ss.c                                         :+:      :+:    :+:   */
+/*   op_swap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eloi <eloi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 10:08:27 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/08 09:17:06 by eloi             ###   ########.fr       */
+/*   Updated: 2025/12/09 09:44:00 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,8 @@ void ft_swap(t_list **list)
     *list = b;
 }
 
-// int ft_sa(t_list a)
-// {
-//    ft_swap(a);
-// }
-
-// int ft_sb(t_list b)
-// {
-//   ft_swap(b);
-// }
-
-// int ft_ss(t_list a, t_list b)
-// {
-// ft_swap(a);
-// ft_swap(b);
-// }
+void ft_sswap(t_list **a, t_list **b)
+{
+    ft_swap(a);
+    ft_swap(b);
+}

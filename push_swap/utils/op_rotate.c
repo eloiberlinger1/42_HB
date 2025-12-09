@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ra_rb_rr.c                                         :+:      :+:    :+:   */
+/*   op_rotate.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 09:25:45 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/09 09:10:27 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/09 09:45:32 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,13 @@ void ft_rotate(t_list **lst)
     tail->next = old_head;
     old_head->next = NULL;
     old_head->prev = tail;
-    
-//    1 2 3 4 5
-
-//    5 1 2 3 4
 }
 
+void    ft_rrotate(t_list **a, t_list **b)
+{
+    ft_rotate(a);
+    ft_rotate(b);
+}
 
 void ft_rev_rotate(t_list **lst)
 {
@@ -49,4 +50,10 @@ void ft_rev_rotate(t_list **lst)
     (*lst)->prev = NULL;
     (*lst)->next = old_head;
     old_head->prev = (*lst);
+}
+
+void    ft_rrev_rotate(t_list **a, t_list **b)
+{
+    ft_rev_rotate(a);
+    ft_rev_rotate(b);
 }

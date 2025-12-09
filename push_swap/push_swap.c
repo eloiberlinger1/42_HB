@@ -6,13 +6,13 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:53 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/09 09:11:27 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/09 09:47:15 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void affiche(int current)
+static void display(int current)
 {
     printf("--- DEBUG LIST --- (valeur: %d)\n", current);
 }
@@ -29,9 +29,7 @@ int ft_check_dobble(t_list *list)
         while (runner != NULL)
         {
             if(runner->content == current->content)
-            {
                 return (1);
-            }
             runner = runner->next;
         }
         current = current->next;
@@ -76,13 +74,18 @@ int main(int argc, char **argv)
     }
 
     //ft_swap(&a);
+    //ft_sswap(&a, &b);
     //ft_push(&a, &b);
-    ft_rotate(&a);
-    ft_rev_rotate(&a);
+    //ft_push(&a, &b);
+    // ft_rotate(&a);
+    // ft_rev_rotate(&a);
+    // ft_rrotate(&a);
+    // ft_rrev_rotate(&a);
+    
     //display list
     ft_printf("===============VALEURS======================\n");
-    ft_lstiter(a, affiche);
+    ft_lstiter(a, display);
     ft_printf("=====================================\n");
-    ft_lstiter(b, affiche);
+    ft_lstiter(b, display);
     ft_printf("====================is sorted ? ==  %d ===========\n", check_sort(a));
 }
