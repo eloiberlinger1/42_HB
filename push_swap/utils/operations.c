@@ -6,9 +6,10 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 09:32:22 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/09 09:43:19 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/10 00:17:11 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../push_swap.h"
+
 

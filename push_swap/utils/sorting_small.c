@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 10:47:34 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/09 23:48:18 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/10 00:19:48 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,24 +41,27 @@ static void sort_more_three_l5(t_list **a, t_list **b)
 	while (a_size > 3)
 	{
 		smallest = ft_lstgetmin(*a);
-		smallest_i = ft_lstsize(smallest);
+		smallest_i = a_size - ft_lstsize(smallest);
 
-		printf("index du plus petit : %d\n", (int)(a_size - smallest_i));
+		printf("index du plus petit : %d\n", (int)(smallest_i));
 		if (a_size == 4)
 		{
-			if ((a_size - smallest_i) == 1)
+			if ((smallest_i) == 1)
 				ft_rotate(a);
-			if ((a_size - smallest_i) == 2)
+			if ((smallest_i) == 2)
 			{
 				ft_rotate(a);
 				ft_rotate(a);
 			}
-			if ((a_size - smallest_i) == 3)
+			if ((smallest_i) == 3)
 				ft_rev_rotate(a);
+			pb(a, b);
+			sort_three_elmts(a);
+			//pa(a, b);     PLANTE POURQUOI
 		}
 		if (a_size == 5)
 		{
-			if ((a_size - smallest_i) >= 2) 
+			if ((smallest_i) >= 2) 
 			{
 				ft_rev_rotate(a);
 				ft_rev_rotate(a);

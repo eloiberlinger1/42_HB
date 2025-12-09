@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 10:08:27 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/09 21:33:35 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/10 00:08:38 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,22 @@ void	ft_swap(t_list **list)
 	*list = b;
 }
 
-void	ft_sswap(t_list **a, t_list **b)
+// sa
+void	sa(t_list **list)
 {
-	ft_swap(a);
-	ft_swap(b);
+    ft_printf("sa\n");
+    ft_swap(list);
+}
+// sb
+void	sb(t_list **list)
+{
+    ft_printf("sb\n");
+    ft_swap(list);
+}
+// ss
+void	ss(t_list **a, t_list **b)
+{
+    ft_printf("ss\n");
+    ft_swap(a);
+    ft_swap(b);
 }

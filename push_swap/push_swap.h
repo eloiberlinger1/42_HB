@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:55 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/09 22:14:59 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/10 00:16:55 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,23 @@ int		check_sort(t_list *list);
 t_list  *ft_lstgetmin(t_list *list);
 
 void	ft_swap(t_list **list);
-void	ft_sswap(t_list **a, t_list **b);
+void	sa(t_list **list);
+void	sb(t_list **list);
+void	ss(t_list **a, t_list **b);
 
 void	ft_push(t_list **l1, t_list **l2);
+void	pa(t_list **a, t_list **b);
+void	pb(t_list **a, t_list **b);
 
 void	ft_rotate(t_list **lst);
-void	ft_rrotate(t_list **a, t_list **b);
+void	ra(t_list **list);
+void	rb(t_list **list);
+void	rr(t_list **a, t_list **b);
+
 void	ft_rev_rotate(t_list **lst);
-void	ft_rrev_rotate(t_list **a, t_list **b);
+void	rra(t_list **list);
+void	rrb(t_list **list);
+void	rrr(t_list **a, t_list **b);
 
 void	sort_small(t_list **a, t_list **b);
 

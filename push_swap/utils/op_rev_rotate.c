@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   op_rotate.c                                        :+:      :+:    :+:   */
+/*   ft_rev_rotate.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/08 09:25:45 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/10 00:16:09 by eberling         ###   ########.fr       */
+/*   Created: 2025/12/10 00:14:48 by eberling          #+#    #+#             */
+/*   Updated: 2025/12/10 00:15:36 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../push_swap.h"
 
-void	ft_rotate(t_list **lst)
+void	ft_rev_rotate(t_list **lst)
 {
 	t_list	*old_head;
 	t_list	*tail;
@@ -20,31 +20,31 @@ void	ft_rotate(t_list **lst)
 	if (!lst || !*lst || !(*lst)->next)
 		return ;
 	tail = ft_lstlast(*lst);
+	tail->prev->next = NULL;
 	old_head = *lst;
-	*lst = (*lst)->next;
+	*lst = tail;
 	(*lst)->prev = NULL;
-	tail->next = old_head;
-	old_head->next = NULL;
-	old_head->prev = tail;
+	(*lst)->next = old_head;
+	old_head->prev = (*lst);
 }
+
 
 // ra
-void	ra(t_list **list)
+void	rra(t_list **list)
 {
-    ft_printf("ra\n");
-    ft_rotate(list);
+    ft_printf("rra\n");
+    ft_rev_rotate(list);
 }
 // rb
-void	rb(t_list **list)
+void	rrb(t_list **list)
 {
-    ft_printf("rb\n");
-    ft_rotate(list);
+    ft_printf("rrb\n");
+    ft_rev_rotate(list);
 }
 // rr
-void	rr(t_list **a, t_list **b)
+void	rrr(t_list **a, t_list **b)
 {
-    ft_printf("rr\n");
-	ft_rotate(a);
-	ft_rotate(b);
+    ft_printf("rrr\n");
+	ft_rev_rotate(a);
+	ft_rev_rotate(b);
 }
-

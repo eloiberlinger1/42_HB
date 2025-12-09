@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 09:18:29 by eloi              #+#    #+#             */
-/*   Updated: 2025/12/09 21:32:56 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/10 00:11:04 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,17 @@ void	ft_push(t_list **a, t_list **b)
 		(*a)->prev = NULL;
 
 	ft_lstadd_front(b, first_a);
+}
+
+// pa
+void	pa(t_list **a, t_list **b)
+{
+    ft_printf("pa\n");
+    ft_push(b, a);
+}
+// pb
+void	pb(t_list **a, t_list **b)
+{
+    ft_printf("pb\n");
+    ft_push(a, b);
 }
