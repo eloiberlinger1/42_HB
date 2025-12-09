@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 09:25:45 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/09 11:17:29 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/09 20:48:05 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void ft_rotate(t_list **lst)
     t_list *old_head;
     t_list *tail;
 
-    if (!lst || !*lst)
+    if (!lst || !*lst || !(*lst)->next)
         return ;
 
     tail = ft_lstlast(*lst);
@@ -40,7 +40,7 @@ void ft_rev_rotate(t_list **lst)
     t_list *old_head;
     t_list *tail;
 
-    if (!lst || !*lst)
+    if (!lst || !*lst || !(*lst)->next)
         return ;
 
     tail = ft_lstlast(*lst);
