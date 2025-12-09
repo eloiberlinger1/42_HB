@@ -6,41 +6,40 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 10:08:27 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/09 09:44:00 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/09 21:33:35 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../push_swap.h"
 
 /*
-    Swap the first 2 elements at the top of stack
+	Swap the first 2 elements at the top of stack
 */
-void ft_swap(t_list **list)
+void	ft_swap(t_list **list)
 {
-    t_list *a;
-    t_list *b;
-    t_list *c;
+	t_list	*a;
+	t_list	*b;
+	t_list	*c;
 
-    if (*list == NULL || (*list)->next == NULL)
-    {
-        printf("un seul element");
-        return ;
-    }
-    
-    a = *list;
-    b = a->next;
-    c = b->next;
-    b->prev = NULL;
-    b->next = a;
-    a->prev = b;
-    a->next = c;
-    if (c != NULL)
-        c->prev = a;
-    *list = b;
+	if (*list == NULL || (*list)->next == NULL)
+	{
+		printf("un seul element");
+		return ;
+	}
+	a = *list;
+	b = a->next;
+	c = b->next;
+	b->prev = NULL;
+	b->next = a;
+	a->prev = b;
+	a->next = c;
+	if (c != NULL)
+		c->prev = a;
+	*list = b;
 }
 
-void ft_sswap(t_list **a, t_list **b)
+void	ft_sswap(t_list **a, t_list **b)
 {
-    ft_swap(a);
-    ft_swap(b);
+	ft_swap(a);
+	ft_swap(b);
 }

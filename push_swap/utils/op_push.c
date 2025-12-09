@@ -1,32 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pa_pb.c                                            :+:      :+:    :+:   */
+/*   op_push.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 09:18:29 by eloi              #+#    #+#             */
-/*   Updated: 2025/12/08 22:27:51 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/09 21:32:56 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../push_swap.h"
 
 // Take the first element at the top of b and put it at the top of a.
-void ft_push(t_list **a, t_list **b)
+void	ft_push(t_list **a, t_list **b)
 {
-    t_list *first_a;
-    if (*a == NULL)
-    {
-        printf("a est vide pas de vleur a prendre pour mettre dans b");
-        return ;
-    }
+	t_list *first_a;
+	if (*a == NULL)
+	{
+		printf("a est vide pas de vleur a prendre pour mettre dans b");
+		return ;
+	}
 
-    first_a = *a;
-    *a = (*a)->next;
-    (*a)->next->prev = *a;
-    if(*a != NULL)
-        (*a)->prev = NULL;
+	first_a = *a;
+	*a = (*a)->next;
+	(*a)->next->prev = *a;
+	if (*a != NULL)
+		(*a)->prev = NULL;
 
-    ft_lstadd_front(b, first_a);
+	ft_lstadd_front(b, first_a);
 }
