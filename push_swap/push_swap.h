@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:55 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/09 00:16:53 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/09 09:10:58 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,7 @@ void ft_swap(t_list **list);
 void ft_push(t_list **l1, t_list **l2);
 int check_sort(t_list *list);
 void ft_rotate(t_list **lst);
+void ft_rev_rotate(t_list **lst);
+
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 09:25:45 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/09 00:15:53 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/09 09:10:27 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,22 @@ void ft_rotate(t_list **lst)
 //    1 2 3 4 5
 
 //    5 1 2 3 4
+}
+
+
+void ft_rev_rotate(t_list **lst)
+{
+    t_list *old_head;
+    t_list *tail;
+
+    if (!lst || !*lst)
+        return ;
+
+    tail = ft_lstlast(*lst);
+    tail->prev->next = NULL;
+    old_head = *lst;
+    *lst = tail;
+    (*lst)->prev = NULL;
+    (*lst)->next = old_head;
+    old_head->prev = (*lst);
 }
