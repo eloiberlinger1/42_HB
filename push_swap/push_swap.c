@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:53 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/09 22:34:35 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/10 10:15:31 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int	main(int argc, char **argv)
 	// ft_rrev_rotate(&a);
 	// ft_rotate(&a);
 	sort_small(&a, &b);
+	//sort_main(&a, &b);
 	
 	// display list
 	ft_printf("===============VALEURS a======================\n");
