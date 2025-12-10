@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 09:18:29 by eloi              #+#    #+#             */
-/*   Updated: 2025/12/10 00:11:04 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/10 09:45:03 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	ft_push(t_list **a, t_list **b)
 
 	first_a = *a;
 	*a = (*a)->next;
-	(*a)->next->prev = *a;
 	if (*a != NULL)
 		(*a)->prev = NULL;
 
