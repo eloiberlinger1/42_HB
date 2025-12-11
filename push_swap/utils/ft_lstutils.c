@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 21:52:46 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/10 10:12:29 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/11 10:23:16 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ t_list  *ft_lstgetmin(t_list *list)
 
     current = list;
     min = current->content;
+    smallest = current;
     while (current != NULL)
     {
         if(current->content < min)
