@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:55 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/10 10:14:04 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/11 15:27:08 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	rrr(t_list **a, t_list **b);
 
 void	sort_small(t_list **a, t_list **b);
 void	sort_main(t_list **a, t_list **b);
+void    lst_affect_index(t_list *list);
 
 
 #endif

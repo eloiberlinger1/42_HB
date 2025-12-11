@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 12:39:44 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/05 10:14:56 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/11 15:22:37 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	ft_putnbr_fd(int n, int fd);
 typedef struct s_list
 {
 	int				content;
+	int				index;
 	struct s_list	*next;
 	struct s_list	*prev;
 }					t_list;
