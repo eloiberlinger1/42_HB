@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 09:32:29 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/11 15:18:39 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/11 16:29:07 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,17 @@
 
 void	sort_main(t_list **a, t_list **b)
 {
+	t_list	*current;
+
+	(void)b;
+
 	if (ft_lstsize(*a) > 5)
 	{
-		(void)b;
+		current = *a;
+
+		while (current)
+		{
+			
+		}
 	}
 }

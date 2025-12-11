@@ -6,15 +6,22 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:53 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/11 15:26:42 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/11 16:31:17 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-static void	display(int current)
+static void	display(t_list *list)
 {
-	printf("--- DEBUG LIST --- (valeur: %d)\n", current);
+	t_list *current;
+
+	current = list;
+	while (current != NULL)
+	{
+		printf("--- DEBUG LIST --- (valeur: %d | index: %d)\n", current->content, current->index);
+		current = current->next;
+	}
 }
 
 int	ft_check_dobble(t_list *list)
@@ -81,13 +88,13 @@ int	main(int argc, char **argv)
 	// ft_rotate(&a);
 	lst_affect_index(a);
 	sort_small(&a, &b);
-	//sort_main(&a, &b);
+	sort_main(&a, &b);
 	
 	// display list
 	ft_printf("===============VALEURS a======================\n");
-	ft_lstiter(a, display);
+	display(a);
 	ft_printf("===============VALEURS b======================\n");
-	ft_lstiter(b, display);
+	display(b);
 	ft_printf("====================is sorted ? ==  %d ===========\n",
 		check_sort(a));
 }

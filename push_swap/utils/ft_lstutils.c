@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 21:52:46 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/11 15:26:29 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/11 16:31:36 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void    lst_affect_index(t_list *list)
 {
     t_list  *current;
+    t_list  *runner;
     int  counter;
 
     if (!list)
@@ -22,9 +23,17 @@ void    lst_affect_index(t_list *list)
 
     current = list;
     counter = 0;
-    while(current != NULL)
+    while(current != NULL && current->next != NULL)
     {
-        current->index = counter;
+        runner = list;
+        while (runner != NULL)
+        {
+            if (current->content < runner->content)
+                current->index = counter++;
+            else
+                runner->index = counter++;
+            runner = runner->next;
+        }
         current = current->next;
     }
 }
