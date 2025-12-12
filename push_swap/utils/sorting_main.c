@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 09:32:29 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/12 17:28:48 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/12 17:42:06 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void radix_sort(t_list **a, t_list **b)
 	while (k_i < k)
 	{
 		n_i = 0;
-		while (n_i <= n)
+		while (n_i < n)
 		{
 			if (((((*a)->index >> k_i)) & 1) == 0)
 				pb(a, b);
@@ -54,17 +54,10 @@ void radix_sort(t_list **a, t_list **b)
 				ra(a);
 			n_i++;
 		}
+		while (*b)
+			pa(a, b);
 		k_i++;
 	}
-	
-	// n_i = 0;
-	// n = ft_lstsize(*b);
-	// while (n_i < n)
-	// {
-	// 	pa(a, b);
-	// 	n_i++;
-	// }
-
 }
 
 void	sort_main(t_list **a, t_list **b)
