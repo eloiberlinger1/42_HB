@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 09:32:29 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/12 15:30:08 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/12 17:28:48 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,7 @@
 (TO CHECK )
 
 In a mathematical point of view for Radix sorting K represent the number of pass needed to get a sorted list
-this value is related to the number of bits of the index of the biggest element of the list
-
-because we make binary pass
-
+this value is related to the value of the max index so depend on the number of elements on the list.
 */
 int get_K(t_list **a)
 {
@@ -32,30 +29,51 @@ int get_K(t_list **a)
 	{
 		k = k >> 1;
 		K++;
-		printf(
-			"sadasd"
-		);
 	}
 	return (K);
 }
 
 void radix_sort(t_list **a, t_list **b)
 {
-	(void)b;
+	int		k;
+	int		n;
+	int		k_i;
+	int		n_i;
+
+	k_i = 0;
+	k = get_K(a);
+	n = ft_lstsize(*a);
+	while (k_i < k)
+	{
+		n_i = 0;
+		while (n_i <= n)
+		{
+			if (((((*a)->index >> k_i)) & 1) == 0)
+				pb(a, b);
+			else
+				ra(a);
+			n_i++;
+		}
+		k_i++;
+	}
 	
-	printf("\n\nK = %d\n\n", get_K(a));
+	// n_i = 0;
+	// n = ft_lstsize(*b);
+	// while (n_i < n)
+	// {
+	// 	pa(a, b);
+	// 	n_i++;
+	// }
+
 }
 
 void	sort_main(t_list **a, t_list **b)
 {
-	t_list	*current;
-
 	(void)b;
 
 	if (ft_lstsize(*a) > 5)
 	{
-		current = *a;
 
-		radix_sort(&current, b);
+		radix_sort(a, b);
 	}
 }
