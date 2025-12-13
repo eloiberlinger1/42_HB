@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:53 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/13 16:33:08 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/13 16:53:22 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 // 	current = list;
 // 	while (current != NULL)
 // 	{
-// 		printf("--- DEBUG LIST --- (valeur: %d | index: %d)\n", current->content, current->index);
+// 		printf("-(valeur: %d | index: %d)\n", current->content, current->index);
 // 		current = current->next;
 // 	}
 // }
