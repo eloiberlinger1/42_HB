@@ -19,3 +19,10 @@ void	ft_lstdelone(t_list *lst, void (*del)(int))
 	del(lst->content);
 	free(lst);
 }
+
+void	ft_lstdelone_no_funct(t_list *lst)
+{
+	if (!lst)
+		return ;
+	free(lst);
+}

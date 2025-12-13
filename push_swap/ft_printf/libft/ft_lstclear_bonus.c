@@ -28,3 +28,20 @@ void	ft_lstclear(t_list **lst, void (*del)(int))
 	}
 	*lst = NULL;
 }
+
+void	ft_lstclear_no_funct(t_list **lst)
+{
+	t_list	*current;
+	t_list	*next;
+
+	if (!lst)
+		return ;
+	current = *lst;
+	while (current)
+	{
+		next = current->next;
+		ft_lstdelone_no_funct(current);
+		current = next;
+	}
+	*lst = NULL;
+}

@@ -59,6 +59,7 @@ int	main(int argc, char **argv)
 	lst_affect_index(a);
 	sort_small(&a, &b);
 	sort_main(&a, &b);
+	ft_lstclear_no_funct(&a);
 }
 
 // display list

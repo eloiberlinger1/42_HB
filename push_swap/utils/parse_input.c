@@ -15,13 +15,13 @@
 /*
 freelist = 1 if the list has to be freed
 */
-static void	*stop_and_free(int must_free, char **args, t_list *a, int freelist)
+static void	*stop_and_free(int must_free, char **args, t_list **a, int freelist)
 {
 	ft_printf("Error\n");
 	if (must_free)
-		free(args);
+		free_words(args, ft_lstsize(*a));
 	if (freelist)
-		free(a);
+		ft_lstclear_no_funct(a);
 	return (NULL);
 }
 
@@ -71,12 +71,12 @@ static void	*input_to_list(char **args, int *i, int *must_free, t_list **a)
 		{
 			if (!ft_isdigit(args[*i][p]) && args[*i][p] != '-'
 				&& args[*i][p] != '+')
-				return (stop_and_free(*must_free, args, *a, 0));
+				return (stop_and_free(*must_free, args, a, 0));
 			p++;
 		}
 		temp = ft_lstnew(ft_atoi(args[*i]));
 		if (!temp)
-			return (stop_and_free(*must_free, args, *a, 1));
+			return (stop_and_free(*must_free, args, a, 1));
 		ft_lstadd_back(a, temp);
 		(*i)++;
 	}
