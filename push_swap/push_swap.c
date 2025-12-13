@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:53 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/11 16:31:17 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/12 18:35:47 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,35 +46,15 @@ int	ft_check_dobble(t_list *list)
 
 int	main(int argc, char **argv)
 {
-	t_list	*a;
 	t_list	*b;
-	t_list	*temp;
-	int		i;
-	int		p;
+	t_list	*a;
 
-	i = 1;
-	a = NULL;
 	b = NULL;
+	a = parse_main(argc, argv);
 	// Recuperer les valeurs entree
-	while (i < argc)
-	{
-		p = 0;
-		while (argv[i][p])
-		{
-			if (!ft_isdigit(argv[i][p])) // Ajouter pour les + ou
-				ft_printf("Quelque chose ici n'est %ppas un nombre.\n", b);
-			p++;
-		}
-		// Adding int numbers in the link list
-		temp = ft_lstnew(ft_atoi(argv[i]));
-		if (!temp)
-			return (0);
-		ft_lstadd_back(&a, temp);
-		i++;
-	}
 	if (ft_check_dobble(a))
 	{
-		printf("ERROR : 2 times same value");
+		ft_printf("Error\n");
 		return (0);
 	}
 	// ft_swap(&a);
@@ -86,16 +66,16 @@ int	main(int argc, char **argv)
 	// ft_rrotate(&a);
 	// ft_rrev_rotate(&a);
 	// ft_rotate(&a);
-	lst_affect_index(a);
-	sort_small(&a, &b);
-	sort_main(&a, &b);
+	// lst_affect_index(a);
+	// sort_small(&a, &b);
+	// sort_main(&a, &b);
 	
 	// display list
 	ft_printf("===============VALEURS a======================\n");
 	display(a);
 	ft_printf("===============VALEURS b======================\n");
 	display(b);
-	ft_printf("====================is sorted ? ==  %d ===========\n",
-		check_sort(a));
+	ft_printf("====================is sorted ? ==  %d ===========\n");
+	// 	check_sort(a));
 }
 
