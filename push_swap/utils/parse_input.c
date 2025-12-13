@@ -17,7 +17,7 @@ freelist = 1 if the list has to be freed
 */
 static void	*stop_and_free(int must_free, char **args, t_list **a, int freelist)
 {
-	ft_printf("Error\n");
+	ft_putstr_fd("Error\n", 1);
 	if (must_free)
 		free_words(args, ft_lstsize(*a));
 	if (freelist)

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "push_swap.h"
+#include "ft_printf/libft/libft.h"
 
 // static void	display(t_list *list)
 // {
@@ -53,13 +54,14 @@ int	main(int argc, char **argv)
 	a = parse_main(argc, argv);
 	if (a == NULL || ft_check_dobble(a))
 	{
-		ft_printf("Error\n");
-		return (0);
+		ft_putstr_fd("Error\n", 1);
+		return (1);
 	}
 	lst_affect_index(a);
 	sort_small(&a, &b);
 	sort_main(&a, &b);
 	ft_lstclear_no_funct(&a);
+	return (0);
 }
 
 // display list

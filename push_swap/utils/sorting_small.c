@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 10:47:34 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/14 00:21:33 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/14 00:39:22 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	sort_small(t_list **a, t_list **b)
 	size_t	list_size;
 
 	list_size = ft_lstsize(*a);
-	if (list_size <= 3)
+	if (list_size <= 3 && list_size > 1)
 		sort_three_elmts(a);
 	else if (list_size > 3 && list_size <= 5)
 		sort_more_three_l5(a, b);

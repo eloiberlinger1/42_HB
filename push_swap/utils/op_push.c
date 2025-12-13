@@ -20,10 +20,7 @@ void	ft_push(t_list **a, t_list **b)
 	t_list	*first_a;
 
 	if (*a == NULL)
-	{
-		printf("a est vide pas de vleur a prendre pour mettre dans b");
 		return ;
-	}
 	first_a = *a;
 	*a = (*a)->next;
 	if (*a != NULL)
