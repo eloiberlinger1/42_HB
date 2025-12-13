@@ -12,33 +12,33 @@
 
 #include "../push_swap.h"
 
-// Take the first element at the top of b and put it at the top of a.
+/*
+Take the first element at the top of b and put it at the top of a.
+*/
 void	ft_push(t_list **a, t_list **b)
 {
-	t_list *first_a;
+	t_list	*first_a;
+
 	if (*a == NULL)
 	{
 		printf("a est vide pas de vleur a prendre pour mettre dans b");
 		return ;
 	}
-
 	first_a = *a;
 	*a = (*a)->next;
 	if (*a != NULL)
 		(*a)->prev = NULL;
-
 	ft_lstadd_front(b, first_a);
 }
 
-// pa
 void	pa(t_list **a, t_list **b)
 {
-    ft_printf("pa\n");
-    ft_push(b, a);
+	ft_printf("pa\n");
+	ft_push(b, a);
 }
-// pb
+
 void	pb(t_list **a, t_list **b)
 {
-    ft_printf("pb\n");
-    ft_push(a, b);
+	ft_printf("pb\n");
+	ft_push(a, b);
 }

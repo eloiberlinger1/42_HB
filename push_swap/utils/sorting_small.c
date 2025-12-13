@@ -30,10 +30,10 @@ static void	sort_three_elmts(t_list **current)
 
 static void	sort_more_three_l5(t_list **a, t_list **b)
 {
-	t_list *smallest;
-	size_t a_size;
-	size_t a_size_var;
-	size_t smallest_i;
+	t_list	*smallest;
+	size_t	a_size;
+	size_t	a_size_var;
+	size_t	smallest_i;
 
 	a_size = ft_lstsize(*a);
 	while (ft_lstsize(*a) > 3)

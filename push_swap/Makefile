@@ -8,7 +8,7 @@ utils/check_sort.c \
 utils/op_swap.c \
 utils/parse_input.c \
 utils/op_push.c utils/op_rev_rotate.c \
-utils/op_rotate.c utils/operations.c utils/sorting_small.c utils/sorting_main.c
+utils/op_rotate.c utils/sorting_small.c utils/sorting_main.c
 
 O_FILES = $(C_FILES:.c=.o)
 

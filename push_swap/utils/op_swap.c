@@ -38,22 +38,21 @@ void	ft_swap(t_list **list)
 	*list = b;
 }
 
-// sa
 void	sa(t_list **list)
 {
-    ft_printf("sa\n");
-    ft_swap(list);
+	ft_printf("sa\n");
+	ft_swap(list);
 }
-// sb
+
 void	sb(t_list **list)
 {
-    ft_printf("sb\n");
-    ft_swap(list);
+	ft_printf("sb\n");
+	ft_swap(list);
 }
-// ss
+
 void	ss(t_list **a, t_list **b)
 {
-    ft_printf("ss\n");
-    ft_swap(a);
-    ft_swap(b);
+	ft_printf("ss\n");
+	ft_swap(a);
+	ft_swap(b);
 }

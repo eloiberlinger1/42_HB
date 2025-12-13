@@ -28,23 +28,21 @@ void	ft_rotate(t_list **lst)
 	old_head->prev = tail;
 }
 
-// ra
 void	ra(t_list **list)
 {
-    ft_printf("ra\n");
-    ft_rotate(list);
+	ft_printf("ra\n");
+	ft_rotate(list);
 }
-// rb
+
 void	rb(t_list **list)
 {
-    ft_printf("rb\n");
-    ft_rotate(list);
+	ft_printf("rb\n");
+	ft_rotate(list);
 }
-// rr
+
 void	rr(t_list **a, t_list **b)
 {
-    ft_printf("rr\n");
+	ft_printf("rr\n");
 	ft_rotate(a);
 	ft_rotate(b);
 }
-

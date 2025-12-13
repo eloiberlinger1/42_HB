@@ -15,10 +15,10 @@
 
 # include "ft_printf/ft_printf.h"
 
-t_list *parse_main(int argc, char **argv);
+t_list	*parse_main(int argc, char **argv);
 int		check_sort(t_list *list);
 t_list	*ft_lstgetmax(t_list *list);
-t_list  *ft_lstgetmin(t_list *list);
+t_list	*ft_lstgetmin(t_list *list);
 
 void	ft_swap(t_list **list);
 void	sa(t_list **list);
@@ -41,7 +41,6 @@ void	rrr(t_list **a, t_list **b);
 
 void	sort_small(t_list **a, t_list **b);
 void	sort_main(t_list **a, t_list **b);
-void    lst_affect_index(t_list *list);
-
+void	lst_affect_index(t_list *list);
 
 #endif
