@@ -62,6 +62,7 @@ static char	**get_args_list(int argc, char **argv, int *must_free, int *i)
 static void	*input_to_list(char **args, int *i, int *must_free, t_list **a)
 {
 	t_list	*temp;
+	int		value;
 	int		p;
 
 	while (args[*i])
@@ -74,7 +75,9 @@ static void	*input_to_list(char **args, int *i, int *must_free, t_list **a)
 				return (stop_and_free(*must_free, args, a, 0));
 			p++;
 		}
-		temp = ft_lstnew(ft_atoi(args[*i]));
+		if (ft_atoi(args[*i], &value) == NULL)
+			return (NULL);
+		temp = ft_lstnew(value);
 		if (!temp)
 			return (stop_and_free(*must_free, args, a, 1));
 		ft_lstadd_back(a, temp);

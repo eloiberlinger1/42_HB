@@ -15,6 +15,7 @@
 
 # include <stdlib.h>
 # include <unistd.h>
+# include <stdio.h>
 
 size_t				ft_strlcat(char *dest, const char *src, size_t destsize);
 size_t				ft_strlcpy(char *dst, const char *src, size_t size);
@@ -29,7 +30,7 @@ char				*ft_strnstr(const char *haystack, const char *needle,
 						size_t len);
 char				*ft_strrchr(const char *str, int ch);
 char				*ft_strdup(const char *s);
-int					ft_atoi(const char *num);
+void				*ft_atoi(const char *num, int *v);
 int					ft_strlen(const char *s);
 int					ft_isalnum(int c);
 int					ft_isalpha(int c);

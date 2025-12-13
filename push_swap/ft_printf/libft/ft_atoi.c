@@ -10,19 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
+
 static int	ft_isspace(char c)
 {
-	if (c == '\t' || c == '\n' || c == '\v'
-		|| c == '\f' || c == '\r' || c == ' ')
+	if (c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r'
+		|| c == ' ')
 		return (1);
 	return (0);
 }
 
-int	ft_atoi(const char *num)
+void	*ft_atoi(const char *num, int *v)
 {
-	int	digit;
-	int	tt;
-	int	i;
+	int			digit;
+	long long	tt;
+	int			i;
 
 	tt = 0;
 	digit = 1;
@@ -37,16 +39,20 @@ int	ft_atoi(const char *num)
 	}
 	while (num[i] >= '0' && num[i] <= '9')
 	{
-		tt = (tt * 10) + (num[i] - '0');
+		if ((((tt * 10) + (num[i] - '0')) < -2147483648) || (((tt * 10)
+					+ (num[i] - '0')) > 2147483647))
+			return (NULL);
+		tt = ((tt * 10) + (num[i] - '0'));
 		i++;
 	}
-	return (tt * digit);
+	*v = ((int)(tt * digit));
+	return (v);
 }
 
 // #include <stdio.h>
 // int main(void)
 // {
-// 	char test[60] = "	  --+223 1231";
+// 	char test[60] = "		--+223 1231";
 // 	printf("%d\n", ft_atoi(test));
 // 	ft_atoi(test);
 // }
