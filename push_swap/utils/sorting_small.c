@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 10:47:34 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/14 00:10:38 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/14 00:21:33 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ static void	sort_three_elmts(t_list **current)
 	t_list	*elt;
 
 	elt = *current;
-
 	if (ft_lstsize(*current) > 2)
 	{
 		if (elt->content > elt->next->content
