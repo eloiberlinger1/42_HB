@@ -92,9 +92,11 @@ t_list	*parse_main(int argc, char **argv)
 
 	a = NULL;
 	args = get_args_list(argc, argv, &must_free, &i);
+	if (args == NULL)
+		return (NULL);
 	if (input_to_list(args, &i, &must_free, &a) == NULL)
 		return (NULL);
 	if (must_free == 1)
-		free(args);
+		free_words(args, ft_lstsize(a));
 	return (a);
 }

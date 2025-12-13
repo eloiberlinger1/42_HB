@@ -51,7 +51,7 @@ int	main(int argc, char **argv)
 
 	b = NULL;
 	a = parse_main(argc, argv);
-	if (ft_check_dobble(a) || a == NULL)
+	if (a == NULL || ft_check_dobble(a))
 	{
 		ft_printf("Error\n");
 		return (0);

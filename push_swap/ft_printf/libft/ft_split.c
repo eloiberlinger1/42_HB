@@ -41,7 +41,7 @@ static int	get_wordsize(const char *s, char c, int i)
 	return (wordsize);
 }
 
-static void	free_words(char **ret, int w)
+void	free_words(char **ret, int w)
 {
 	int	i;
 
@@ -53,7 +53,7 @@ static void	free_words(char **ret, int w)
 	free(ret);
 }
 
-static int	write_words(const char *s, int words, char c, char **ret)
+static char	**write_words(const char *s, int words, char c, char **ret)
 {
 	int			wordsize;
 	int			i;
@@ -69,17 +69,17 @@ static int	write_words(const char *s, int words, char c, char **ret)
 		j = 0;
 		wordsize = get_wordsize(s, c, i);
 		ret[w] = (char *) malloc((wordsize + 1) * sizeof(char));
-		if (!ret[w])
+		if (!(ret)[w])
 		{
-			free_words(ret, w);
+			free_words((ret), w);
 			return (0);
 		}
 		while (j < wordsize)
-			ret[w][j++] = s[i++];
-		ret[w][j] = '\0';
+			(ret)[w][j++] = s[i++];
+		(ret)[w][j] = '\0';
 		w++;
 	}
-	return (1);
+	return (ret);
 }
 
 char	**ft_split(char const *s, char c)
@@ -93,7 +93,8 @@ char	**ft_split(char const *s, char c)
 	ret = (char **) malloc((words + 1) * sizeof(char *));
 	if (!ret)
 		return (NULL);
-	if (!write_words(s, words, c, ret))
+	ret = write_words(s, words, c, ret);
+	if (!ret)
 		return (NULL);
 	ret[words] = NULL;
 	return (ret);
@@ -110,4 +111,5 @@ char	**ft_split(char const *s, char c)
 // 		printf("%s\n", recup[i]);
 // 		i++;
 // 	}
+// 	free_words(recup, it);
 // }
