@@ -45,7 +45,7 @@ static char	**get_args_list(int argc, char **argv, int *must_free, int *i)
 	if (argc == 2)
 	{
 		*i = 1;
-		if (contains(argv[1], ' '))
+		if (contains(argv[1], ' ') || ft_strlen(argv[1]) > 0)
 		{
 			*must_free = 1;
 			args = ft_split(argv[1], ' ');
