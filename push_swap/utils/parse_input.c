@@ -27,9 +27,9 @@ static void	*stop_and_free(int must_free, char **args, t_list **a, int freelist)
 
 static int	contains(char *s, char c)
 {
-	while (s++)
+	while (*s)
 	{
-		if (*s == c)
+		if (*s++ == c)
 			return (1);
 	}
 	return (0);

@@ -22,10 +22,7 @@ void	ft_swap(t_list **list)
 	t_list	*c;
 
 	if (*list == NULL || (*list)->next == NULL)
-	{
-		printf("un seul element");
 		return ;
-	}
 	a = *list;
 	b = a->next;
 	c = b->next;
