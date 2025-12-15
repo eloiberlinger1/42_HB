@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 18:31:42 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/15 11:56:38 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/15 20:05:29 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ static void	*stop_and_free(int must_free, char **args, t_list **a, int freelist)
 		ft_lstclear_no_funct(a);
 	return (NULL);
 }
-
 
 static char	**get_args_list(int argc, char **argv, int *must_free, int *i)
 {
@@ -50,18 +49,24 @@ static char	**get_args_list(int argc, char **argv, int *must_free, int *i)
 	return (args);
 }
 
-int	check_input(int *i, int *p, int *must_free, char **args, t_list **a)
+/*
+ Useless will in all control path lead where
+ a t_list element doesn't have to be freed.
+*/
+static int	check_input(int *i, int *p, int *must_free, char **args)
 {
 	int		has_digit;
+	t_list	**useless;
 
 	has_digit = 0;
+	useless = NULL;
 	if (args[*i][*p] == '+' || args[*i][*p] == '-')
 		(*p)++;
 	while (args[*i][*p])
 	{
 		if (!ft_isdigit(args[*i][*p]))
 		{
-			stop_and_free(*must_free, args, a, 0);
+			stop_and_free(*must_free, args, useless, 0);
 			return (0);
 		}
 		has_digit = 1;
@@ -69,7 +74,7 @@ int	check_input(int *i, int *p, int *must_free, char **args, t_list **a)
 	}
 	if (!has_digit)
 	{
-		stop_and_free(*must_free, args, a, 0);
+		stop_and_free(*must_free, args, useless, 0);
 		return (0);
 	}
 	return (1);
@@ -86,7 +91,7 @@ static void	*input_to_list(char **args, int *i, int *must_free, t_list **a)
 		if (args[*i][0] == '\0')
 			return (stop_and_free(*must_free, args, a, 0), NULL);
 		p = 0;
-		if (check_input(i, &p, must_free, args, a) == 0)
+		if (check_input(i, &p, must_free, args) == 0)
 			return (NULL);
 		if (ft_atoi(args[*i], &value) == NULL)
 			return (stop_and_free(*must_free, args, a, 1), NULL);

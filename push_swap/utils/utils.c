@@ -6,10 +6,9 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 11:34:56 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/15 11:35:28 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/15 19:52:35 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 int	contains(char *s, char c)
 {
