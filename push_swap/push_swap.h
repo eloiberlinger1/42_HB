@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:55 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/12 18:34:00 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/15 11:35:31 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ t_list	*parse_main(int argc, char **argv);
 int		check_sort(t_list *list);
 t_list	*ft_lstgetmax(t_list *list);
 t_list	*ft_lstgetmin(t_list *list);
+int	contains(char *s, char c);
+
 
 void	ft_swap(t_list **list);
 void	sa(t_list **list);

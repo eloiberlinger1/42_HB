@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 18:31:42 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/13 16:50:10 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/15 11:56:38 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,6 @@ static void	*stop_and_free(int must_free, char **args, t_list **a, int freelist)
 	return (NULL);
 }
 
-static int	contains(char *s, char c)
-{
-	while (*s)
-	{
-		if (*s++ == c)
-			return (1);
-	}
-	return (0);
-}
 
 static char	**get_args_list(int argc, char **argv, int *must_free, int *i)
 {
@@ -59,35 +50,49 @@ static char	**get_args_list(int argc, char **argv, int *must_free, int *i)
 	return (args);
 }
 
+int	check_input(int *i, int *p, int *must_free, char **args, t_list **a)
+{
+	int		has_digit;
+
+	has_digit = 0;
+	if (args[*i][*p] == '+' || args[*i][*p] == '-')
+		(*p)++;
+	while (args[*i][*p])
+	{
+		if (!ft_isdigit(args[*i][*p]))
+		{
+			stop_and_free(*must_free, args, a, 0);
+			return (0);
+		}
+		has_digit = 1;
+		(*p)++;
+	}
+	if (!has_digit)
+	{
+		stop_and_free(*must_free, args, a, 0);
+		return (0);
+	}
+	return (1);
+}
+
 static void	*input_to_list(char **args, int *i, int *must_free, t_list **a)
 {
 	t_list	*temp;
 	int		value;
 	int		p;
-	int		has_digit;
 
 	while (args[*i])
 	{
 		if (args[*i][0] == '\0')
-			return (stop_and_free(*must_free, args, a, 0));
+			return (stop_and_free(*must_free, args, a, 0), NULL);
 		p = 0;
-		has_digit = 0;
-		if (args[*i][p] == '+' || args[*i][p] == '-')
-			p++;
-		while (args[*i][p])
-		{
-			if (!ft_isdigit(args[*i][p]))
-				return (stop_and_free(*must_free, args, a, 0));
-			has_digit = 1;
-			p++;
-		}
-		if (!has_digit)
-			return (stop_and_free(*must_free, args, a, 0));
-		if (ft_atoi(args[*i], &value) == NULL)
+		if (check_input(i, &p, must_free, args, a) == 0)
 			return (NULL);
+		if (ft_atoi(args[*i], &value) == NULL)
+			return (stop_and_free(*must_free, args, a, 1), NULL);
 		temp = ft_lstnew(value);
 		if (!temp)
-			return (stop_and_free(*must_free, args, a, 1));
+			return (stop_and_free(*must_free, args, a, 1), NULL);
 		ft_lstadd_back(a, temp);
 		(*i)++;
 	}
