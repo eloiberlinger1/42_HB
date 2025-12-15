@@ -54,7 +54,7 @@ int	main(int argc, char **argv)
 	a = parse_main(argc, argv);
 	if (a == NULL || ft_check_dobble(a))
 	{
-		ft_putstr_fd("Error\n", 1);
+		ft_putstr_fd("Error\n", 2);
 		return (1);
 	}
 	lst_affect_index(a);

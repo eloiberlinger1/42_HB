@@ -17,7 +17,7 @@ freelist = 1 if the list has to be freed
 */
 static void	*stop_and_free(int must_free, char **args, t_list **a, int freelist)
 {
-	ft_putstr_fd("Error\n", 1);
+	ft_putstr_fd("Error\n", 2);
 	if (must_free)
 		free_words(args, ft_lstsize(*a));
 	if (freelist)
@@ -64,17 +64,25 @@ static void	*input_to_list(char **args, int *i, int *must_free, t_list **a)
 	t_list	*temp;
 	int		value;
 	int		p;
+	int		has_digit;
 
 	while (args[*i])
 	{
+		if (args[*i][0] == '\0')
+			return (stop_and_free(*must_free, args, a, 0));
 		p = 0;
+		has_digit = 0;
+		if (args[*i][p] == '+' || args[*i][p] == '-')
+			p++;
 		while (args[*i][p])
 		{
-			if (!ft_isdigit(args[*i][p]) && args[*i][p] != '-'
-				&& args[*i][p] != '+')
+			if (!ft_isdigit(args[*i][p]))
 				return (stop_and_free(*must_free, args, a, 0));
+			has_digit = 1;
 			p++;
 		}
+		if (!has_digit)
+			return (stop_and_free(*must_free, args, a, 0));
 		if (ft_atoi(args[*i], &value) == NULL)
 			return (NULL);
 		temp = ft_lstnew(value);
