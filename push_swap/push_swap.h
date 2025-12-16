@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:55 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/15 20:05:20 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/16 11:40:33 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,6 @@ void	rrr(t_list **a, t_list **b);
 void	sort_small(t_list **a, t_list **b);
 void	sort_main(t_list **a, t_list **b);
 void	lst_affect_index(t_list *list);
+int	ft_check_dobble(t_list *list);
 
 #endif
