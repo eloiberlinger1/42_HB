@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:53 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/13 16:53:22 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/16 11:40:52 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,26 +25,6 @@
 // 	}
 // }
 
-int	ft_check_dobble(t_list *list)
-{
-	t_list	*current;
-	t_list	*runner;
-
-	current = list;
-	while (current != NULL && current->next != NULL)
-	{
-		runner = current->next;
-		while (runner != NULL)
-		{
-			if (runner->content == current->content)
-				return (1);
-			runner = runner->next;
-		}
-		current = current->next;
-	}
-	return (0);
-}
-
 int	main(int argc, char **argv)
 {
 	t_list	*b;
@@ -52,7 +32,7 @@ int	main(int argc, char **argv)
 
 	b = NULL;
 	a = parse_main(argc, argv);
-	if (a == NULL || ft_check_dobble(a))
+	if (a == NULL)
 	{
 		ft_putstr_fd("Error\n", 2);
 		return (1);

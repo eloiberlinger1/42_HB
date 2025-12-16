@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 18:31:42 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/15 20:05:29 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/16 11:42:13 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,8 @@ static void	*input_to_list(char **args, int *i, int *must_free, t_list **a)
 		ft_lstadd_back(a, temp);
 		(*i)++;
 	}
+	if (ft_check_dobble(*a))
+		return (stop_and_free(*must_free, args, a, 1), NULL);
 	return (*args);
 }
 
