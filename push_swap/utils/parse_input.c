@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 18:31:42 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/16 11:42:13 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/17 00:17:34 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ freelist = 1 if the list has to be freed
 */
 static void	*stop_and_free(int must_free, char **args, t_list **a, int freelist)
 {
-	ft_putstr_fd("Error\n", 2);
 	if (must_free)
 		free_words(args, ft_lstsize(*a));
 	if (freelist)
@@ -89,7 +88,7 @@ static void	*input_to_list(char **args, int *i, int *must_free, t_list **a)
 	while (args[*i])
 	{
 		if (args[*i][0] == '\0')
-			return (stop_and_free(*must_free, args, a, 0), NULL);
+			return (stop_and_free(*must_free, args, a, 1), NULL);
 		p = 0;
 		if (check_input(i, &p, must_free, args) == 0)
 			return (NULL);
