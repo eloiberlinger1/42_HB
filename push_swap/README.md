@@ -72,7 +72,9 @@ pa
 You can test the program with the provided checker:
 
 #### Get random integers list
-https://www.random.org/integer-sets/?sets=1&num=500&min=-500&max=9000&seqnos=on&sort=on&order=index&format=html&rnd=new
+```bash
+seq 1 100 | sort -R | head -n 10 | tr '\n' ' '
+```
 
 Pipe the output to the checker:
 ```bash
