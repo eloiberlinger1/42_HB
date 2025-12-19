@@ -5,5 +5,3 @@ def ft_plot_area():
 
     print("Plot area : "+str(input_lenght*input_width))
 
-
-ft_plot_area()
