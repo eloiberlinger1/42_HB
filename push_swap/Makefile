@@ -13,19 +13,18 @@ utils/op_rotate.c utils/sorting_small.c utils/sorting_main.c
 
 O_FILES = $(C_FILES:.c=.o)
 
-.PHONY: printf_deps
-
 all: $(NAME)
 
 # --- Dependencies (ft_printf & libft) ---
 PRINTF_D = ft_printf/
 PRINTF_A = libftprintf.a
 PRINTF_PATH = $(PRINTF_D)$(PRINTF_A)
-printf_deps:
+
+$(PRINTF_PATH):
 	@echo "--- Compiling ft_printf and libft dependencies ---"
 	$(MAKE) -C $(PRINTF_D) all
 
-$(NAME): $(O_FILES) printf_deps
+$(NAME): $(O_FILES) $(PRINTF_PATH)
 	@echo "--------- LINKING -------"
 	$(CC) $(CFLAGS) $(O_FILES) -L$(PRINTF_D) -lftprintf -o $(NAME)
 
@@ -42,4 +41,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re printf_deps
+.PHONY: all clean fclean re
