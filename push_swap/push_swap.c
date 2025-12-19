@@ -6,7 +6,7 @@
 /*   By: eberling <eberling@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:41:53 by eberling          #+#    #+#             */
-/*   Updated: 2025/12/17 00:14:04 by eberling         ###   ########.fr       */
+/*   Updated: 2025/12/19 15:33:20 by eberling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,15 @@ int	main(int argc, char **argv)
 	t_list	*b;
 	t_list	*a;
 
+	if (argc <= 1)
+		return (0);
 	b = NULL;
 	a = parse_main(argc, argv);
+	if (check_sort(a))
+	{
+		ft_lstclear_no_funct(&a);
+		return (0);
+	}
 	if (a == NULL)
 	{
 		ft_putstr_fd("Error\n", 2);
