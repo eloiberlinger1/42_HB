@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""
+Module for garden-related utility functions.
+"""
+
 
 def ft_garden_intro():
     """Display information about plant"""
