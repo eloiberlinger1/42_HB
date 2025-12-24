@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
+"""
+This module provides a simple registry system for plants in a garden.
+It defines a Plant class and a function to display plant data.
+"""
+
 
 class Plant:
     """Represent a plant"""
     def __init__(self, name: str, height: int, age: int):
         """Initialize a plant with name height and age"""
-        self.name = ""
-        self.height = 0
-        self.age = 0
+        self.name = name
+        self.height = height
+        self.age = age
 
     def display_info(self):
         """Display plant informations"""
-        print(f"Name : {self.name}")
-        print(f"Name : {self.height}cm")
-        print(f"Age : {self.age}")
+        print(f"{self.name} : {self.height}, {self.age} days old")
 
 
 def garden_data():
