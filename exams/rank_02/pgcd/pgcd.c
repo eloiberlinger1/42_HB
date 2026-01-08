@@ -28,9 +28,10 @@ int main(int argc, char **argv)
 				if (a > b)
 					a = a - b;
 				else
-					b = b -a;
+					b = b - a;
 			}
 			printf("%d", a);
+
 		}
 	} else
 		printf("\n");
