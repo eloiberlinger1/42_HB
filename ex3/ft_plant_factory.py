@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
-add text
+This module simulates a garden management system using the Plant class.
+It demonstrates the creation of multiple plant instances stored within
+a dictionary for efficient individual tracking and collective growth
+simulations.
 """
 
 
