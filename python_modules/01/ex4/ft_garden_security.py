@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
-
+A secure garden management script that demonstrates basic encapsulation.
+It defines a SecurePlant class with validation logic to prevent invalid
+data (like negative values) from being assigned to plant attributes.
 """
 
 
