@@ -9,24 +9,14 @@ class Plant:
 
     def __init__(self, name: str, height: int) -> None:
         """
-        Docstring for __init__
-
-        :param self: Description
-        :param name: name of plant
-        :type name: str
-        :param height: height of plant
-        :type height: int
+        Init plant with height, height
         """
         self.name = name
         self.height = height
 
     def grow(self, cm: int) -> None:
         """
-        Docstring for grow
-
-        :param self: Description
-        :param cm: How many cm to add
-        :type cm: int
+        Display plant info
         """
         self.height += cm
         print(f"{self.name} grew {cm}cm")
@@ -34,20 +24,12 @@ class Plant:
 
 class FloweringPlant(Plant):
     """
-    Docstring for FloweringPlant
+    Plant that can flower
     """
 
     def __init__(self, name: str, height: int, color: str) -> None:
         """
-        Docstring for __init__
-
-        :param self: Description
-        :param name: Description
-        :type name: str
-        :param height: Description
-        :type height: int
-        :param color: Description
-        :type color: str
+        init flowering plant with height, name, color
         """
         super().__init__(name, height)
         self.color = color
@@ -60,26 +42,14 @@ class PrizeFlower(FloweringPlant):
 
     def __init__(self, name: str, h: int, color: str, points: int) -> None:
         """
-        Docstring for __init__
-
-        :param self: Description
-        :param name: Description
-        :type name: str
-        :param h: Description
-        :type h: int
-        :param color: Description
-        :type color: str
-        :param points: Description
-        :type points: int
+        prize a flower
         """
         super().__init__(name, h, color)
         self.points = points
 
     def __str__(self):
         """
-        Docstring for __str__
-
-        :param self: Description
+        dislpay prize flower informations
         """
         return (f"{self.name}: {self.height}cm, {self.color} flowers "
                 f"(blooming), Prize points: {self.points}")
@@ -100,21 +70,15 @@ class GardenManager():
         Docstring for GardenStats
         """
 
-        def calculate_score(self, plants: list[Plant]) -> int:
+        def calculate_points(self, plants: list[Plant]) -> int:
             """
-            Docstring for calculate_score
-
-            :param self: Description
-            :param plants: Description
-            :type plants: List[Any]
-            :return: Description
-            :rtype: int
+            Docstring for calculate_points
             """
-            score = 0
+            points = 0
             for p in plants:
-                if hasattr(p, 'points'):
-                    score += p.points * 10
-            return score
+                if isinstance(p, PrizeFlower):
+                    points += p.points * p.height
+            return points
 
     def __init__(self, owner: str) -> None:
         """
