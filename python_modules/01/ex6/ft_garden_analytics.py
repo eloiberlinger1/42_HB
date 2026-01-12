@@ -153,7 +153,7 @@ def main() -> None:
     bob_garden.add_plant(Plant("Bush", 90))
     bob_score = bob_garden.stats.calculate_points(bob_garden.plants)
 
-    # Final Network Analytics [cite: 309]
+    # Final Network Analytics
     print(f"\nHeight validation test: {GardenManager.validate_height(10)}")
     print(f"Garden scores Alice: "
           f"{alice_garden.stats.calculate_points(alice_garden.plants)}, "
