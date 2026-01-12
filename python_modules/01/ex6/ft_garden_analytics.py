@@ -115,7 +115,8 @@ class GardenManager():
                 print(f"{p.name}: {p.height}cm, {p.color} flowers (blooming)")
             else:
                 print(f"{p.name}: {p.height}cm")
-        print(f"Plants added: {len(self.plants)}")
+
+        print(f"\nPlants added: {len(self.plants)}")
         score = self.stats.calculate_points(self.plants)
         print(f"Garden score for {self.owner}: {score}")
 
@@ -144,19 +145,24 @@ def main() -> None:
     alice_garden.add_plant(Plant("Oak Tree", 100))
     alice_garden.add_plant(FloweringPlant("Rose", 25, "red"))
     alice_garden.add_plant(PrizeFlower("Sunflower", 50, "yellow", 10))
+    print("")
 
     alice_garden.grow_all()
+    print("")
     alice_garden.generate_report()
 
     # Bob's Garden
     print("")
     bob_garden.add_plant(Plant("Bush", 90))
+    # bob_garden.add_plant(PrizeFlower("Lila", 500, "lila", 5))
+    bob_garden.grow_all()
     bob_score = bob_garden.stats.calculate_points(bob_garden.plants)
+    alice_score = alice_garden.stats.calculate_points(alice_garden.plants)
 
     # Final Network Analytics
     print(f"\nHeight validation test: {GardenManager.validate_height(10)}")
     print(f"Garden scores Alice: "
-          f"{alice_garden.stats.calculate_points(alice_garden.plants)}, "
+          f"{alice_score}, "
           f"Bob: {bob_score}")
     print(f"Total gardens managed: {GardenManager.total_gardens}")
 
