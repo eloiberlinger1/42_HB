@@ -101,8 +101,40 @@ class GardenManager():
         :param plant: Description
         :type plant: Any
         """
-        self.plants += plant
+        self.plants.append(plant)
         print(f"Added {plant.name} to {self.owner}'s garden")
+
+    def grow_all(self) -> None:
+        """
+        Grow all plants
+        """
+        print(f"{self.owner} is helping all plants grow...")
+        for plant in self.plants:
+            plant.grow(1)
+
+    def generate_report(self) -> None:
+        print(f"=== {self.owner}'s Garden Report ===")
+        print("Plants in garden:")
+        for p in self.plants:
+            if isinstance(p, PrizeFlower):
+                print(p)
+            elif isinstance(p, FloweringPlant):
+                print(f"{p.name}: {p.height}cm, {p.color} flowers (blooming)")
+            else:
+                print(f"{p.name}: {p.height}cm")
+        print(f"Plants added: {len(self.plants)}")
+        score = self.stats.calculate_score(self.plants)
+        print(f"Garden score for {self.owner}: {score}")
+
+    @staticmethod
+    def is_valid_height(value: int) -> bool:
+        """Check if an heiht is correct"""
+        return value >= 0
+
+    @classmethod
+    def setup_network(cls, owners: list[str]) -> list['GardenManager']:
+        """Create a network of gardens"""
+        return [cls(name) for name in owners]
 
 
 def main() -> None:
