@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 
 def check_temperature(temp_str: str) -> int:
     """
@@ -21,6 +22,9 @@ def check_temperature(temp_str: str) -> int:
 
 
 def test_temperature_input():
+    """
+    test_temperature_input
+    """
     print("=== Garden Temperature Checker ===\n")
     if (check_temperature("25") is not None):
         print("Temperature 25°C is perfect for plants!")
@@ -34,4 +38,5 @@ def test_temperature_input():
     print("All tests completed - program didn't crash!")
 
 
-test_temperature_input()
+if __name__ == "__main__":
+    test_temperature_input()
