@@ -7,8 +7,8 @@ def check_temperature(temp_str: str) -> int:
     :type input: str => (int)
     """
     try:
-        input = int(temp_str)
         print(f"Testing temperature: {temp_str}")
+        input = int(temp_str)
         if (input < 0):
             print(f"Error: {temp_str}°C is too cold for plants (min 0°C)")
         elif (input > 40):
@@ -30,6 +30,8 @@ def test_temperature_input():
     check_temperature("100")
     print("")
     check_temperature("-50")
+    print("")
+    print("All tests completed - program didn't crash!")
 
 
 test_temperature_input()
