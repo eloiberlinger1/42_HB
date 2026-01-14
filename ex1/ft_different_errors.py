@@ -26,10 +26,11 @@ def garden_operations(value: str):
 
     elif (value == "KeyError"):
         try:
-            plants = {"Rose", "Tree"}
-            value = plants["none"]
+            plants = {"Rose": 1, "Tree": 2}
+            valueplants = plants["none"]
+            print(valueplants)
         except KeyError:
-            print("Caught KeyError: 'missing\_plant'")
+            print("Caught KeyError: 'missing_plant'")
 
     elif (value == "multiple"):
         try:
