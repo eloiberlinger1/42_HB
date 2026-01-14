@@ -3,13 +3,12 @@
 class GardenError(Exception):
     """Docstring for GardenError"""
     def __init__(self, message: str):
-        super().__init__(message)
+        pass
 
 
 class PlantError(GardenError):
     """Exception raised for plant errors."""
-    def __init__(self, message: str):
-        super().__init__(message)
+    pass
 
 
 class WaterError(GardenError):
@@ -24,7 +23,7 @@ def test_custom_errors():
 
     print("Testing PlantError...")
     try:
-        raise PlantError("Caught PlantError: The tomato plant is wilting!")
+        raise PlantError("The tomato plant is wilting!")
     except PlantError as error_msg:
         print(f"Caught a PlantError: {error_msg}\n")
 
