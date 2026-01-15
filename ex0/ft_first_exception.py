@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""
+This module implements an agricultural data validation pipeline
+"""
+
 
 def check_temperature(temp_str: str) -> int:
     """

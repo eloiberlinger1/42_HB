@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""
+This module implements robust health monitoring for individual plants.
+"""
+
 
 def check_plant_health(plant_name, water_level, sunlight_hours):
     """Raise an error in case of invalid values"""
