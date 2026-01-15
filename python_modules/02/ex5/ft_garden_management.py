@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""
+This module implements a comprehensive Garden Management System
+"""
+
 
 class GardenError(Exception):
     """Basic GardenError"""
@@ -20,6 +24,9 @@ class Plant():
     Docstring for Plant
     """
     def __init__(self, name, water_level=5, sunlight=8):
+        """
+        Docstring for __init__
+        """
         if not name:
             raise ValueError("Plant name cannot be empty!")
         self.name = name

@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
+"""
+This module defines domain-specific error types such as
+GardenError, PlantError, and WaterError
+"""
+
 
 class GardenError(Exception):
     """Docstring for GardenError"""
-    def __init__(self, message: str):
-        pass
+    pass
 
 
 class PlantError(GardenError):
@@ -14,6 +18,9 @@ class PlantError(GardenError):
 class WaterError(GardenError):
     """Exception raised for water errors."""
     def __init__(self, message: str):
+        """
+        Docstring for __init__
+        """
         super().__init__(message)
 
 

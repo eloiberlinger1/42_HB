@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+"""
+This module demonstrates the handling of diverse failure modes in agricultural
+data systems.
+"""
+
 
 def garden_operations(value: str):
     """
@@ -42,7 +47,8 @@ def garden_operations(value: str):
 
 def test_error_types():
     """Testing errors"""
-    print("=== Garden Error Types Demo\n ===")
+    print("=== Garden Error Types Demo ===")
+    print("")
     print("Testing ValueError...")
     garden_operations("ValueError")
 

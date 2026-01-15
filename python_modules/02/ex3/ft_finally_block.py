@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+"""
+This module illustrates the importance of resource management using the
+try-except-finally structure. It ensures that critical agricultural systems,
+such as irrigation valves, are safely closed (cleaned up) regardless of
+whether the watering operation succeeded or encountered a data error.
+"""
+
 
 def water_plants(plant_list):
     """Water plants"""
