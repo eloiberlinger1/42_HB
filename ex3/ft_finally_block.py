@@ -16,7 +16,7 @@ def water_plants(plant_list):
 
 
 def test_watering_system():
-    """Test watering system with good and bad inputs"""
+    """Test watering system with valid and invalid inputs"""
     valid_plant_list = ["tomato", "dill", "coriander", "lettuce"]
     invalid_plant_list = ["Bombardino crocodilo", "Ballerino Cappuccino", None]
 
