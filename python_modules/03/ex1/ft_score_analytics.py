@@ -7,6 +7,9 @@ import sys
 
 
 def main() -> None:
+    """
+    Docstring for main
+    """
     print("=== Player Score Analytics ===")
     if (len(sys.argv) == 1):
         errormsg = "No scores provided. Usage: python3 ft_score_a"
@@ -21,8 +24,12 @@ def main() -> None:
         except ValueError:
             print("Only numeric values please")
     print(f"Scores proceed: {str(user_i)}")
-    print(f"Total players: {len(user_i)}")
-    print(f"Total score: {sum(user_i)}")
+    print(f"Total players: {str(len(user_i))}")
+    print(f"Total score: {str(sum(user_i))}")
+    print(f"Average score: {str(sum(user_i)/len(user_i))}")
+    print(f"High score: {str(max(user_i))}")
+    print(f"Low score: {str(min(user_i))}")
+    print(f"Score range: {str(max(user_i)-min(user_i))}")
 
 
 if __name__ == "__main__":
