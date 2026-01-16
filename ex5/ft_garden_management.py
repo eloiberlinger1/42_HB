@@ -51,7 +51,7 @@ class GardenManager():
                 raise PlantError("Invalid Plant object!")
             self.plants.append(p)
             print(f"Added {p.name} successfully")
-        except Exception as e:
+        except PlantError as e:
             print(f"Error adding plant: {e}")
 
     def water_plants(self):
@@ -85,7 +85,7 @@ class GardenManager():
                 print(f"Error checking {plant.name}: {e}")
 
 
-def main():
+def test_garden_management():
     """
     Testing the GardenManagment classes.
     """
@@ -107,4 +107,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    test_garden_management()
