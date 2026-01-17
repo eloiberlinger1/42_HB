@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
 Archivment tracker exercise
+ & => .intersection()
+ - => .difference()
 """
 
 
@@ -9,9 +11,9 @@ def ft_achievement_tracker() -> None:
     Docstring for ft_archivment_tracker
     """
 
-    alice = {"first_kill", "level_10", "level_50"}
-    bob = {"explorer", "treasure_hunter", "boss_slayer", "collector"},
-    charlie = {"perfectionist", "social_butterfly", "lone_wolf", "strategist"}
+    alice = {"first_kill", "level_10", "boss_slayer", "level_50"}
+    bob = {"explorer", "boss_slayer", "level_10"}
+    charlie = {"level_10", "lone_wolf", "strategist"}
 
     print("=== Achievement Tracker System ===")
 
@@ -23,7 +25,7 @@ def ft_achievement_tracker() -> None:
     )
 
     print()
-    common_achievements = alice.intersection(bob).intersection(charlie)
+    common_achievements = alice & bob & charlie
     players = [('alice', alice), ('bob', bob), ('charlie', charlie)]
     rare_achievements = set()
     for achievement in all_achievements:
@@ -32,7 +34,7 @@ def ft_achievement_tracker() -> None:
             if achievement in player_achievements:
                 count += 1
         if count == 1:
-            rare_achievements = rare_achievements.union({achievement})
+            rare_achievements = rare_achievements | {achievement}
 
     print(
         f"Common to all players: {common_achievements}\n"
@@ -41,9 +43,9 @@ def ft_achievement_tracker() -> None:
 
     print()
     print(
-        f"Alice vs Bob common: {alice.intersection(bob)}\n"
-        f"Alice unique: {alice.difference(bob)}\n"
-        f"Bob unique: {bob.difference(alice)}"
+        f"Alice vs Bob common: {alice & bob}\n"
+        f"Alice unique: {alice - bob}\n"
+        f"Bob unique: {bob - alice}"
     )
 
 
