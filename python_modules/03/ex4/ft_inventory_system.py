@@ -14,26 +14,35 @@ def new_item(item_type: str, rarity: str, quantity: int, value: int) -> dict:
     }
 
 
-def display_inventory(inventory: dict) -> None:
+def display_inventory(inventory: dict) -> dict:
     """
     Docstring for display_inventory
     """
+    return_dict = {}
     tt_inventory_value = 0
     tt_items = 0
     tt_categories = {}
     print()
-
-    for item, prop in inventory:
+    for item, prop in inventory.items():
         item_value = prop["quantity"] * prop["value"]
         tt_inventory_value += item_value
         tt_items += prop["quantity"]
+
+        category = prop["type"]
+        current = tt_categories.get(category, 0)
+        tt_categories[category] = current + prop["quantity"]
+
         item_string = f"{item} ({prop['type']}, {prop['rarity']})"
         item_string += f": {prop['quantity']}x @ {prop['value']} gold"
-        item_string += " each = {item_value} gold"
+        item_string += f" each = {item_value} gold"
 
-    print(item_string)
+        print(item_string)
+
+    return_dict['total_value'] = tt_inventory_value
+    return_dict['total_items'] = tt_items
+
     print()
-    print(f"Inventory value: {tt_inventory_value}")
+    print(f"Inventory value: {tt_inventory_value} gold")
     print(f"Item count: {tt_items}")
 
     cat_string = "Categories: "
@@ -46,12 +55,20 @@ def display_inventory(inventory: dict) -> None:
 
     print(cat_string)
 
+    return (return_dict)
 
-def ft_inventory_system():
+
+def ft_inventory_system() -> None:
+    """
+    Docstring for ft_inventory_system
+    """
     bob_inventory = {}
     alice_inventory = {}
 
-    alice_inventory["potion"] = new_item("consumable", "common", 0, 50)
+    bob_inventory["potion"] = new_item("consumable", "common", 0, 50)
+    alice_inventory["sword"] = new_item("weapon", "rare", 1, 500)
+    alice_inventory["potion"] = new_item("consumable", "common", 5, 50)
+    alice_inventory["shield"] = new_item("armor", "uncommon", 1, 200)
 
     print("=== Player Inventory System ===")
     print()
@@ -64,6 +81,23 @@ def ft_inventory_system():
     bob_potions_qtt = bob_inventory.get("potion", {}).get("quantity", 0)
     alice_inventory["potion"].update({"quantity": alice_potions_qtt - 2})
     bob_inventory["potion"].update({"quantity": bob_potions_qtt + 2})
+    print("Transaction successful!")
+
+    print()
+    print("=== Updated Inventories ===")
+    alice_potions = alice_inventory.get("potion", {}).get("quantity", 0)
+    bob_potions = bob_inventory.get("potion", {}).get("quantity", 0)
+    print(f"Alice potions: {alice_potions}")
+    print(f"Bob potions: {bob_potions}")
+
+    stats_alice = display_inventory(alice_inventory)
+    print()
+    print("=== Inventory Analytics ===")
+    print(
+        f"Most valuable player: Alice ({stats_alice['total_value']} gold)\n"
+        f"Most items: Alice ({stats_alice['total_items']} items)\n"
+        f"Rarest items: sword, magic_ring"
+    )
 
 
 if (__name__ == "__main__"):
