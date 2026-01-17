@@ -3,6 +3,7 @@
 Archivment tracker exercise
  & => .intersection()
  - => .difference()
+ | => .union()
 """
 
 
@@ -18,7 +19,7 @@ def ft_achievement_tracker() -> None:
     print("=== Achievement Tracker System ===")
 
     print()
-    all_achievements = alice.union(bob).union(charlie)
+    all_achievements = alice | bob | charlie
     print(
         f"All unique achievements: {all_achievements}\n"
         f"Total unique achievements: {len(all_achievements)}"
