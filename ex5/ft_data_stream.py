@@ -5,6 +5,42 @@ Docstring for ex5.ft_data_stream
 from typing import Generator
 
 
+def fibo_gen(limit: int) -> Generator[int, None, None]:
+    """
+    Docstring for fibo_gen
+
+    :param limit: Description
+    :type limit: int
+    :return: Description
+    :rtype: Generator[int, None, None]
+    """
+    a, b = 0, 1
+    for _ in range(limit):
+        yield a
+        a, b = b, a + b
+
+
+def prime_gen(limit: int) -> Generator[int, None, None]:
+    """
+    Docstring for prime_gen
+
+    :param limit: Description
+    :type limit: int
+    :return: Description
+    :rtype: Generator[int, None, None]
+    """
+    count = 0
+    num = 2
+    while (count < limit):
+        for i in range(2, int(num**0.5) + 1):
+            if num % i == 0:
+                break
+        else:
+            yield num
+            count += 1
+        num += 1
+
+
 def get_event(count: int) -> Generator[dict, None, None]:
     """
     Gives an event considering the input number
@@ -36,13 +72,21 @@ def ft_data_stream() -> None:
     print(f"Processing {events_amnt} game events...")
     print()
     stats = {"treasure": 0, "level_up": 0, "high_level": 0}
+
     for event in get_event(1000):
         if (event['event_type'] == "found treasure"):
             stats["treasure"] += 1
+        elif (event['event_type'] == "leveled up"):
+            stats["level_up"] += 1
 
-        print(f"Event {event['event_i']}: Player \
-{event['player_name']} \
-(level {event['level']}) {event['event_type']}")
+        if (event['level'] >= 10):
+            stats["high_level"] += 1
+
+        if (event["event_i"] <= 6):
+            print(f"Event {event['event_i']}: Player ", end="")
+            print(f"{event['player_name']}",            end="")
+            print(f" (level {event['level']}) {event['event_type']}")
+    print("...")
 
     print()
     print("=== Stream Analytics ===")
@@ -51,13 +95,17 @@ def ft_data_stream() -> None:
     print(f"Treasure events: {stats['treasure']}")
     print(f"Level-up events: {stats['level_up']}")
 
-    print("\nMemory usage: Constant (streaming)\
-\nProcessing time: 0.045 seconds")
+    print()
+    print("Memory usage: Constant (streaming)")
+    print("Processing time: 0.045 seconds")
 
     print()
     print("=== Generator Demonstration ===")
-    print("Fibonnaci sequence (first 10): ")
-    print("Prime numbers (first 5): ")
+    fibo_list = [str(n) for n in fibo_gen(10)]
+    print(f"Fibonacci sequence (first 10): {', '.join(fibo_list)}")
+
+    prime_list = [str(n) for n in prime_gen(5)]
+    print(f"Prime numbers (first 5): {', '.join(prime_list)}")
 
 
 if (__name__ == "__main__"):
