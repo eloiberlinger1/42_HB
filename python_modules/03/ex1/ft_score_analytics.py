@@ -24,6 +24,9 @@ def main() -> None:
     print(f"Scores proceed: {str(user_i)}")
     print(f"Total players: {str(len(user_i))}")
     print(f"Total score: {str(sum(user_i))}")
+    if len(user_i) == 0:
+        print("No scores provided")
+        return
     print(f"Average score: {str(sum(user_i)/len(user_i))}")
     print(f"High score: {str(max(user_i))}")
     print(f"Low score: {str(min(user_i))}")

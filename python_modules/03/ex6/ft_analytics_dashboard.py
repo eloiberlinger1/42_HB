@@ -63,7 +63,6 @@ def ft_analytics_dashboard() -> None:
         'kills': players_stats[tp_name]['kills'],
         'deaths': players_stats[tp_name]['deaths'],
     }
-    print("Top performer: alice (2300 points, 5 achievements")
     print(f"Top performer: {top_player['name']} ",              end="")
     print(f"{top_player['kills']} kills, {top_player['deaths']} deaths")
 
