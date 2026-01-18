@@ -1,19 +1,12 @@
 #!/usr/bin/env python3
 """
-Docstring for ex5.ft_data_stream
+Game Data Stream Processor - Process game events using generators.
 """
 from typing import Generator
 
 
 def fibo_gen(limit: int) -> Generator[int, None, None]:
-    """
-    Docstring for fibo_gen
-
-    :param limit: Description
-    :type limit: int
-    :return: Description
-    :rtype: Generator[int, None, None]
-    """
+    """Generate first 'limit' Fibonacci numbers."""
     a, b = 0, 1
     for _ in range(limit):
         yield a
@@ -21,14 +14,7 @@ def fibo_gen(limit: int) -> Generator[int, None, None]:
 
 
 def prime_gen(limit: int) -> Generator[int, None, None]:
-    """
-    Docstring for prime_gen
-
-    :param limit: Description
-    :type limit: int
-    :return: Description
-    :rtype: Generator[int, None, None]
-    """
+    """Generate first 'limit' prime numbers."""
     count = 0
     num = 2
     while (count < limit):
@@ -42,9 +28,7 @@ def prime_gen(limit: int) -> Generator[int, None, None]:
 
 
 def get_event(count: int) -> Generator[dict, None, None]:
-    """
-    Gives an event considering the input number
-    """
+    """Generate 'count' game events with rotating players and event types."""
     players = ["alice", "bob", "charlie", "diana", "eve", "frank"]
     event_types = [
             "killed a monster",
@@ -62,9 +46,7 @@ def get_event(count: int) -> Generator[dict, None, None]:
 
 
 def ft_data_stream() -> None:
-    """
-    Docstring for ft_data_stream
-    """
+    """Process game events stream and demonstrate generator usage."""
 
     events_amnt = 1000
     print("=== Game Data Stream Processor ===")

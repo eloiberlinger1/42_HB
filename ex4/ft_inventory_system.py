@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-ex4.ft_inventory_system
+Player Inventory System - Manage game items and inventory operations.
 """
 
 
 def new_item(item_type: str, rarity: str, quantity: int, value: int) -> dict:
-    """Returns an item in the expected dict format"""
+    """Create an item dictionary with type, rarity, quantity, and value."""
     return {
         "type": item_type,
         "rarity": rarity,
@@ -15,9 +15,7 @@ def new_item(item_type: str, rarity: str, quantity: int, value: int) -> dict:
 
 
 def display_inventory(inventory: dict) -> dict:
-    """
-    Docstring for display_inventory
-    """
+    """Display inventory and return statistics (total_value, total_items)."""
     return_dict = {}
     tt_inventory_value = 0
     tt_items = 0
@@ -59,9 +57,7 @@ def display_inventory(inventory: dict) -> dict:
 
 
 def ft_inventory_system() -> None:
-    """
-    Docstring for ft_inventory_system
-    """
+    """Demonstrate inventory operations: creation, display, and transactions."""
     bob_inventory = {}
     alice_inventory = {}
 

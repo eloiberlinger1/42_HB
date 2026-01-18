@@ -1,16 +1,11 @@
 #!/usr/bin/env python3
 """
-Archivment tracker exercise
- & => .intersection()
- - => .difference()
- | => .union()
+Achievement Tracker System - Analyze player achievements using set operations.
 """
 
 
 def ft_achievement_tracker() -> None:
-    """
-    Docstring for ft_archivment_tracker
-    """
+    """Track and analyze achievements across multiple players."""
 
     alice = {"first_kill", "level_10", "boss_slayer", "level_50"}
     bob = {"explorer", "boss_slayer", "level_10"}
