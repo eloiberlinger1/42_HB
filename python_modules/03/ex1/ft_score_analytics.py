@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 """
-getting and interpreting input and args
+Player Score Analytics - Calculate statistics from numeric scores.
 """
 
 import sys
 
 
 def main() -> None:
-    """
-    Docstring for main
-    """
+    """Process scores from command-line and display statistics."""
     print("=== Player Score Analytics ===")
     if (len(sys.argv) == 1):
         errormsg = "No scores provided. Usage: python3 ft_score_a"

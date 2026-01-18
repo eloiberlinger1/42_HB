@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 """
-getting and interpreting input and args
+Command Quest - Process and display command-line arguments.
 """
 
 import sys
 
 
 def main() -> None:
-    """
-    Docstring for main
-    """
+    """Display program name and all command-line arguments."""
     print("=== Command Quest ===")
     print(f"Program name: {str(sys.argv[0])}")
     print(f"Arguments received: {str(len(sys.argv) - 1)}")

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Position tracker exercise
+Game Coordinate System - 3D position tracking and distance calculation.
 """
 
 import sys
@@ -8,11 +8,7 @@ import math
 
 
 def main(cord: list[str]) -> None:
-    """
-    Docstring for main
-
-    :param cord: List of coordinates in string format ["x,y,z", ...]
-    """
+    """Process coordinates and calculate distances from origin (0,0,0)."""
     print("=== Game Coordinate System ===")
     print()
     p1 = (0, 0, 0)
