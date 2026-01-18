@@ -5,14 +5,40 @@ def ft_analytics_dashboard():
     """
     Docstring for ft_analytics_dashboard
     """
-    players = ['alice', 'charlie', 'diana']
+    players = [
+        "alice",
+        "bob",
+        "charlie",
+        "diana",
+        "eve",
+        "frank"
+    ]
+    characterisis = ["level", "kills", "deaths"]
+    players_stats = {p: {c: 0 for c in characterisis} for p in players}
+
+    # Define example values
+    players_stats["alice"]["level"] = 20
+    players_stats["charlie"]["level"] = 25
+    players_stats["eve"]["level"] = 2
+    players_stats["alice"]["kills"] = 540
+    players_stats["charlie"]["kills"] = 225
+    players_stats["eve"]["kills"] = 28
 
     print("=== Game Analytics Dashboard ===")
     print()
     print("=== List Comprehension Examples ===")
-    print("High scorers (>2000): ['alice', 'charlie', 'diana']")
-    print("Scores doubled: [4600, 3600, 4300, 4100]")
-    print("Active players: ['alice', 'bob', 'charlie']")
+
+    high_level_p = [p for p in players_stats if players_stats[p]['level'] > 10]
+    print(f"High level players (>10): {high_level_p}")
+
+    kills_not_doubled = [stat['kills'] for stat in players_stats.values()]
+    kills_doubled = [stat['kills'] * 2 for stat in players_stats.values()]
+    print(f"Kills not doubled: {kills_not_doubled}")
+    print(f"Kills doubled: {kills_doubled}")
+
+    active_p = [p for p in players_stats if players_stats[p]['level'] > 0]
+    print(f"Active players: {active_p}")
+
     print()
     print("=== Dict Comprehension Examples ===")
     print("Player scores: {'alice': 2300, 'bob': 1800, 'charlie': 2150}")

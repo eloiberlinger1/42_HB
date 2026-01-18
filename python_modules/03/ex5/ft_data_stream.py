@@ -55,7 +55,7 @@ def ft_data_stream() -> None:
     print()
     stats = {"treasure": 0, "level_up": 0, "high_level": 0}
 
-    for event in get_event(1000):
+    for event in get_event(events_amnt):
         if (event['event_type'] == "found treasure"):
             stats["treasure"] += 1
         elif (event['event_type'] == "leveled up"):
@@ -79,7 +79,7 @@ def ft_data_stream() -> None:
 
     print()
     print("Memory usage: Constant (streaming)")
-    print("Processing time: 0.045 seconds")
+    print("Processing time: ? seconds (time functions not allowed)")
 
     print()
     print("=== Generator Demonstration ===")

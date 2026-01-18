@@ -57,7 +57,8 @@ def display_inventory(inventory: dict) -> dict:
 
 
 def ft_inventory_system() -> None:
-    """Demonstrate inventory operations: creation, display, and transactions."""
+    """Demonstrate inventory operations: creation, display,
+    and transactions."""
     bob_inventory = {}
     alice_inventory = {}
 
