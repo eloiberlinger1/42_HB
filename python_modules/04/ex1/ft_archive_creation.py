@@ -30,7 +30,6 @@ def ft_archive_creation() -> None:
             print("SECURE PRESERVATION:")
             print("[CLASSIFIED] New security protocols archived")
             print("Vault automatically sealed upon completion")
-            file.close()
             print(f"Archive '{file_name}' ready for long-term preservation.")
     except Exception:
         print("Failed to create storage unit")
