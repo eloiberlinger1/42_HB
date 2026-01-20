@@ -14,7 +14,7 @@ def ft_crisis_response() -> None:
 
     file_name = "lost_archive.txt"
     try:
-        print("CRISIS ALERT: Attempting access to 'lost_archive.txt'...")
+        print(f"CRISIS ALERT: Attempting access to '{file_name}'...")
         with open(file_name) as file:
             content = file.read()
             print(f"{content}")
@@ -26,7 +26,7 @@ def ft_crisis_response() -> None:
 
     file_name = "classified_data.txt"
     try:
-        print("CRISIS ALERT: Attempting access to 'classified_data.txt'...")
+        print(f"CRISIS ALERT: Attempting access to '{file_name}'...")
         with open(file_name, "w") as file:
             file.write("restricted!")
     except PermissionError:
@@ -37,10 +37,10 @@ def ft_crisis_response() -> None:
 
     file_name = "standard_archive.txt"
     try:
-        print(f"ROUTINE ACCESS: Attempting access to '{file_name}.txt'...")
+        print(f"ROUTINE ACCESS: Attempting access to '{file_name}'...")
         with open(file_name, 'r') as file:
             content = file.read()
-            print(f"SUCCESS: Archive recovered - ``{content}''")
+            print(f"SUCCESS: Archive recovered - '{content}'")
     except Exception as e:
         print(f"Error: {e}")
     print("STATUS: Normal operations resumed")
