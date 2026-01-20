@@ -32,7 +32,7 @@ class NumericProcessor(DataProcessor):
     Docstring for NumericProcessor
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.listelmt = None
         super().__init__()
 
@@ -84,7 +84,7 @@ class TextProcessor(DataProcessor):
     """
     Docstring for TextProcessor
     """
-    def __init__(self):
+    def __init__(self) -> None:
         self.data = None
         super().__init__()
 
@@ -110,7 +110,7 @@ class LogProcessor(DataProcessor):
     """
     Docstring for LogProcessor
     """
-    def __init__(self):
+    def __init__(self) -> None:
         self.data = None
         super().__init__()
 
