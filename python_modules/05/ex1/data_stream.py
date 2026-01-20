@@ -124,6 +124,21 @@ class EventStream(DataStream):
         type = "System Events"
         super().__init__(stream_id, type)
 
+    def process_batch(self, data_batch: List[Any]) -> str:
+        """
+        Docstring for process_batch
+        """
+        print(f"Processing transaction batch: {data_batch}")
+        filtered_batch = self.filter_data(data_batch)
+        count = 0
+        err_count = 0
+        for i in filtered_batch:
+            count += 1
+            if (i == "error"):
+                err_count += 1
+
+        return (f"Event analysis: {count} events, {err_count} error detected")
+
 
 class StreamProcessor():
     """
@@ -162,6 +177,22 @@ def data_stream() -> None:
     dumy_data = ["buy:100", "sell:150", "buy:75"]
     result = sensor.process_batch(dumy_data)
     print(result)
+
+    print()
+
+    print("Initializing Event Stream...")
+    sensor = EventStream("EVENT_001")
+    print(f"Stream ID: {sensor.stream_id}, Type: {sensor.type}")
+    dumy_data = ["login", "error", "logout"]
+    result = sensor.process_batch(dumy_data)
+    print(result)
+
+    print()
+
+    print("=== Polymorphic Stream Processing ===")
+    print("Processing mixed stream types through unified interface...")
+
+    print("Batch 1 Results:")
 
 
 if __name__ == "__main__":
