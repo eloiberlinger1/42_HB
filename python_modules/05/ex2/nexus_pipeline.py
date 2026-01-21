@@ -5,6 +5,7 @@ Docstring for ex2.nexus_pipeline
 
 from typing import Any, List, Optional, Union, Dict
 from abc import ABC, abstractmethod
+import collections
 
 
 class ProcessingPipeline(ABC):
@@ -13,10 +14,17 @@ class ProcessingPipeline(ABC):
     """
 
     def __init__(self):
+        self.input_stage = InputStage()
+        self.trans_stage = TransformStage()
+        self.out_stage = OutputStage()
+
+        pass
+
+    def process():
         pass
 
 
-class InputStage(ProcessingPipeline):
+class InputStage:
     """
     Docstring for InputStage
     """
@@ -33,7 +41,7 @@ class InputStage(ProcessingPipeline):
         """
 
 
-class TransformStage(ProcessingPipeline):
+class TransformStage:
     """
     Docstring for TransformStage
     """
@@ -50,7 +58,7 @@ class TransformStage(ProcessingPipeline):
         """
 
 
-class OutputStage(ProcessingPipeline):
+class OutputStage:
     """
     Docstring for OutputStage
     """
@@ -67,8 +75,8 @@ class OutputStage(ProcessingPipeline):
         """
 
 
-class JSONAdapter:
-    def __init__(self):
+class JSONAdapter(ProcessingPipeline):
+    def __init__(self, pipeline_id: str) -> None:
         """
         Docstring for __init__
 
@@ -87,8 +95,8 @@ class JSONAdapter:
         """
 
 
-class CSVAdapter:
-    def __init__(self):
+class CSVAdapter(ProcessingPipeline):
+    def __init__(self, pipeline_id: str) -> None:
         """
         Docstring for __init__
 
@@ -107,8 +115,8 @@ class CSVAdapter:
         """
 
 
-class StreamAdapter:
-    def __init__(self):
+class StreamAdapter(ProcessingPipeline):
+    def __init__(self, pipeline_id: str) -> None:
         """
         Docstring for __init__
 
@@ -128,7 +136,15 @@ class StreamAdapter:
 
 
 class NexusManager:
-    pass
+    """
+    Docstring for NexusManager
+    """
+
+    def __init__(self):
+        self.list = []
+
+    def process_data(self, data: Any):
+        print(f"processing data {data}")
 
 
 def nexus_pipeline() -> None:
@@ -141,11 +157,26 @@ def nexus_pipeline() -> None:
 
     print("Initializing Nexus Manager...")
     print("")
-    print("Pipeline capacity: 1000 streams/second   ")
+
+    pipeline_cap = 1000
+    print(f"Pipeline capacity: {pipeline_cap} streams/second")
+    print()
     print("Creating Data Processing Pipeline...")
     print("Stage 1: Input validation and parsing")
+    input = "test input"
+    validator = InputStage()
+
+    if validator.process(input) is None:
+        print("Invalid inpur format")
+        return
+
     print("Stage 2: Data transformation and enrichment")
+    transform = TransformStage()
+    transform.process(input)
+
     print("Stage 3: Output formatting and delivery")
+
+    print()
     print("=== Multi-Format Data Processing ===")
     print("Processing JSON data through pipeline...")
     print('Input: {"sensor": "temp", "value": 23.5, "unit": "C"}')

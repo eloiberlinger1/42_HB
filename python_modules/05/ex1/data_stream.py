@@ -211,9 +211,6 @@ class StreamProcessor:
 
         return results
 
-    def filter_results(self, results) -> None:
-        return "asd"
-
 
 def data_stream() -> None:
     """
