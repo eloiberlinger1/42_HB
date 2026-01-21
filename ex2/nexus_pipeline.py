@@ -3,9 +3,8 @@
 Docstring for ex2.nexus_pipeline
 """
 
-from typing import Any, List, Optional, Union, Dict
+from typing import Any, List, Optional, Union, Dict, Protocol
 from abc import ABC, abstractmethod
-import collections
 
 
 class ProcessingPipeline(ABC):
@@ -13,14 +12,29 @@ class ProcessingPipeline(ABC):
     Docstring for ProcessingPipeline
     """
 
-    def __init__(self):
-        self.input_stage = InputStage()
-        self.trans_stage = TransformStage()
-        self.out_stage = OutputStage()
-
+    def __init__(self) -> None:
+        self.stages: List[ProcessingStage] = []
         pass
 
-    def process():
+    def add_stage(self, stage: ProcessingStage) -> None:
+        self.stages.append(stage)
+
+    @abstractmethod
+    def process(self, data: Any) -> Union[str, Any]:
+        pass
+
+
+# ################################################
+#
+#             STAGE CLASSES
+#
+# ################################################
+
+
+# Duck typing class
+class ProcessingStage(Protocol):
+
+    def process(self, data: Any) -> Any:
         pass
 
 
@@ -30,32 +44,18 @@ class InputStage:
     """
 
     def process(self, data: Any) -> Any:
-        """
-        Docstring for process
-
-        :param self: Description
-        :param data: Description
-        :type data: Any
-        :return: Description
-        :rtype: Any
-        """
+        if data is None:
+            raise ValueError("Data is corrupted")
+        if not isinstance(data, (dict, list, str)):
+            raise TypeError(f"Unsupported data type: {type(data)}")
+        return data
 
 
 class TransformStage:
-    """
-    Docstring for TransformStage
-    """
-
     def process(self, data: Any) -> Any:
-        """
-        Docstring for process
-
-        :param self: Description
-        :param data: Description
-        :type data: Any
-        :return: Description
-        :rtype: Any
-        """
+        if isinstance(data, dict):
+            data["nexus_verified"] = True
+        return data
 
 
 class OutputStage:
@@ -75,6 +75,13 @@ class OutputStage:
         """
 
 
+# ################################################
+#
+#             ADAPTERS CLASSES
+#
+# ################################################
+
+
 class JSONAdapter(ProcessingPipeline):
     def __init__(self, pipeline_id: str) -> None:
         """
@@ -82,26 +89,40 @@ class JSONAdapter(ProcessingPipeline):
 
         :param self: Description
         """
+        super().__init__()
+        self.pipeline_id = pipeline_id
 
     def process(self, data: Any) -> Union[str, Any]:
         """
         Docstring for process
-
-        :param self: Description
-        :param data: Description
-        :type data: Any
-        :return: Description
-        :rtype: str | Any
         """
+        print(f"Processing JSON data through pipeline {self.pipeline_id}...")
+        data = {"type": "json", "data": data}
+
+        try:
+            if not isinstance(data, dict):
+                raise TypeError("JSONAdapter expect a dict")
+
+            result = self._run_pipeline(data)
+            return result
+
+        except Exception as e:
+            return f"Error in pipeline : {e}"
 
 
 class CSVAdapter(ProcessingPipeline):
+    """
+    Docstring for CSVAdapter
+    """
+
     def __init__(self, pipeline_id: str) -> None:
         """
         Docstring for __init__
 
         :param self: Description
         """
+        self.pipeline_id = pipeline_id
+        super().__init__()
 
     def process(self, data: Any) -> Union[str, Any]:
         """
@@ -140,11 +161,44 @@ class NexusManager:
     Docstring for NexusManager
     """
 
-    def __init__(self):
-        self.list = []
+    def __init__(self) -> None:
+        self.pipelines: List[ProcessingPipeline] = []
+        self.stats: Dict[str, Any] = {
+            "total_processed": 0,
+            "success_count": 0,
+            "error_count": 0,
+        }
 
-    def process_data(self, data: Any):
-        print(f"processing data {data}")
+    def add_pipeline(self, pipeline: ProcessingPipeline) -> None:
+        """
+        To add a pipeline
+        """
+
+        self.pipelines.append(pipeline)
+
+    def process_data(self, data: Any) -> None:
+        for p in self.pipelines:
+            try:
+                result = p.process(data)
+                self.stats["success_count"] += 1
+                self.stats["total_processed"] += 1
+                print(f"Result: {result}")
+            except Exception as e:
+                self.stats["error_count"] += 1
+                print(f"Error detected: {e}")
+
+    def chain_pipelines(
+        self, data: Any, pipeline_list: List[ProcessingPipeline]
+    ) -> Any:
+        """
+        Démontre le chaînage : Raw -> Processed -> Analyzed
+        """
+        current_data = data
+        print("=== Pipeline Chaining Active ===")
+        for p in pipeline_list:
+            # previous result becomes the input of the next pipeline
+            current_data = p.process(current_data)
+        return current_data
 
 
 def nexus_pipeline() -> None:
@@ -163,7 +217,12 @@ def nexus_pipeline() -> None:
     print()
     print("Creating Data Processing Pipeline...")
     print("Stage 1: Input validation and parsing")
-    input = "test input"
+
+    adapter = JSONAdapter("pipeline_1")
+    # On ajoute les stages (Input, Transform, Output) à l'adapter
+    input = {"sensor": "temp", "value": 23.5}
+    adapter.process(input)
+
     validator = InputStage()
 
     if validator.process(input) is None:
