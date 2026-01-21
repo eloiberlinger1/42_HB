@@ -3,35 +3,18 @@
 Docstring for ex2.nexus_pipeline
 """
 
-from typing import Any, List, Optional, Union, Dict, Protocol
+from typing import Any, List, Union, Dict, Protocol
 from abc import ABC, abstractmethod
 
 
-class ProcessingPipeline(ABC):
-    """
-    Docstring for ProcessingPipeline
-    """
-
-    def __init__(self) -> None:
-        self.stages: List[ProcessingStage] = []
-        pass
-
-    def add_stage(self, stage: ProcessingStage) -> None:
-        self.stages.append(stage)
-
-    @abstractmethod
-    def process(self, data: Any) -> Union[str, Any]:
-        pass
-
-
 # ################################################
 #
-#             STAGE CLASSES
+#             STAGE - PROCESSINg CLASSES
 #
 # ################################################
 
 
-# Duck typing class
+# (Duck typing class)
 class ProcessingStage(Protocol):
 
     def process(self, data: Any) -> Any:
@@ -48,6 +31,18 @@ class InputStage:
             raise ValueError("Data is corrupted")
         if not isinstance(data, (dict, list, str)):
             raise TypeError(f"Unsupported data type: {type(data)}")
+
+        if isinstance(data, dict):
+            if data["sensor"] is None:
+                raise TypeError(f"Undefined values: {data}")
+
+            if data["value"] is None:
+                raise TypeError(f"Undefined values: {data}")
+
+        if isinstance(data, str):
+            print(f"data is an str instance \n\n\n{data}")
+            parsed_data = data
+
         return data
 
 
@@ -64,15 +59,31 @@ class OutputStage:
     """
 
     def process(self, data: Any) -> Any:
-        """
-        Docstring for process
+        data["output_passed"] = True
+        return data
 
-        :param self: Description
-        :param data: Description
-        :type data: Any
-        :return: Description
-        :rtype: Any
-        """
+
+class ProcessingPipeline(ABC):
+    """
+    Docstring for ProcessingPipeline
+    """
+
+    def __init__(self) -> None:
+        self.stages: List[ProcessingStage] = []
+        pass
+
+    def add_stage(self, stage: ProcessingStage) -> None:
+        self.stages.append(stage)
+
+    def _run_pipeline(self, data: Any) -> None:
+        result = data
+        for s in self.stages:
+            result = s.process(result)
+        return result
+
+    @abstractmethod
+    def process(self, data: Any) -> Union[str, Any]:
+        pass
 
 
 # ################################################
@@ -97,14 +108,12 @@ class JSONAdapter(ProcessingPipeline):
         Docstring for process
         """
         print(f"Processing JSON data through pipeline {self.pipeline_id}...")
-        data = {"type": "json", "data": data}
 
         try:
             if not isinstance(data, dict):
                 raise TypeError("JSONAdapter expect a dict")
 
-            result = self._run_pipeline(data)
-            return result
+            return self._run_pipeline(data)
 
         except Exception as e:
             return f"Error in pipeline : {e}"
@@ -156,6 +165,13 @@ class StreamAdapter(ProcessingPipeline):
         """
 
 
+# ################################################
+#
+#             NEXUS CLASSE
+#
+# ################################################
+
+
 class NexusManager:
     """
     Docstring for NexusManager
@@ -201,6 +217,13 @@ class NexusManager:
         return current_data
 
 
+# ################################################
+#
+#                  MAIN CODE
+#
+# ################################################
+
+
 def nexus_pipeline() -> None:
     """
     Docstring for nexus_pipeline
@@ -212,31 +235,31 @@ def nexus_pipeline() -> None:
     print("Initializing Nexus Manager...")
     print("")
 
-    pipeline_cap = 1000
-    print(f"Pipeline capacity: {pipeline_cap} streams/second")
-    print()
-    print("Creating Data Processing Pipeline...")
-    print("Stage 1: Input validation and parsing")
+    manager = NexusManager()
 
-    adapter = JSONAdapter("pipeline_1")
-    # On ajoute les stages (Input, Transform, Output) à l'adapter
-    input = {"sensor": "temp", "value": 23.5}
-    adapter.process(input)
+    # Configuration du pipeline JSON
+    json_pipe = JSONAdapter("JSON_01")
+    json_pipe.add_stage(InputStage())
+    json_pipe.add_stage(TransformStage())
+    json_pipe.add_stage(OutputStage())
 
-    validator = InputStage()
+    manager.add_pipeline(json_pipe)
 
-    if validator.process(input) is None:
-        print("Invalid inpur format")
-        return
+    # Exécution réelle
+    test_data = {"sensor": "temp", "value": 23.5}
+    manager.process_data(test_data)  # Cela va déclencher toute la chaîne.
 
-    print("Stage 2: Data transformation and enrichment")
-    transform = TransformStage()
-    transform.process(input)
+    # Configuration du Pipeline CSV
+    csv_pipe = CSVAdapter("CSV_LOG_01")
+    csv_pipe.add_stage(InputStage())
+    csv_pipe.add_stage(TransformStage())
+    csv_pipe.add_stage(OutputStage())
 
-    print("Stage 3: Output formatting and delivery")
+    # Ajout des pipelines au Manager (Polymorphisme)
+    manager.add_pipeline(json_pipe)
+    manager.add_pipeline(csv_pipe)
 
-    print()
-    print("=== Multi-Format Data Processing ===")
+    print("\n=== Multi-Format Data Processing ===")
     print("Processing JSON data through pipeline...")
     print('Input: {"sensor": "temp", "value": 23.5, "unit": "C"}')
     print("Transform: Enriched with metadata and validation")
