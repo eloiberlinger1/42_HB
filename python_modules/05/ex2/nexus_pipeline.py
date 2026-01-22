@@ -27,6 +27,14 @@ class InputStage:
     """
 
     def process(self, data: Any) -> Any:
+        """
+        Docstring for process
+
+        This is the first of all the stages and can be called bt:
+        - JSONAdapter (data format will be dict)
+        - CSVAdapter (data format will be str (csv wise))
+        - StreamAdapter (data format will be ??)
+        """
         if data is None:
             raise ValueError("Data is corrupted")
         if not isinstance(data, (dict, list, str)):
@@ -39,17 +47,36 @@ class InputStage:
             if data["value"] is None:
                 raise TypeError(f"Undefined values: {data}")
 
+        data["input_verified"] = True
+
+        # CSV case
         if isinstance(data, str):
             print(f"data is an str instance \n\n\n{data}")
-            parsed_data = data
+            parts = data.split(",")
+            if len(parts) >= 2:
+                data = {"sensor": parts[0], "value": parts[1]}
+            else:
+                data = {"raw_content": data}
 
         return data
 
 
 class TransformStage:
+    """
+    Docstring for TransformStage
+    """
+
     def process(self, data: Any) -> Any:
+        """
+        Processing the Transform stage
+        adds nexus_verified as true if the data is succesfully
+        recognised as a dict.
+        """
         if isinstance(data, dict):
             data["nexus_verified"] = True
+        else:
+            raise TypeError("Data must be dict")
+
         return data
 
 
@@ -59,7 +86,12 @@ class OutputStage:
     """
 
     def process(self, data: Any) -> Any:
-        data["output_passed"] = True
+        if isinstance(data, dict):
+            print("Transform: Enriched with metadata and validation")
+            data["output_verified"] = True
+        else:
+            raise TypeError("Input must be a dict")
+
         return data
 
 
@@ -107,6 +139,7 @@ class JSONAdapter(ProcessingPipeline):
         """
         Docstring for process
         """
+        print(f"Input: '{data}'")
         print(f"Processing JSON data through pipeline {self.pipeline_id}...")
 
         try:
@@ -136,13 +169,18 @@ class CSVAdapter(ProcessingPipeline):
     def process(self, data: Any) -> Union[str, Any]:
         """
         Docstring for process
-
-        :param self: Description
-        :param data: Description
-        :type data: Any
-        :return: Description
-        :rtype: str | Any
         """
+        print(f"Input: '{data}'")
+        print(f"Processing CSV data through pipeline {self.pipeline_id}...")
+
+        try:
+            if not isinstance(data, str):
+                raise TypeError("CSVAdapter expect a string in CSV format")
+
+            return self._run_pipeline(data)
+
+        except Exception as e:
+            return f"Error in pipeline : {e}"
 
 
 class StreamAdapter(ProcessingPipeline):
@@ -258,14 +296,24 @@ def nexus_pipeline() -> None:
     # Ajout des pipelines au Manager (Polymorphisme)
     manager.add_pipeline(json_pipe)
     manager.add_pipeline(csv_pipe)
+    manager.process_data(test_data)
 
     print("\n=== Multi-Format Data Processing ===")
     print("Processing JSON data through pipeline...")
-    print('Input: {"sensor": "temp", "value": 23.5, "unit": "C"}')
-    print("Transform: Enriched with metadata and validation")
-    print("Output: Processed temperature reading: 23.5°C (Normal range)")
+    example_data = {"sensor": "temp", "value": 23.5, "unit": "C"}
+    manager.process_data(example_data)
+
+    print(
+        "Output: Processed temperature reading: "
+        f"{example_data['value']}°{example_data['unit']} (Normal range)"
+    )
+
     print("Processing CSV data through same pipeline...")
-    print('Input: "user,action,timestamp"')
+    example_data = "user,action,timestamp"
+
+    # test (les errures ne sont pas comptes ?!)
+    print(f"\n\nManager stats: {manager.stats}")
+
     print("Transform: Parsed and structured data")
     print("Output: User activity logged: 1 actions processed")
     print("Processing Stream data through same pipeline...")
