@@ -50,14 +50,18 @@ class InputStage:
         if isinstance(data, dict):
             data["source_type"] = "JSON"
 
-        if isinstance(data, str):
+        elif isinstance(data, str):
             parts = data.split(",")
             if len(parts) >= 2:
                 data = {"sensor": parts[0], "value": parts[1]}
             else:
                 data = {"raw_content": data}
             data["source_type"] = "CSV"
-
+        
+        elif isinstance(data, list):
+            data = {"data": data}
+            data["source_type"] = "Stream"
+            
         return data
 
 
@@ -101,8 +105,14 @@ class OutputStage:
                 return f"Processed {sensor} reading: {val}°C ({status})"
             
             elif data["source_type"] == "CSV":
-                return f"User activity logged: 1 actions processed" 
+                return "User activity logged: 1 actions processed"
                 
+            elif data["source_type"] == "Stream":
+                length = len(data["data"])
+                average = sum(data["data"]) / length
+                return (f"Output: Stream summary: {length}"
+                        f" readings, avg: {average}°C")
+            
         else:
             raise TypeError("Input must be a dict")
 
@@ -114,8 +124,9 @@ class ProcessingPipeline(ABC):
     Docstring for ProcessingPipeline
     """
 
-    def __init__(self) -> None:
+    def __init__(self, pipeline_id: str) -> None:
         self.stages: List[ProcessingStage] = []
+        self.pipeline_id = pipeline_id
         pass
 
     def add_stage(self, stage: ProcessingStage) -> None:
@@ -146,8 +157,7 @@ class JSONAdapter(ProcessingPipeline):
 
         :param self: Description
         """
-        super().__init__()
-        self.pipeline_id = pipeline_id
+        super().__init__(pipeline_id)
 
     def process(self, data: Any) -> Union[str, Any]:
         """
@@ -173,8 +183,7 @@ class CSVAdapter(ProcessingPipeline):
 
         :param self: Description
         """
-        self.pipeline_id = pipeline_id
-        super().__init__()
+        super().__init__(pipeline_id)
 
     def process(self, data: Any) -> Union[str, Any]:
         """
@@ -196,17 +205,19 @@ class StreamAdapter(ProcessingPipeline):
 
         :param self: Description
         """
+        super().__init__(pipeline_id)
 
     def process(self, data: Any) -> Union[str, Any]:
         """
         Docstring for process
-
-        :param self: Description
-        :param data: Description
-        :type data: Any
-        :return: Description
-        :rtype: str | Any
         """
+        print(f"Input: '{data}'")
+        print(f"Processing Stream data through pipeline {self.pipeline_id}...")
+
+        if not isinstance(data, dict):
+            raise TypeError("StreamAdapter expect a dict")
+
+        return self._run_pipeline(data)
 
 
 # ################################################
@@ -291,7 +302,7 @@ def nexus_pipeline() -> None:
 
     test_data = {"sensor": "temp", "value": 23.5}
     manager.process_data(test_data)
-    
+
     # Configuration du Pipeline CSV
     csv_pipe = CSVAdapter("CSV_LOG_01")
     csv_pipe.add_stage(InputStage())
@@ -318,7 +329,7 @@ def nexus_pipeline() -> None:
     example_data = [20.0, 22.0, 24.0, 21.5, 23.0]
     manager.process_data(example_data)
 
-# test (les errures ne sont pas comptes ?!)
+    # test (les errures ne sont pas comptes ?!)
     print(f"\n\nManager stats: {manager.stats}")
 
 
