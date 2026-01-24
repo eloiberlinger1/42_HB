@@ -90,8 +90,6 @@ class OutputStage:
     """
 
     def process(self, data: Any) -> Any:
-        print(data)
-
         if isinstance(data, dict):
 
             if data["source_type"] == "JSON":
@@ -214,8 +212,8 @@ class StreamAdapter(ProcessingPipeline):
         print(f"Input: '{data}'")
         print(f"Processing Stream data through pipeline {self.pipeline_id}...")
 
-        if not isinstance(data, dict):
-            raise TypeError("StreamAdapter expect a dict")
+        if not isinstance(data, list):
+            raise TypeError("StreamAdapter expect a list")
 
         return self._run_pipeline(data)
 
@@ -297,30 +295,31 @@ def nexus_pipeline() -> None:
     json_pipe.add_stage(InputStage())
     json_pipe.add_stage(TransformStage())
     json_pipe.add_stage(OutputStage())
-
     manager.add_pipeline(json_pipe)
-
-    test_data = {"sensor": "temp", "value": 23.5}
-    manager.process_data(test_data)
 
     # Configuration du Pipeline CSV
     csv_pipe = CSVAdapter("CSV_LOG_01")
     csv_pipe.add_stage(InputStage())
     csv_pipe.add_stage(TransformStage())
     csv_pipe.add_stage(OutputStage())
-
-    # Ajout des pipelines au Manager (Polymorphisme)
     manager.add_pipeline(csv_pipe)
+
+    # Configuration du Pipeline Stream
+    stream_pipe = StreamAdapter("STREAM_01")
+    stream_pipe.add_stage(InputStage())
+    stream_pipe.add_stage(TransformStage())
+    stream_pipe.add_stage(OutputStage())
+    manager.add_pipeline(stream_pipe)
+
+    test_data = {"sensor": "temp", "value": 23.5}
     manager.process_data(test_data)
 
     print("\n=== Multi-Format Data Processing ===")
     print()
-    print("Processing JSON data through pipeline...")
     example_data = {"sensor": "temperature", "value": 23.5, "unit": "C"}
     manager.process_data(example_data)
 
     print()
-    print("Processing CSV data through same pipeline...")
     example_data = "user,action,timestamp"
     manager.process_data(example_data)
 
@@ -328,6 +327,15 @@ def nexus_pipeline() -> None:
     print("Processing Stream data through same pipeline...")
     example_data = [20.0, 22.0, 24.0, 21.5, 23.0]
     manager.process_data(example_data)
+
+    print()
+    print("=== Pipeline Chaining Demo ===")
+    print()
+    
+    chain_result = manager.chain_pipelines("user,login,12:00", [csv_pipe])
+    print(f"Chaining result : {chain_result}")
+
+
 
     # test (les errures ne sont pas comptes ?!)
     print(f"\n\nManager stats: {manager.stats}")
