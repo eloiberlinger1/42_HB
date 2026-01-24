@@ -87,7 +87,15 @@ class OutputStage:
 
     def process(self, data: Any) -> Any:
         if isinstance(data, dict):
-            print("Transform: Enriched with metadata and validation")
+            sensor = data.get("sensor", "unknown")
+            val = data.get("value", "0")
+            if data.get("nexus_verified"):
+                status = "Normal range"  
+            else:
+                status = "Unverified"
+                
+            return f"Processed {sensor} reading: {val}°C ({status})"
+        
             data["output_verified"] = True
         else:
             raise TypeError("Input must be a dict")
@@ -300,13 +308,13 @@ def nexus_pipeline() -> None:
 
     print("\n=== Multi-Format Data Processing ===")
     print("Processing JSON data through pipeline...")
-    example_data = {"sensor": "temp", "value": 23.5, "unit": "C"}
+    example_data = {"sensor": "temperature", "value": 23.5, "unit": "C"}
     manager.process_data(example_data)
 
-    print(
-        "Output: Processed temperature reading: "
-        f"{example_data['value']}°{example_data['unit']} (Normal range)"
-    )
+    # print(
+    #     "Output: Processed temperature reading: "
+    #     f"{example_data['value']}°{example_data['unit']} (Normal range)"
+    # )
 
     print("Processing CSV data through same pipeline...")
     example_data = "user,action,timestamp"

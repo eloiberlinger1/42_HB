@@ -95,7 +95,7 @@ class TransactionStream(DataStream):
     Docstring for TransactionStream
     """
 
-    def __init__(self, stream_id):
+    def __init__(self, stream_id: str) -> None:
         type = " Financial Data"
         super().__init__(stream_id, type)
 
@@ -131,7 +131,7 @@ class EventStream(DataStream):
     Docstring for EventStream
     """
 
-    def __init__(self, stream_id):
+    def __init__(self, stream_id: str) -> None:
         type = "System Events"
         self.errors_counter = 0
         super().__init__(stream_id, type)
@@ -158,7 +158,7 @@ class StreamProcessor:
     Manages multiple DataStream based classes
     """
 
-    def __init__(self, batch: any):
+    def __init__(self, batch: any) -> None:
         """
         Docstring for __init__
 
