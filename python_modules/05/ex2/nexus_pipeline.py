@@ -47,16 +47,16 @@ class InputStage:
             if data["value"] is None:
                 raise TypeError(f"Undefined values: {data}")
 
-        data["input_verified"] = True
+        if isinstance(data, dict):
+            data["source_type"] = "JSON"
 
-        # CSV case
         if isinstance(data, str):
-            print(f"data is an str instance \n\n\n{data}")
             parts = data.split(",")
             if len(parts) >= 2:
                 data = {"sensor": parts[0], "value": parts[1]}
             else:
                 data = {"raw_content": data}
+            data["source_type"] = "CSV"
 
         return data
 
@@ -69,8 +69,8 @@ class TransformStage:
     def process(self, data: Any) -> Any:
         """
         Processing the Transform stage
-        adds nexus_verified as true if the data is succesfully
-        recognised as a dict.
+        adds nexus_verified as true if the data is successfully
+        recognized as a dict.
         """
         if isinstance(data, dict):
             data["nexus_verified"] = True
@@ -86,17 +86,23 @@ class OutputStage:
     """
 
     def process(self, data: Any) -> Any:
+        print(data)
+
         if isinstance(data, dict):
-            sensor = data.get("sensor", "unknown")
-            val = data.get("value", "0")
-            if data.get("nexus_verified"):
-                status = "Normal range"  
-            else:
-                status = "Unverified"
+
+            if data["source_type"] == "JSON":
+                sensor = data.get("sensor", "unknown")
+                val = data.get("value", "0")
+                if data.get("nexus_verified"):
+                    status = "Normal range"  
+                else:
+                    status = "Unverified"
                 
-            return f"Processed {sensor} reading: {val}°C ({status})"
-        
-            data["output_verified"] = True
+                return f"Processed {sensor} reading: {val}°C ({status})"
+            
+            elif data["source_type"] == "CSV":
+                return f"User activity logged: 1 actions processed" 
+                
         else:
             raise TypeError("Input must be a dict")
 
@@ -150,14 +156,10 @@ class JSONAdapter(ProcessingPipeline):
         print(f"Input: '{data}'")
         print(f"Processing JSON data through pipeline {self.pipeline_id}...")
 
-        try:
-            if not isinstance(data, dict):
-                raise TypeError("JSONAdapter expect a dict")
+        if not isinstance(data, dict):
+            raise TypeError("JSONAdapter expect a dict")
 
-            return self._run_pipeline(data)
-
-        except Exception as e:
-            return f"Error in pipeline : {e}"
+        return self._run_pipeline(data)
 
 
 class CSVAdapter(ProcessingPipeline):
@@ -181,14 +183,10 @@ class CSVAdapter(ProcessingPipeline):
         print(f"Input: '{data}'")
         print(f"Processing CSV data through pipeline {self.pipeline_id}...")
 
-        try:
-            if not isinstance(data, str):
-                raise TypeError("CSVAdapter expect a string in CSV format")
+        if not isinstance(data, str):
+            raise TypeError("CSVAdapter expect a string in CSV format")
 
-            return self._run_pipeline(data)
-
-        except Exception as e:
-            return f"Error in pipeline : {e}"
+        return self._run_pipeline(data)
 
 
 class StreamAdapter(ProcessingPipeline):
@@ -213,7 +211,7 @@ class StreamAdapter(ProcessingPipeline):
 
 # ################################################
 #
-#             NEXUS CLASSE
+#             NEXUS CLASS
 #
 # ################################################
 
@@ -253,7 +251,7 @@ class NexusManager:
         self, data: Any, pipeline_list: List[ProcessingPipeline]
     ) -> Any:
         """
-        Démontre le chaînage : Raw -> Processed -> Analyzed
+        Shows le chain system : Raw -> Processed -> Analyzed
         """
         current_data = data
         print("=== Pipeline Chaining Active ===")
@@ -291,10 +289,9 @@ def nexus_pipeline() -> None:
 
     manager.add_pipeline(json_pipe)
 
-    # Exécution réelle
     test_data = {"sensor": "temp", "value": 23.5}
-    manager.process_data(test_data)  # Cela va déclencher toute la chaîne.
-
+    manager.process_data(test_data)
+    
     # Configuration du Pipeline CSV
     csv_pipe = CSVAdapter("CSV_LOG_01")
     csv_pipe.add_stage(InputStage())
@@ -302,43 +299,27 @@ def nexus_pipeline() -> None:
     csv_pipe.add_stage(OutputStage())
 
     # Ajout des pipelines au Manager (Polymorphisme)
-    manager.add_pipeline(json_pipe)
     manager.add_pipeline(csv_pipe)
     manager.process_data(test_data)
 
     print("\n=== Multi-Format Data Processing ===")
+    print()
     print("Processing JSON data through pipeline...")
     example_data = {"sensor": "temperature", "value": 23.5, "unit": "C"}
     manager.process_data(example_data)
 
-    # print(
-    #     "Output: Processed temperature reading: "
-    #     f"{example_data['value']}°{example_data['unit']} (Normal range)"
-    # )
-
+    print()
     print("Processing CSV data through same pipeline...")
     example_data = "user,action,timestamp"
+    manager.process_data(example_data)
 
-    # test (les errures ne sont pas comptes ?!)
-    print(f"\n\nManager stats: {manager.stats}")
-
-    print("Transform: Parsed and structured data")
-    print("Output: User activity logged: 1 actions processed")
+    print()
     print("Processing Stream data through same pipeline...")
-    print("Input: Real-time sensor stream")
-    print("Transform: Aggregated and filtered")
-    print("Output: Stream summary: 5 readings, avg: 22.1°C")
-    print("=== Pipeline Chaining Demo ===")
-    print("Pipeline A -> Pipeline B -> Pipeline C")
-    print("Data flow: Raw -> Processed -> Analyzed -> Stored")
-    print("Chain result: 100 records processed through 3-stage pipeline")
-    print("Performance: 95%% efficiency, 0.2s total processing time")
-    print("=== Error Recovery Test ===")
-    print("Simulating pipeline failure...")
-    print("Error detected in Stage 2: Invalid data format")
-    print("Recovery initiated: Switching to backup processor")
-    print("Recovery successful: Pipeline restored, processing resumed")
-    print("Nexus Integration complete. All systems operational.")
+    example_data = [20.0, 22.0, 24.0, 21.5, 23.0]
+    manager.process_data(example_data)
+
+# test (les errures ne sont pas comptes ?!)
+    print(f"\n\nManager stats: {manager.stats}")
 
 
 if __name__ == "__main__":
