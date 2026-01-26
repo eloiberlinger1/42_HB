@@ -96,7 +96,7 @@ class TransactionStream(DataStream):
     """
 
     def __init__(self, stream_id: str) -> None:
-        type = " Financial Data"
+        type = "Financial Data"
         super().__init__(stream_id, type)
 
     def process_batch(self, data_batch: List[Any]) -> str:
