@@ -158,7 +158,7 @@ class StreamProcessor:
     Manages multiple DataStream based classes
     """
 
-    def __init__(self, batch: any) -> None:
+    def __init__(self, batch: Any) -> None:
         """
         Docstring for __init__
 

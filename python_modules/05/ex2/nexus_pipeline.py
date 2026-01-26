@@ -57,11 +57,11 @@ class InputStage:
             else:
                 data = {"raw_content": data}
             data["source_type"] = "CSV"
-        
+
         elif isinstance(data, list):
             data = {"data": data}
             data["source_type"] = "Stream"
-            
+
         return data
 
 
@@ -96,21 +96,23 @@ class OutputStage:
                 sensor = data.get("sensor", "unknown")
                 val = data.get("value", "0")
                 if data.get("nexus_verified"):
-                    status = "Normal range"  
+                    status = "Normal range"
                 else:
                     status = "Unverified"
-                
+
                 return f"Processed {sensor} reading: {val}°C ({status})"
-            
+
             elif data["source_type"] == "CSV":
                 return "User activity logged: 1 actions processed"
-                
+
             elif data["source_type"] == "Stream":
                 length = len(data["data"])
                 average = sum(data["data"]) / length
-                return (f"Output: Stream summary: {length}"
-                        f" readings, avg: {average}°C")
-            
+                return (
+                    f"Output: Stream summary: {length}"
+                    f" readings, avg: {average}°C"
+                )
+
         else:
             raise TypeError("Input must be a dict")
 
@@ -331,11 +333,9 @@ def nexus_pipeline() -> None:
     print()
     print("=== Pipeline Chaining Demo ===")
     print()
-    
+
     chain_result = manager.chain_pipelines("user,login,12:00", [csv_pipe])
     print(f"Chaining result : {chain_result}")
-
-
 
     # test (les errures ne sont pas comptes ?!)
     print(f"\n\nManager stats: {manager.stats}")
