@@ -1,10 +1,3 @@
+from .basic import lead_to_gold, stone_to_gem
+from .advanced import philosophers_stone, elixir_of_life
 
-from alchemy.elements import create_fire, create_earth
-
-
-def lead_to_gold():
-    return "Lead transmuted to gold using [fire_result]"
-
-
-def stone_to_gem():
-    return "Stone transmuted to gem using [earth_result]"
