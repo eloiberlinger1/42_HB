@@ -24,4 +24,4 @@ def wisdom_potion():
     result = mix[0]
     for i in mix[1:]:
         result += " and "+i
-    return f"Wisdom potion brewed with all elements: {result}"
+    return f"Healing potion brewed with: {result}"
