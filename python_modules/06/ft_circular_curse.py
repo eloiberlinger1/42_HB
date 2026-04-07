@@ -2,6 +2,7 @@
 
 from alchemy.grimoire import validate_ingredients, record_spell
 
+
 def ft_circular_curse() -> None:
     """late import to avoir infinite imports"""
     try:
