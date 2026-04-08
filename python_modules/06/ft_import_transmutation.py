@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-import alchemy.elements
-from alchemy.elements import create_water
+import elements
+from elements import create_water
 from alchemy.potions import wisdom_potion as heal, strength_potion
-from alchemy.elements import create_earth, create_fire
+from elements import create_earth, create_fire
 
 
 def ft_import_transmutation() -> None:
@@ -13,7 +13,7 @@ def ft_import_transmutation() -> None:
         print()
         print("Method 1 - Full module import:")
         print("alchemy.elements.create_fire(): "
-              f"{alchemy.elements.create_fire()}")
+              f"{elements.create_fire()}")
         print()
         print("Method 2 - Specific function import:")
         print(f"create_water(): {create_water()}")
