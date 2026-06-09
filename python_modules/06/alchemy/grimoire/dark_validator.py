@@ -1,8 +1,8 @@
-from .light_spellbook import light_spell_allowed_ingredients
+from .dark_spellbook import dark_spell_allowed_ingredients
 
 
 def validate_ingredients(ingredients: str):
-    allowed = light_spell_allowed_ingredients()
+    allowed = dark_spell_allowed_ingredients()
     if (ingredients in allowed):
         return "VALID"
     else:
