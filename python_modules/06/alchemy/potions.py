@@ -2,7 +2,7 @@ from alchemy.elements import create_air, create_earth
 from elements import create_fire, create_water
 
 
-def healing_function():
+def healing_potion():
     return f"Healing potion brewed with {create_air()} and {create_earth()}"
 
 
