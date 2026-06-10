@@ -1,0 +1,9 @@
+one generic class creature that can attack
+
+attack type classes inherit from creature : 
+    Flameling, Pyrodon, Aquabub, and Torragon
+
+CreatureFactory abstract class
+
+FlameFactory and AquaFactory inherit from CreatureFactory
+
