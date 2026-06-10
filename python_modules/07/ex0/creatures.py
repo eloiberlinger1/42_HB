@@ -11,7 +11,7 @@ class Flameling(Creature):
 
 class Pyrodon(Creature):
     def __init__(self, name: str) -> None:
-        super().__init__(name, "Fire")
+        super().__init__(name, "Fire/Flying")
 
     def attack(self) -> str:
         return f"{self.name} uses Flamethrower!"
