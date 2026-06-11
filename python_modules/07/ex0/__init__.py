@@ -1,4 +1,3 @@
-from .creatures import Flameling, Pyrodon, Aquabub, Torrential
 from .factory_base import AbstractCreatureFactory
 from .factory import (
     FireCreatureFactory,
@@ -6,10 +5,6 @@ from .factory import (
 )
 
 __all__ = [
-    'Flameling',
-    'Pyrodon',
-    'Aquabub',
-    'Torrential',
     'FireCreatureFactory',
     'WaterCreatureFactory',
     'AbstractCreatureFactory'
