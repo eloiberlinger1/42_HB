@@ -1,4 +1,4 @@
-from ex0 import AbstractCreatureFactory
+from ex0 import CreatureFactory
 import ex0.factory as factory
 
 
@@ -7,7 +7,7 @@ aqua_fact = factory.WaterCreatureFactory()
 
 
 def initiate_creature(
-    factory: AbstractCreatureFactory,
+    factory: CreatureFactory,
     basename: str,
     evolvedname: str
 ) -> None:
@@ -24,8 +24,8 @@ initiate_creature(aqua_fact, "Aquabub", "Torragon")
 
 
 def make_them_fight(
-        factory1: AbstractCreatureFactory,
-        factory2: AbstractCreatureFactory
+        factory1: CreatureFactory,
+        factory2: CreatureFactory
 ) -> None:
     print("Testing battle")
     flameling = factory1.create_base_creature("flameling")

@@ -1,3 +1,4 @@
+import ex0
 from abc import ABC, abstractmethod
 
 
@@ -14,3 +15,8 @@ class TransformCapability(ABC):
     def __init__(self):
         pass
 
+
+class HealingCreatureFactory(ex0.CreatureFactory):
+    def __init__(self):
+        pass
+    

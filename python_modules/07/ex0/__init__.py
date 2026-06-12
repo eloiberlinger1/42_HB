@@ -1,4 +1,4 @@
-from .factory_base import AbstractCreatureFactory
+from .factory_base import CreatureFactory
 from .factory import (
     FireCreatureFactory,
     WaterCreatureFactory,
@@ -7,7 +7,7 @@ from .factory import (
 __all__ = [
     'FireCreatureFactory',
     'WaterCreatureFactory',
-    'AbstractCreatureFactory'
+    'CreatureFactory'
 ]
 
 __version__ = "1.0.0"

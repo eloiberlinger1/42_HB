@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from .creature_base import Creature
 
 
-class AbstractCreatureFactory(ABC):
+class CreatureFactory(ABC):
 
     @abstractmethod
     def create_base_creature(self, name: str) -> Creature:

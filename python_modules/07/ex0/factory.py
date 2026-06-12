@@ -1,9 +1,9 @@
-from .factory_base import AbstractCreatureFactory
+from .factory_base import CreatureFactory
 from .creature_base import Creature
 from .creatures import Flameling, Pyrodon, Aquabub, Torrential
 
 
-class FireCreatureFactory(AbstractCreatureFactory):
+class FireCreatureFactory(CreatureFactory):
     def create_base_creature(self, name: str) -> Creature:
         return Flameling(name)
 
@@ -11,7 +11,7 @@ class FireCreatureFactory(AbstractCreatureFactory):
         return Pyrodon(name)
 
 
-class WaterCreatureFactory(AbstractCreatureFactory):
+class WaterCreatureFactory(CreatureFactory):
     def create_base_creature(self, name: str) -> Creature:
         return Aquabub(name)
 
