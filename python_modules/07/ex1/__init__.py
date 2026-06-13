@@ -1,18 +1,15 @@
-from .capabilites import HealCapability, TransformCapability
-from .creatures import (
-    Sproutling,
-    Bloomelle,
-    Shiftling,
-    Morphagon
+from .capabilites import (
+    HealCapability,
+    TransformCapability,
+    HealingCreatureFactory,
+    TransformCreatureFactory
 )
 
 __all__ = [
     'HealCapability',
     'TransformCapability',
-    'Sproutling',
-    'Bloomelle',
-    'Shiftling',
-    'Morphagon'
+    'HealingCreatureFactory',
+    'TransformCreatureFactory'
 ]
 
 __version__ = "1.0.0"
