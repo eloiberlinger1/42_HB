@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 
 
 class HealCapability(ABC):
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
     @abstractmethod
@@ -14,7 +14,7 @@ class HealCapability(ABC):
 
 
 class TransformCapability(ABC):
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
     @abstractmethod
@@ -28,9 +28,9 @@ class TransformCapability(ABC):
 
 class HealingCreatureFactory(CreatureFactory):
 
-    def __init__(self):
+    def __init__(self) -> None:
         pass
-    
+
     def create_base_creature(self, name: str) -> Creature:
         from .creatures import Sproutling
         return Sproutling(name)
@@ -42,9 +42,9 @@ class HealingCreatureFactory(CreatureFactory):
 
 class TransformCreatureFactory(CreatureFactory):
 
-    def __init__(self):
+    def __init__(self) -> None:
         pass
-    
+
     def create_base_creature(self, name: str) -> Creature:
         from .creatures import Shiftling
         return Shiftling(name)
@@ -52,4 +52,3 @@ class TransformCreatureFactory(CreatureFactory):
     def create_evolved_creature(self, name: str) -> Creature:
         from .creatures import Morphagon
         return Morphagon(name)
-    
