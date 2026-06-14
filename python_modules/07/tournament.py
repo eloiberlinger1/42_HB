@@ -1,38 +1,90 @@
 from typing import List, Tuple
 
-from ex1 import (
-    HealingCreatureFactory,
-    TransformCreatureFactory,
-    HealCapability,
-    TransformCapability
-)
 from ex0 import (
     CreatureFactory,
     FireCreatureFactory,
     WaterCreatureFactory
 )
-import ex2
+from ex0.creature_base import Creature
+from ex1 import (
+    HealingCreatureFactory,
+    TransformCreatureFactory,
+)
+from ex2 import (
+    BattleStrategy,
+    NormalStrategy,
+    AggressiveStrategy,
+    DefensiveStrategy
+)
 
-def run_tournament(opponents: List[Tuple[CreatureFactory, BattleStrategy]])
 
-heal_fact = HealingCreatureFactory()
-transfo_fact = TransformCreatureFactory()
-flame_fact = FireCreatureFactory()
-water_fact = WaterCreatureFactory()
+def run_tournament(opponents:
+                   List[Tuple[CreatureFactory, BattleStrategy]]) -> None:
+    """
+    takes a list of opponents (Factory, Strategy), and make them fight.
+    """
+    print("*** Tournament ***")
+    print(f"{len(opponents)} opponents involved")
 
-print("Tournament 0 (basic)")
+    fighters: List[Tuple[Creature, BattleStrategy]] = []
+
+    for index, (factory, strategy) in enumerate(opponents):
+        if isinstance(factory, FireCreatureFactory):
+            name = "Flameling"
+        elif isinstance(factory, WaterCreatureFactory):
+            name = "Aquabub"
+        elif isinstance(factory, HealingCreatureFactory):
+            name = "Sproutling"
+        else:
+            name = "Shiftling"
+
+        creature = factory.create_base_creature(name)
+        fighters.append((creature, strategy))
+
+    for i in range(len(fighters)):
+        for j in range(i + 1, len(fighters)):
+            c1, strat1 = fighters[i]
+            c2, strat2 = fighters[j]
+
+            print("* Battle *")
+            print(c1.describe())
+            print("VS.")
+            print(c2.describe())
+            print("now fight!")
+
+            try:
+                print(strat1.act(c1))
+                print(strat2.act(c2))
+
+            except ValueError as e:
+                print(f"Battle error, aborting tournament: {e}")
+                return
 
 
-print("[ (Flameling+Normal), (Healing+Defensive) ]")
+if __name__ == "__main__":
+    flame_fact = FireCreatureFactory()
+    water_fact = WaterCreatureFactory()
+    heal_fact = HealingCreatureFactory()
+    transfo_fact = TransformCreatureFactory()
 
-print("*** Tournament ***")
-print("2 opponents involved")
+    normal = NormalStrategy()
+    aggressive = AggressiveStrategy()
+    defensive = DefensiveStrategy()
 
-print("* Battle *")
+    print("Tournament (basic)")
+    print("[ (Flameling+Normal), (Healing+Defensive) ]")
+    opponents_1 = [
+        (flame_fact, normal),
+        (heal_fact, defensive)
+    ]
+    run_tournament(opponents_1)
 
-f = flame_fact.create_evolved_creature("test flame")
-print("vs.")
-h = heal_fact.create_evolved_creature("test heal")
+    print("\n" + "="*40 + "\n")
 
-print("now fight!")
-
+    print("Tournament 1 (error)")
+    print("[ (Flameling+Aggressive), (Healing+Defensive) ]")
+    opponents_2 = [
+        (flame_fact, aggressive),  # Invalide !
+        (heal_fact, defensive)
+    ]
+    run_tournament(opponents_2)

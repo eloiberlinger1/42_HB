@@ -34,8 +34,12 @@ class AggressiveStrategy(BattleStrategy):
 
     def act(self, creature: Creature) -> str:
         if not self.is_valid(creature):
-            raise ValueError(f"Invalid Creature '{creature.name}' for this aggressive strategy")
-        
+            raise ValueError(
+                "Invalid Creature ",
+                creature.name,
+                " for this aggressive strategy"
+            )
+
         assert isinstance(creature, TransformCapability)
         res = []
         res.append(creature.transform())
@@ -52,8 +56,12 @@ class DefensiveStrategy(BattleStrategy):
 
     def act(self, creature: Creature) -> str:
         if not self.is_valid(creature):
-            raise ValueError(f"Invalid Creature '{creature.name}' for this defensive strategy")
-        
+            raise ValueError(
+                "Invalid Creature ",
+                creature.name,
+                " for this defensive strategy"
+            )
+
         assert isinstance(creature, HealCapability)
         res = []
         res.append(creature.attack())

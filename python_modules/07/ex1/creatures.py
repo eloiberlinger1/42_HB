@@ -28,7 +28,7 @@ class Bloomelle(Creature, HealCapability):
 
     def describe(self) -> None:
         return super().describe()
-    
+
 
 class Shiftling(Creature, TransformCapability):
     def __init__(self, name: str) -> None:

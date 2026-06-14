@@ -2,14 +2,15 @@ from .strategies import (
     BattleStrategy,
     NormalStrategy,
     AggressiveStrategy,
-    
+    DefensiveStrategy
+
 )
 
 __all__ = [
-    'HealCapability',
-    'TransformCapability',
-    'HealingCreatureFactory',
-    'TransformCreatureFactory'
+    'BattleStrategy',
+    'NormalStrategy',
+    'AggressiveStrategy',
+    'DefensiveStrategy'
 ]
 
 __version__ = "1.0.0"
