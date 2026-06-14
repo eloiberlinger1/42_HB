@@ -6,6 +6,9 @@ class Sproutling(Creature, HealCapability):
     def __init__(self, name: str) -> None:
         super().__init__(name, "Grass")
 
+    def describe(self) -> None:
+        return super().describe()
+
     def attack(self) -> str:
         return f"{self.name} uses Vine Whip!"
 
@@ -23,6 +26,9 @@ class Bloomelle(Creature, HealCapability):
     def heal(self) -> str:
         return f"{self.name} heals itself and others for a large amount"
 
+    def describe(self) -> None:
+        return super().describe()
+    
 
 class Shiftling(Creature, TransformCapability):
     def __init__(self, name: str) -> None:
@@ -43,6 +49,9 @@ class Shiftling(Creature, TransformCapability):
         else:
             return f"{self.name} attacks normally."
 
+    def describe(self) -> None:
+        return super().describe()
+
 
 class Morphagon(Creature, TransformCapability):
     def __init__(self, name: str) -> None:
@@ -62,3 +71,6 @@ class Morphagon(Creature, TransformCapability):
             return f"{self.name} unleashes a devastating morph strike!"
         else:
             return f"{self.name} attacks normally."
+
+    def describe(self) -> None:
+        return super().describe()

@@ -6,11 +6,15 @@ class Creature(ABC):
     def __init__(self, name: str, creature_type: str) -> None:
         self.name: str = name
         self.creature_type: str = creature_type
-        print(self)
 
     @abstractmethod
     def attack(self) -> str:
         """To be define more exactely for each creature"""
+        pass
+
+    @abstractmethod
+    def describe(self) -> None:
+        print(self)
         pass
 
     def __str__(self):

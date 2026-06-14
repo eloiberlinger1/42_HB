@@ -1,3 +1,5 @@
+from typing import List, Tuple
+
 from ex1 import (
     HealingCreatureFactory,
     TransformCreatureFactory,
@@ -9,7 +11,9 @@ from ex0 import (
     FireCreatureFactory,
     WaterCreatureFactory
 )
+import ex2
 
+def run_tournament(opponents: List[Tuple[CreatureFactory, BattleStrategy]])
 
 heal_fact = HealingCreatureFactory()
 transfo_fact = TransformCreatureFactory()

@@ -19,6 +19,7 @@ def initiate_creatures(
     print("Testing Creature with healing capability")
     print("base:")
     c = factory.create_base_creature(basename)
+    c.describe()
     print(c.attack())
     if (isinstance(c, HealCapability)):
         print(c.heal())

@@ -13,8 +13,10 @@ def initiate_creature(
 ) -> None:
     print("Testing factory")
     creature = factory.create_base_creature(basename)
+    creature.describe()
     print(f"{creature.attack()}")
     creature = factory.create_evolved_creature(evolvedname)
+    creature.describe()
     print(f"{creature.attack()}")
     print()
 
@@ -29,8 +31,10 @@ def make_them_fight(
 ) -> None:
     print("Testing battle")
     flameling = factory1.create_base_creature("flameling")
+    flameling.describe()
     print("vs.")
     aquabub = factory1.create_base_creature("aquabub")
+    aquabub.describe()
     flameling.attack()
     aquabub.attack()
 
