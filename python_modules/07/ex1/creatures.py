@@ -7,7 +7,7 @@ class Sproutling(Creature, HealCapability):
         super().__init__(name, "Grass")
 
     def attack(self) -> str:
-        return f"{self.name} uses attack!"
+        return f"{self.name} uses Vine Whip!"
 
     def heal(self) -> str:
         return f"{self.name} heals itself for a small amount"
