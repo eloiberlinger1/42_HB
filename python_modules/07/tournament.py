@@ -84,7 +84,18 @@ if __name__ == "__main__":
     print("Tournament 1 (error)")
     print("[ (Flameling+Aggressive), (Healing+Defensive) ]")
     opponents_2 = [
-        (flame_fact, aggressive),  # Invalide !
+        (flame_fact, aggressive),
         (heal_fact, defensive)
     ]
     run_tournament(opponents_2)
+
+    print("\n" + "="*40 + "\n")
+
+    print("Tournament 2 (multiple)")
+    print("[ (Aquabub+Normal), (Healing+Defensive), (Transform+Aggressive) ]")
+    opponents_3 = [
+        (water_fact, normal),
+        (heal_fact, defensive),
+        (transfo_fact, aggressive)
+    ]
+    run_tournament(opponents_3)

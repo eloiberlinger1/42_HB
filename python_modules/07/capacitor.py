@@ -16,7 +16,6 @@ def initiate_creatures(
     basename: str,
     evolved_name: str
 ) -> None:
-    print("Testing Creature with healing capability")
     print("base:")
     c = factory.create_base_creature(basename)
     c.describe()
@@ -39,5 +38,7 @@ def initiate_creatures(
         print(c.revert())
 
 
+print("Testing Creature with healing capability")
 initiate_creatures(heal_fact, "Sproutling", "Bloomelle")
+print("Testing Creature with transform capability")
 initiate_creatures(transfo_fact, "Shiftling", "Morphagon")
