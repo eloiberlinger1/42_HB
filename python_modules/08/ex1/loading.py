@@ -10,26 +10,22 @@ required = {
     "matplotlib.pyplot": "Visualization ready",
 }
 
-all_imports_ok = True
-
 for p, m in required.items():
     try:
         ip = importlib.import_module(p)
-        pv = getattr(ip, "__verison__", "Available")
+        pv = getattr(ip, "__version__", "Available")
         print(f"[OK] {p} ({pv}) - {m}")
 
     except ImportError:
-        print(f"Missing required package : {p}")
+        print(f"Missing required package : {p}\n\n")
         print(
-            "Please install with pip :"
-            "> pip install -r requirements.txt"
-            "Or Poetry :"
-            "> poetry install"
+            "Please install with pip :\n"
+            "> pip install -r requirements.txt\n\n"
+            "Or Poetry :\n"
+            "> poetry install\n"
+            "> poetry run python loading.py\n\n"
         )
-        all_imports_ok = False
-
-if not all_imports_ok:
-    sys.exit(1)
+        sys.exit(1)
 
 import pandas as pd
 import numpy as np
