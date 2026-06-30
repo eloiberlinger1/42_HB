@@ -63,9 +63,12 @@ def main() -> None:
     try:
         SpaceStation(**invalid_demo_data)
     except ValidationError as e:
-        print(e)
+        error_msg = e.errors()[0]["msg"]
 
-    print()
+        if "Value error, " in error_msg:
+            error_msg = error_msg.replace("Value error, ", "")
+
+        print(error_msg)
 
 
 if __name__ == "__main__":

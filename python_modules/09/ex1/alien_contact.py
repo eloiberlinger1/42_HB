@@ -104,7 +104,12 @@ def main() -> None:
     try:
         AlienContact(**invalid_data)
     except ValidationError as e:
-        print(e)
+        error_msg = e.errors()[0]["msg"]
+
+        if "Value error, " in error_msg:
+            error_msg = error_msg.replace("Value error, ", "")
+
+        print(error_msg)
 
 
 if __name__ == "__main__":
