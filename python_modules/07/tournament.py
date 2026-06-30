@@ -1,10 +1,6 @@
 from typing import List, Tuple
 
-from ex0 import (
-    CreatureFactory,
-    FireCreatureFactory,
-    WaterCreatureFactory
-)
+from ex0 import CreatureFactory, FireCreatureFactory, WaterCreatureFactory
 from ex0.creature_base import Creature
 from ex1 import (
     HealingCreatureFactory,
@@ -14,12 +10,13 @@ from ex2 import (
     BattleStrategy,
     NormalStrategy,
     AggressiveStrategy,
-    DefensiveStrategy
+    DefensiveStrategy,
 )
 
 
-def run_tournament(opponents:
-                   List[Tuple[CreatureFactory, BattleStrategy]]) -> None:
+def run_tournament(
+    opponents: List[Tuple[CreatureFactory, BattleStrategy]],
+) -> None:
     """
     takes a list of opponents (Factory, Strategy), and make them fight.
     """
@@ -47,9 +44,9 @@ def run_tournament(opponents:
             c2, strat2 = fighters[j]
 
             print("* Battle *")
-            print(c1.describe())
+            c1.describe()
             print("VS.")
-            print(c2.describe())
+            c2.describe()
             print("now fight!")
 
             try:
@@ -73,29 +70,23 @@ if __name__ == "__main__":
 
     print("Tournament (basic)")
     print("[ (Flameling+Normal), (Healing+Defensive) ]")
-    opponents_1 = [
-        (flame_fact, normal),
-        (heal_fact, defensive)
-    ]
+    opponents_1 = [(flame_fact, normal), (heal_fact, defensive)]
     run_tournament(opponents_1)
 
-    print("\n" + "="*40 + "\n")
+    print("\n" + "=" * 40 + "\n")
 
     print("Tournament 1 (error)")
     print("[ (Flameling+Aggressive), (Healing+Defensive) ]")
-    opponents_2 = [
-        (flame_fact, aggressive),
-        (heal_fact, defensive)
-    ]
+    opponents_2 = [(flame_fact, aggressive), (heal_fact, defensive)]
     run_tournament(opponents_2)
 
-    print("\n" + "="*40 + "\n")
+    print("\n" + "=" * 40 + "\n")
 
     print("Tournament 2 (multiple)")
     print("[ (Aquabub+Normal), (Healing+Defensive), (Transform+Aggressive) ]")
     opponents_3 = [
         (water_fact, normal),
         (heal_fact, defensive),
-        (transfo_fact, aggressive)
+        (transfo_fact, aggressive),
     ]
     run_tournament(opponents_3)
