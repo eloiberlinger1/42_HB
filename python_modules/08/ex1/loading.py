@@ -27,10 +27,10 @@ for p, m in required.items():
         )
         sys.exit(1)
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as mp
-import requests
+import pandas as pd  # noqa: E402
+import numpy as np  # noqa: E402
+import matplotlib.pyplot as mp  # noqa: E402
+import requests  # noqa: E402
 
 
 def fetch_data() -> list:

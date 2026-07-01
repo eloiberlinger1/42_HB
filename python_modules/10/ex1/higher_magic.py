@@ -44,7 +44,7 @@ def spell_sequence(spells: list[Callable]) -> Callable:
     return result
 
 
-def main():
+def main() -> None:
     print("Testing spell combiner...")
 
     test_values = [11, 25, 17]
@@ -57,8 +57,13 @@ def main():
         return f"Heal restores {target} for {power} HP"
 
     comb_spell_result = spell_combiner(fireball, heal)
-    comb_spell_result = comb_spell_result(test_targets[0], test_values[0])
-    print(f"Combined spell result: {comb_spell_result}")
+    spell_output = comb_spell_result(test_targets[0], test_values[0])
+    print(f"Combined spell result: {spell_output[0]}, {spell_output[1]}\n")
+
+    print("Testing power amplifier...")
+    mega_fireball = power_amplifier(fireball, 3)
+    print(f"Original power 10 description -> {fireball('Dragon', 10)}")
+    print(f"Amplified power 10 description -> {mega_fireball('Dragon', 10)}")
 
 
 if __name__ == "__main__":
