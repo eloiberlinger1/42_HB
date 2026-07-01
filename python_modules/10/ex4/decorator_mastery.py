@@ -1,6 +1,6 @@
 import functools
-from typing import Callable, Any
 import time
+from typing import Any, Callable
 
 
 def spell_timer(func: Callable) -> Callable:
@@ -28,7 +28,7 @@ def power_validator(min_power: int) -> Callable:
             if power is None and args:
                 if len(args) >= 3 and hasattr(args[0], "cast_spell"):
                     power = args[2]
-                else:
+                elif len(args) > 0:
                     power = args[0]
 
             if power is not None and power >= min_power:
@@ -41,9 +41,29 @@ def power_validator(min_power: int) -> Callable:
     return decorator
 
 
-"""
 def retry_spell(max_attempts: int) -> Callable:
-    pass
+
+    def decorator(func: Callable) -> Callable:
+
+        @functools.wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+
+            for attempt in range(1, max_attempts + 1):
+
+                try:
+                    return func(*args, **kwargs)
+                except Exception:
+                    print(f"Spell failed, retrying {attempt}/{max_attempts}")
+
+            return f"Spell casting failed after {max_attempts} attempts"
+     
+        return wrapper
+
+    return decorator
+
+
+
+"""
 
 
 class MageGuild:
@@ -63,11 +83,27 @@ def fireball() -> str:
     return "Fireball cast!"
 
 
+@retry_spell(3)
+def spell_test(i: int) -> None:
+    
+    if (i == -1):
+        raise ValueError("Waaaaaaagh spelled !")
+    else:
+        print("It worked")
+
+
 def main() -> None:
     print("\nTesting spell timer...")
     print(f"Result: {fireball()}\n\n")
 
+    decorator_config = power_validator(10)
+    # cast_spell = decorator_config()
+    # testing to implement
+
     print("Testing retrying spell...")
+    retry_result = spell_test(-1)
+    print(f"Result: {retry_result}\n")
+
 
 
 if __name__ == "__main__":
