@@ -48,7 +48,7 @@ def retry_spell(max_attempts: int) -> Callable:
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
 
-            for attempt in range(1, max_attempts + 1):
+            for attempt in range(1, max_attempts):
 
                 try:
                     return func(*args, **kwargs)
@@ -56,25 +56,26 @@ def retry_spell(max_attempts: int) -> Callable:
                     print(f"Spell failed, retrying {attempt}/{max_attempts}")
 
             return f"Spell casting failed after {max_attempts} attempts"
-     
+
         return wrapper
 
     return decorator
-
-
-
-"""
 
 
 class MageGuild:
 
     @staticmethod
     def validate_mage_name(name: str) -> bool:
-        pass
+        alpha_spaces_only = all(
+            char.isalpha() or char.isspace() for char in name
+        )
+        if len(name) >= 3 and alpha_spaces_only:
+            return True
+        return False
 
+    @power_validator(10)
     def cast_spell(self, spell_name: str, power: int) -> str:
-        pass
-"""
+        return f"Successfully cast {spell_name} with {power} power"
 
 
 @spell_timer
@@ -85,25 +86,45 @@ def fireball() -> str:
 
 @retry_spell(3)
 def spell_test(i: int) -> None:
-    
-    if (i == -1):
+
+    if i == -1:
         raise ValueError("Waaaaaaagh spelled !")
     else:
         print("It worked")
+
+
+"""
+@power_validator(10)
+def test_spell(power: int, cast_spell: str, target: str) -> None:
+    print("Spell done and checked with power validator !")
+"""
 
 
 def main() -> None:
     print("\nTesting spell timer...")
     print(f"Result: {fireball()}\n\n")
 
-    decorator_config = power_validator(10)
-    # cast_spell = decorator_config()
-    # testing to implement
+    # print("Testing power validator:")
+    # print(test_spell(5, "fire", "dragon"))
 
-    print("Testing retrying spell...")
+    print("\nTesting retrying spell...")
     retry_result = spell_test(-1)
-    print(f"Result: {retry_result}\n")
+    print(retry_result)
+    print("Waaaaaaagh spelled !\n")
 
+    test_powers = [14, 9, 20, 26]
+    spell_names = ["heal", "tsunami", "flash", "earthquake"]
+    mage_names = ["Casey", "Pho_enix", "Nova", "Kai", "Storm", "Ash"]
+
+    print("\n\nTesting MageGuild...")
+    mg_inst = MageGuild()
+
+    print(mg_inst.validate_mage_name(mage_names[0]))
+    print(mg_inst.validate_mage_name(mage_names[1]))
+    print(mg_inst.cast_spell(spell_names[0], test_powers[0]))
+    print(mg_inst.cast_spell(spell_names[1], test_powers[1]))
+
+    print()
 
 
 if __name__ == "__main__":

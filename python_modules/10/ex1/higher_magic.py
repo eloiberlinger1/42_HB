@@ -2,8 +2,12 @@
 
 from typing import Callable
 
+Spell = Callable[[str, int], str]
 
-def spell_combiner(spell1: Callable, spell2: Callable) -> Callable:
+
+def spell_combiner(
+    spell1: Spell, spell2: Spell
+) -> Callable[[str, int], tuple[str, str]]:
 
     def result(target: str, power: int) -> tuple[str, str]:
         return ((spell1(target, power)), (spell2(target, power)))
@@ -11,7 +15,7 @@ def spell_combiner(spell1: Callable, spell2: Callable) -> Callable:
     return result
 
 
-def power_amplifier(base_spell: Callable, multiplier: int) -> Callable:
+def power_amplifier(base_spell: Spell, multiplier: int) -> Spell:
 
     def result(target: str, power: int) -> str:
         return base_spell(target, power * multiplier)
@@ -19,7 +23,9 @@ def power_amplifier(base_spell: Callable, multiplier: int) -> Callable:
     return result
 
 
-def conditional_caster(condition: Callable, spell: Callable) -> Callable:
+def conditional_caster(
+    condition: Callable[[str, int], bool], spell: Spell
+) -> Spell:
 
     def result(target: str, power: int) -> str:
         if condition(target, power):
@@ -30,7 +36,9 @@ def conditional_caster(condition: Callable, spell: Callable) -> Callable:
     return result
 
 
-def spell_sequence(spells: list[Callable]) -> Callable:
+def spell_sequence(
+    spells: list[Spell],
+) -> Callable[[str, int], list[str]]:
 
     def result(target: str, power: int) -> list[str]:
         results = []

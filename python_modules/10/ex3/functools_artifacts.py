@@ -1,4 +1,5 @@
-from typing import Callable, Any
+from typing import Any
+from collections.abc import Callable
 import functools
 import operator
 
@@ -8,17 +9,16 @@ def spell_reducer(spells: list[int], operation: str) -> int:
     if not spells:
         return 0
 
-    operations = {
-        "add": operator.add,
-        "multiply": operator.mul,
-        "max": lambda a, b: a if a > b else b,
-        "min": lambda a, b: a if a < b else b,
-    }
-
-    if operation not in operations:
+    if operation == "add":
+        return functools.reduce(operator.add, spells)
+    elif operation == "multiply":
+        return functools.reduce(operator.mul, spells)
+    elif operation == "max":
+        return functools.reduce(max, spells)
+    elif operation == "min":
+        return functools.reduce(min, spells)
+    else:
         raise ValueError(f"Unknown operation: {operation}")
-
-    return functools.reduce(operations[operation], spells)
 
 
 def partial_enchanter(base_enchantment: Callable) -> dict[str, Callable]:
