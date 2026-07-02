@@ -44,7 +44,7 @@ def partial_enchanter(
 def memoized_fibonacci(n: int) -> int:
 
     if n < 0:
-        raise ValueError("n doit être un entier positif ou nul.")
+        raise ValueError("n must be positive or nul.")
     if n == 0:
         return 0
     if n == 1:
