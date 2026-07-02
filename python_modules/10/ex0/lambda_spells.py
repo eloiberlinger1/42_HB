@@ -1,12 +1,15 @@
 #! /usr/local/bin/python3
+from typing import Any
 
 
-def artifact_sorter(artifacts: list[dict]) -> list[dict]:
+def artifact_sorter(artifacts: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
     return sorted(artifacts, key=lambda par: par["power"], reverse=True)
 
 
-def power_filter(mages: list[dict], min_power: int) -> list[dict]:
+def power_filter(
+    mages: list[dict[str, Any]], min_power: int
+) -> list[dict[str, Any]]:
 
     return list(filter(lambda p: p["power"] >= min_power, mages))
 
@@ -15,7 +18,7 @@ def spell_transformer(spells: list[str]) -> list[str]:
     return list(map(lambda p: ("* " + p + " *"), spells))
 
 
-def mage_stats(mages: list[dict]) -> dict:
+def mage_stats(mages: list[dict[str, Any]]) -> dict[str, Any]:
     max_mage = max(mages, key=lambda p: p["power"])
     min_mage = min(mages, key=lambda p: p["power"])
     total_power = sum(m["power"] for m in mages)
@@ -39,7 +42,6 @@ def main() -> None:
         {"name": "Storm", "power": 89, "element": "earth"},
         {"name": "Nova", "power": 80, "element": "shadow"},
     ]
-
     artifacts = [  # noqa: F841
         {"name": "Light Prism", "power": 74, "type": "weapon"},
         {"name": "Light Prism", "power": 65, "type": "armor"},

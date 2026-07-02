@@ -21,15 +21,17 @@ def spell_reducer(spells: list[int], operation: str) -> int:
         raise ValueError(f"Unknown operation: {operation}")
 
 
-def partial_enchanter(base_enchantment: Callable) -> dict[str, Callable]:
+def partial_enchanter(
+    base_enchantment: Callable[[int, str], str],
+) -> dict[str, Callable[..., Any]]:
     """
     Allows to partially define an enchantement and let the
     user enter one or more parameters later when calling it
     """
 
     fire_enchant = functools.partial(base_enchantment, 50, "fire")
-    ice_enchant = functools.partial(base_enchantment, 50, "fire")
-    lightning_enchant = functools.partial(base_enchantment, 50, "fire")
+    ice_enchant = functools.partial(base_enchantment, 50, "ice")
+    lightning_enchant = functools.partial(base_enchantment, 50, "lightning")
 
     return {
         "fire": fire_enchant,
@@ -48,11 +50,7 @@ def memoized_fibonacci(n: int) -> int:
     if n == 1:
         return 1
 
-    a, b = 0, 1
-    for _ in range(2, n + 1):
-        a, b = b, a + b
-
-    return b
+    return memoized_fibonacci(n - 1) + memoized_fibonacci(n - 2)
 
 
 def spell_dispatcher() -> Callable[[Any], str]:
@@ -74,10 +72,14 @@ def spell_dispatcher() -> Callable[[Any], str]:
         return f"Enchantment: {spell}"
 
     @_base_dispatcher.register(list)
-    def _(spell: list) -> str:
+    def _(spell: list[Any]) -> str:
         return f"Multi-cast: {len(spell)} spells"
 
     return _base_dispatcher
+
+
+def test_enchant(power: int, spell: str) -> str:
+    return "enchangement result"
 
 
 def main() -> None:
@@ -89,11 +91,15 @@ def main() -> None:
     operations = ["add", "multiply", "max", "min"]
     fibonacci_tests = [18, 20, 13]
 
-    print("Testing spell reducer...")
+    print("\ntesting partial enchanter\n")
+    result = partial_enchanter(test_enchant)
+    print(f"Fire enchant is {result['fire']()}")
+
+    print("\nTesting spell reducer...")
     print(spell_reducer(spell_powers, operations[1]))
 
     print("\n\nTesting memoized fibonacci...")
-    fibonacci_tests = [18, 20, 13]
+    fibonacci_tests = [18, 2004, 2000]
     for i in fibonacci_tests:
         print(f"Fib({i}): {memoized_fibonacci(i)}")
 

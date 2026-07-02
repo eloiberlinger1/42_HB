@@ -1,9 +1,11 @@
 import functools
 import time
-from typing import Any, Callable
+from typing import Any, Callable, TypeVar
+
+F = TypeVar("F", bound=Callable[..., Any])
 
 
-def spell_timer(func: Callable) -> Callable:
+def spell_timer(func: F) -> F:
 
     @functools.wraps(func)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
@@ -14,12 +16,12 @@ def spell_timer(func: Callable) -> Callable:
         print(f"Spell completed in {end_time - start_time:.3f} seconds")
         return result
 
-    return wrapper
+    return wrapper  # type: ignore[return-value]
 
 
-def power_validator(min_power: int) -> Callable:
+def power_validator(min_power: int) -> Callable[[F], F]:
 
-    def decorator(func: Callable) -> Callable:
+    def decorator(func: F) -> F:
 
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
@@ -36,28 +38,31 @@ def power_validator(min_power: int) -> Callable:
 
             return "Insufficient power for this spell"
 
-        return wrapper
+        return wrapper  # type: ignore[return-value]
 
     return decorator
 
 
-def retry_spell(max_attempts: int) -> Callable:
+def retry_spell(max_attempts: int) -> Callable[[F], F]:
 
-    def decorator(func: Callable) -> Callable:
+    def decorator(func: F) -> F:
 
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
 
-            for attempt in range(1, max_attempts):
+            for attempt in range(1, max_attempts + 1):
 
                 try:
                     return func(*args, **kwargs)
                 except Exception:
                     print(f"Spell failed, retrying {attempt}/{max_attempts}")
 
-            return f"Spell casting failed after {max_attempts} attempts"
+            return (
+                f"Spell casting failed after {max_attempts} attempts"
+                "\nWaaaaaaagh spelled !"
+            )
 
-        return wrapper
+        return wrapper  # type: ignore[return-value]
 
     return decorator
 
@@ -85,12 +90,12 @@ def fireball() -> str:
 
 
 @retry_spell(3)
-def spell_test(i: int) -> None:
+def spell_test(i: int) -> None | str:
 
-    if i == -1:
-        raise ValueError("Waaaaaaagh spelled !")
-    else:
-        print("It worked")
+    if i == 2:
+        return str(i)
+
+    raise ValueError()
 
 
 """
@@ -108,9 +113,8 @@ def main() -> None:
     # print(test_spell(5, "fire", "dragon"))
 
     print("\nTesting retrying spell...")
-    retry_result = spell_test(-1)
+    retry_result = spell_test(1)
     print(retry_result)
-    print("Waaaaaaagh spelled !\n")
 
     test_powers = [14, 9, 20, 26]
     spell_names = ["heal", "tsunami", "flash", "earthquake"]
