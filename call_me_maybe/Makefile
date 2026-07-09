@@ -18,7 +18,7 @@ install:
 
 dev: install
 	@echo "Installing development dependencies..."
-	@$(UV)sync
+	@$(UV) sync
 	@echo "Dev environment ready."
 	uv run python -m src.main
 
