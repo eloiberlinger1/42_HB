@@ -1,5 +1,5 @@
-MAIN = src/main.py
-STORAGE_PATH = /goinfre/eberling
+MAIN = src/__main__.py
+STORAGE_PATH = /Users/eloi/Documents/42/projects/call_me_maybe
 VENV_PATH = $(STORAGE_PATH)/.venv
 # UV_CACHE_DIR is a default variable for UV package
 export UV_CACHE_DIR = $(STORAGE_PATH)/.cache/uv
@@ -20,10 +20,10 @@ dev: install
 	@echo "Installing development dependencies..."
 	@$(UV) sync
 	@echo "Dev environment ready."
-	uv run python -m src.main
+	uv run python -m src
 
 run: install
-	@$(UV) run python -m src.main
+	@$(UV) run python -m src
 
 clean:
 	@echo "Tidying up..."
