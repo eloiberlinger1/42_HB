@@ -1,24 +1,29 @@
 MAIN = src/main.py
-PYTHON = python3
 STORAGE_PATH = /goinfre/eberling
 VENV_PATH = $(STORAGE_PATH)/.venv
-# UV_CACHE_DIR is default variable for UV package
+# UV_CACHE_DIR is a default variable for UV package
 export UV_CACHE_DIR = $(STORAGE_PATH)/.cache/uv
+export UV_PROJECT_ENVIRONMENT = $(VENV_PATH)
+export UV_LINK_MODE = copy
+UV = uv
 
-
-.PHONY: all install run clean
+.PHONY: all install dev run clean
 
 all: install
 
 install:
-	@echo "Creating .venv in $(VENV_PATH)..."
-	@uv venv $(VENV_PATH)
-	@echo "Installing dependencies..."
-	@$(VENV_PATH)/bin/uv pip install pydantic numpy
+	@echo "Syncing environment with uv..."
+	@$(UV) sync
 	@echo "Done."
 
-run:
-	@$(VENV_PATH)/bin/python -m src
+dev: install
+	@echo "Installing development dependencies..."
+	@$(UV)sync
+	@echo "Dev environment ready."
+	uv run python -m src.main
+
+run: install
+	@$(UV) run python -m src.main
 
 clean:
 	@echo "Tidying up..."
