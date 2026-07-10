@@ -1,14 +1,10 @@
+"""
+Main llm loop and model initialization
+"""
 import json
 import math
+
 from llm_sdk import Small_LLM_Model
-
-
-class JSONState:
-
-    # Creer un enum plus tard pour gerer les differents etats json
-    def __init__(self):
-        self.states = {"WAIT_FOR_OPEN", "WAIT_FOR_KEY"}
-
 
 model = Small_LLM_Model()
 
@@ -33,14 +29,6 @@ with open(vocab_path, "r", encoding="utf-8") as f:
 id_to_token = {
     token_id: token_str for token_str, token_id in vocab_dict.items()
 }
-
-authorized_fonctions = [
-    "fn_add_numbers",
-    "fn_greet",
-    "fn_reverse_string",
-    "fn_get_square_root",
-    "fn_substitute_string_with_regex",
-]
 
 for i in range(max_new_tokens):
     logits = model.get_logits_from_input_ids(generated_ids)
