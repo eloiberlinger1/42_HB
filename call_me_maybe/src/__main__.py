@@ -5,17 +5,19 @@ Main llm loop and model initialization
 from .constrained_decoder import ConstrainedDecoder
 from .context_manager import ContextManager
 from .json_format_constraint import JSONFormatConstraint
+from .test import Tester
 
 
 def main():
 
-    context_manager = ContextManager(
-        definitions_path="data/input/function_definitions.json"
-    )
+    # By default pick the first question.
+    test = Tester()
+    test_input = test.gettest()
 
-    schema_constraint = JSONFormatConstraint(
-        available_functions=context_manager.get_functions()
-    )
+    context_manager = ContextManager()
+    prompt = context_manager.get_prompt(test_input)
+
+    constr_decod = ConstrainedDecoder()
 
 
 if __name__ == "__main__":
