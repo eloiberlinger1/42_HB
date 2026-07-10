@@ -1,5 +1,4 @@
-
-
+import json
 
 """
 You are an expert system. Select the correct function name to satisfy the user request.
@@ -16,3 +15,11 @@ User Request: "[METTRE_ICI_LE_PROMPT_DE_L_UTILISATEUR]"
 The correct function to use is: fn_
 """
 
+
+class FunctionsManager:
+
+    def __init__(self):
+        self.functions_file_path = "data/input/functions_definition.json"
+        self.json_functions = json()
+        with open(self.functions_file_path, "r") as f:
+            self.json_functions = json.decoder(f)

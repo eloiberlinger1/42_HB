@@ -1,5 +1,6 @@
 MAIN = src/__main__.py
-STORAGE_PATH = /Users/eloi/Documents/42/projects/call_me_maybe
+STORAGE_PATH = /home/eberling/goinfre
+# STORAGE_PATH = /Users/eloi/Documents/42/projects/call_me_maybe
 VENV_PATH = $(STORAGE_PATH)/.venv
 # UV_CACHE_DIR is a default variable for UV package
 export UV_CACHE_DIR = $(STORAGE_PATH)/.cache/uv
