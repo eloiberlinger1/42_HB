@@ -1,4 +1,8 @@
-from llm_sdk import Small_LLM_Model
+from llm_sdk import (
+    Small_LLM_Model,
+)  # comment eviter de devoir repeter ca juste pour le typehint ?
+from .json_format_constraint import JSONFormatConstraint
+
 import math
 import json
 
@@ -9,32 +13,42 @@ class ConstrainedDecoder:
 
     """
 
-    def __init__(self):
-
+    def __init__(
+        self, model: Small_LLM_Model, constraint_engine: JSONFormatConstraint
+    ):
         self.model = Small_LLM_Model()
+        self.constraint_engine = constraint_engine
 
-    def decode(self):
-
+    def generate(self, prompt: str, max_new_tokens: int = 150) -> str:
+        """
+        Generate constrained tokens
+        """
         model = self.model
-        max_new_tokens = 20
+        input_ids = self.model.encode(prompt)
         generated_ids = list(input_ids)
 
         # vocab file : https://huggingface.co/Qwen/Qwen3-0.6B/raw/main/vocab.json
-        vocab_path = model.get_path_to_vocab_file()
-        with open(vocab_path, "r", encoding="utf-8") as f:
-            vocab_dict = json.load(f)
+        # vocab_path = model.get_path_to_vocab_file()
 
         for i in range(max_new_tokens):
             logits = model.get_logits_from_input_ids(generated_ids)
 
+            input_ids_len = len(input_ids)
+            tokens_generes = generated_ids[input_ids_len:]
+            actual_text = (
+                self.model.decode(tokens_generes) if tokens_generes else ""
+            )
+
             #     90 =  "{"
             # cette variable doit changer en fonction de la generation et des etapes du controlleur d'etat JSON
-            tokens_autorises = [90]
+            encouraged_token = [90]
 
-            constrained_logits = []
+            constrained_logits = self.constraint_engine.get_allowed_tokens(
+                generated_ids
+            )
 
             for token_id, logit_value in enumerate(logits):
-                if token_id in tokens_autorises:
+                if token_id in encouraged_token:
                     constrained_logits.append(logit_value)
                 else:
                     constrained_logits.append(-math.inf)
@@ -53,4 +67,4 @@ class ConstrainedDecoder:
 
         print("affichage de la reponse")
 
-        print(final_text)
+        return final_text

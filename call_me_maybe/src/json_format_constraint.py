@@ -3,10 +3,15 @@ Follow the generated tokens to guide the llm so it will choose JSON format chara
 """
 
 
+class JSONState:
+    pass
+
+
 class JSONFormatConstraint:
 
     # Creer un enum plus tard pour gerer les differents etats json
     def __init__(self):
         self.states = {"WAIT_FOR_OPEN", "WAIT_FOR_KEY"}
 
-    # get_allowed_tokens(texte_deja_genere))
+    def get_allowed_tokens(self, generated_ids):
+        return "{"

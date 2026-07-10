@@ -5,6 +5,8 @@ Main llm loop and model initialization
 from .constrained_decoder import ConstrainedDecoder
 from .context_manager import ContextManager
 from .json_format_constraint import JSONFormatConstraint
+from llm_sdk import Small_LLM_Model
+
 from .test import Tester
 
 
@@ -17,7 +19,12 @@ def main():
     context_manager = ContextManager()
     prompt = context_manager.get_prompt(test_input)
 
-    constr_decod = ConstrainedDecoder()
+    json_formater = JSONFormatConstraint()
+
+    model = Small_LLM_Model()
+    decoder = ConstrainedDecoder(model, json_formater)
+
+    decoder.generate(prompt)
 
 
 if __name__ == "__main__":
