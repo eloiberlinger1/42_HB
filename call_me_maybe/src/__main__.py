@@ -19,9 +19,12 @@ def main():
     context_manager = ContextManager()
     prompt = context_manager.get_prompt(test_input)
 
-    json_formater = JSONFormatConstraint()
-
     model = Small_LLM_Model()
+
+    model_vocab = model.get_path_to_vocab_file()
+    functions_path = "data/input/functions_definition.json"
+    json_formater = JSONFormatConstraint(model_vocab, functions_path)
+
     decoder = ConstrainedDecoder(model, json_formater)
 
     result = decoder.generate(prompt)

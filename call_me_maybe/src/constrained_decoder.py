@@ -2,7 +2,6 @@ from llm_sdk import (
     Small_LLM_Model,
 )  # comment eviter de devoir repeter ca juste pour le typehint ?
 from .json_format_constraint import JSONFormatConstraint
-import numpy as np
 
 
 class ConstrainedDecoder:
@@ -31,25 +30,24 @@ class ConstrainedDecoder:
         # vocab_path = model.get_path_to_vocab_file()
 
         max_new_tokens = 20  # for dev
+        constraint = self.constraint_engine
+
+        result = ""
 
         for i in range(max_new_tokens):
             print(f"Iteration {i}/{max_new_tokens}")
+            print(f"result value: {result}")
 
             next_token_logits = model.get_logits_from_input_ids(generated_ids)
 
-            if i == 0:
-                next_token_logits = np.array(next_token_logits)
-
-                mask = np.full_like(next_token_logits, -float("inf"))
-
-                mask[90] = next_token_logits[90]
-                next_token_logits = mask
-
-            next_token_id = int(np.argmax(next_token_logits))
+            next_token_id = constraint.apply_constraint(
+                next_token_logits, result
+            )
 
             generated_ids.append(next_token_id)
+            result += model._tokenizer.decode([next_token_id])
 
             if next_token_id == model._tokenizer.eos_token_id:
                 break
 
-        return model._tokenizer.decode(generated_ids)
+        return result
