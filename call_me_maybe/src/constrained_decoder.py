@@ -1,11 +1,8 @@
-from typing import List
 from llm_sdk import (
     Small_LLM_Model,
 )  # comment eviter de devoir repeter ca juste pour le typehint ?
 from .json_format_constraint import JSONFormatConstraint
-
-import math
-import json
+import numpy as np
 
 
 class ConstrainedDecoder:
@@ -24,19 +21,35 @@ class ConstrainedDecoder:
         """
         Generate constrained tokens
         """
+
         model = self.model
 
-        input_ids = model._tokenizer.encode(prompt, add_special_tokens=False)
-        generated_ids = list(input_ids)
+        prompt_ids = model._tokenizer.encode(prompt, add_special_tokens=False)
+        generated_ids = list(prompt_ids)
 
-        print("Input ids :")
-        print(input_ids)
-        
         # vocab file : https://huggingface.co/Qwen/Qwen3-0.6B/raw/main/vocab.json
         # vocab_path = model.get_path_to_vocab_file()
 
-        for i in range(max_new_tokens):
-            all_logits = model.get_logits_from_input_ids(list(input_ids))
-            
-            print(all_logits)
+        max_new_tokens = 20  # for dev
 
+        for i in range(max_new_tokens):
+            print(f"Iteration {i}/{max_new_tokens}")
+
+            next_token_logits = model.get_logits_from_input_ids(generated_ids)
+
+            if i == 0:
+                next_token_logits = np.array(next_token_logits)
+
+                mask = np.full_like(next_token_logits, -float("inf"))
+
+                mask[90] = next_token_logits[90]
+                next_token_logits = mask
+
+            next_token_id = int(np.argmax(next_token_logits))
+
+            generated_ids.append(next_token_id)
+
+            if next_token_id == model._tokenizer.eos_token_id:
+                break
+
+        return model._tokenizer.decode(generated_ids)

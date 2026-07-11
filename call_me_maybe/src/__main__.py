@@ -24,7 +24,10 @@ def main():
     model = Small_LLM_Model()
     decoder = ConstrainedDecoder(model, json_formater)
 
-    decoder.generate(prompt)
+    result = decoder.generate(prompt)
+
+    print("Finish")
+    print(result)
 
 
 if __name__ == "__main__":
