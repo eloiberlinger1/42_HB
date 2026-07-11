@@ -14,4 +14,7 @@ class JSONFormatConstraint:
         self.states = {"WAIT_FOR_OPEN", "WAIT_FOR_KEY"}
 
     def get_allowed_tokens(self, generated_ids):
+
+        print(generated_ids)
+
         return "{"
