@@ -26,10 +26,7 @@ class ConstrainedDecoder:
         prompt_ids = model._tokenizer.encode(prompt, add_special_tokens=False)
         generated_ids = list(prompt_ids)
 
-        # vocab file : https://huggingface.co/Qwen/Qwen3-0.6B/raw/main/vocab.json
-        # vocab_path = model.get_path_to_vocab_file()
-
-        max_new_tokens = 20  # for dev
+        max_new_tokens = 20  # for dev | 100 - 150 for normal
         constraint = self.constraint_engine
 
         result = ""
@@ -40,9 +37,7 @@ class ConstrainedDecoder:
 
             next_token_logits = model.get_logits_from_input_ids(generated_ids)
 
-            next_token_id = constraint.apply_constraint(
-                next_token_logits, result
-            )
+            next_token_id = constraint.apply_constraint(next_token_logits)
 
             generated_ids.append(next_token_id)
             result += model._tokenizer.decode([next_token_id])

@@ -37,6 +37,11 @@ class State(Enum):
 
 
 class JSONFormatConstraint:
+    """
+    Applies the constraints on each iteration of the token generation to
+    control the output and encourage the llm to take decisions that 
+    follows the JSON expected output format.
+    """
 
     def __init__(self, model, functions_file_path, prompt: str):
         self.state = State.WAIT_FOR_OPEN_BRACE
@@ -52,98 +57,84 @@ class JSONFormatConstraint:
             self.defined_functions = json.load(f)
 
         self.functions = {f["name"]: f for f in self.defined_functions}
-
-    def _check_state(self, current_text: str) -> State:
-        """
-        Handles the already generated text to make sure the generation follows
-        the defined rules.
-        """
-        if not current_text:
-            self.state = State.WAIT_FOR_OPEN_BRACE
-            return self.state
-
-        if self.state == State.WAIT_FOR_OPEN_BRACE and current_text == "{":
-            self.state = State.EXPECT_PROMPT_KEY
-
-        elif self.state == State.EXPECT_PROMPT_KEY and current_text.endswith(
-            '{"prompt": "'
-        ):
-            self.state = State.READING_PROMPT_VALUE
-
-        elif (
-            self.state == State.READING_PROMPT_VALUE
-            and current_text.endswith('", "name": "')
-        ):
-            self.state = State.READING_NAME_VALUE
-
-        elif self.state == State.READING_NAME_VALUE:
-            if current_text.endswith('", "parameters": {'):
-                self.state = State.EXPECT_PARAM_KEY
-
-                partie_name = current_text.split('"name": "')[-1]
-                nom_fonction = partie_name.split('", "parameters"')[0]
-
-                self.current_function = self.functions.get(nom_fonction)
-                self.param_keys_to_generate = (
-                    list(self.current_function["parameters"].keys())
-                    if self.current_function
-                    else []
-                )
-
-        return self.state
+        self.text_buffer = ""
 
     def get_encouraged_ids(self) -> list[int]:
         """
         Returns a list of the ids to expect accordint to the
         already written json.
+
+        This function looks no the buffer what still have to be written
+        before it can go to the next JSONState.
         """
 
         state = self.state
-        tokenizer = self.model.tokenizer
+        tokenizer = self.model._tokenizer
 
         if state == State.WAIT_FOR_OPEN_BRACE:
             return tokenizer.encode("{", add_special_tokens=False)
 
         elif state == State.EXPECT_PROMPT_KEY:
-            tokens = tokenizer.encode('"prompt": "', add_special_tokens=False)
+            remainder = '"prompt": "'.replace(self.text_buffer, "")
+            tokens = tokenizer.encode(remainder, add_special_tokens=False)
             return [tokens[0]] if tokens else []
 
         elif state == State.READING_PROMPT_VALUE:
-            tokens = tokenizer.encode(
-                self.target_prompt, add_special_tokens=False
-            )
+            full_expected = self.target_prompt + '", "name": "'
+            remainder = full_expected.replace(self.text_buffer, "")
+            tokens = tokenizer.encode(remainder, add_special_tokens=False)
             return [tokens[0]] if tokens else []
-
-        elif state == State.EXPECT_NAME_KEY:
-            tokens = tokenizer.encode('", "name": "', add_special_tokens=False)
-            return [tokens[0]] if tokens else []
-
-        elif state == State.READING_NAME_VALUE:
-            encouraged = []
-            for name in self.functions.keys():
-                tokens = tokenizer.encode(name, add_special_tokens=False)
-                if tokens:
-                    encouraged.append(tokens[0])
-            return list(set(encouraged))
 
         return []
 
-    def apply_constraint(self, token_logits: list[float], result: str):
-        print(f"Current state : {self.state}")
+    def state_transition(self, token_text: str) -> None:
+
+        if not token_text:
+            return
+
+        self.text_buffer += token_text
+
+        if self.state == State.WAIT_FOR_OPEN_BRACE:
+            if "{" in self.text_buffer:
+                self.state = State.EXPECT_PROMPT_KEY
+                self.text_buffer = ""
+
+        elif self.state == State.EXPECT_PROMPT_KEY:
+            if '"prompt": "' in self.text_buffer:
+                self.state = State.READING_PROMPT_VALUE
+                self.text_buffer = ""
+
+        elif self.state == State.READING_PROMPT_VALUE:
+            if self.target_prompt in self.text_buffer and '", "name": "' in self.text_buffer:
+                self.state = State.READING_NAME_VALUE
+                self.text_buffer = ""
+
+
+    def apply_constraint(self, token_logits: list[float]):
+        """
+        In order to just pick the token with the highest score (max())
+        Here we manually change the probabilities to encourage the expected caracters
+        according to the JSON state.
+        """
 
         encouraged_ids = self.get_encouraged_ids()
-        print(f"Current state : {self.state}")
 
         next_token_logits = np.array(token_logits)
-
         mask = np.full_like(next_token_logits, -float("inf"))
+        
+        if not encouraged_ids:
+            next_token_id = int(np.argmax(next_token_logits))
+        else:
+            for i in encouraged_ids:
+                mask[i] = next_token_logits[i]
+            next_token_id = int(np.argmax(mask))
 
-        for i in encouraged_ids:
-            if i == -1:
-                break
-            mask[i] = next_token_logits[i]
-        next_token_logits = mask
+        last_token_text = self.model._tokenizer.decode([next_token_id])
+        print(f"Token choisi : '{last_token_text}' | Transition depuis l'état : {self.state}")
+        
+        self.state_transition(last_token_text)
 
-        next_token_id = int(np.argmax(next_token_logits))
+        print(f"Nouvel etat: {self.state}")        
 
         return next_token_id
+
