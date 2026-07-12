@@ -14,16 +14,15 @@ def main():
 
     # By default pick the first question.
     test = Tester()
-    test_input = test.gettest()
+    raw_prompt = test.gettest()
 
     context_manager = ContextManager()
-    prompt = context_manager.get_prompt(test_input)
+    prompt = context_manager.get_prompt(raw_prompt)
 
     model = Small_LLM_Model()
 
-    model_vocab = model.get_path_to_vocab_file()
     functions_path = "data/input/functions_definition.json"
-    json_formater = JSONFormatConstraint(model_vocab, functions_path)
+    json_formater = JSONFormatConstraint(model, functions_path, raw_prompt)
 
     decoder = ConstrainedDecoder(model, json_formater)
 
