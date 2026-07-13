@@ -58,6 +58,7 @@ class JSONFormatConstraint:
 
         self.functions = {f["name"]: f for f in self.defined_functions}
         self.text_buffer = ""
+        self.current_function = ""
 
     def get_encouraged_ids(self) -> list[int]:
         """
@@ -80,8 +81,31 @@ class JSONFormatConstraint:
             return [tokens[0]] if tokens else []
 
         elif state == State.READING_PROMPT_VALUE:
-            full_expected = self.target_prompt + '", "name": "'
+            full_expected = self.target_prompt
             remainder = full_expected.replace(self.text_buffer, "")
+            tokens = tokenizer.encode(remainder, add_special_tokens=False)
+            return [tokens[0]] if tokens else []
+        
+        elif state == State.EXPECT_NAME_KEY:
+            full_expected = '", "name": "'
+            remainder = full_expected.replace(self.text_buffer, "")
+            tokens = tokenizer.encode(remainder, add_special_tokens=False)
+            return [tokens[0]] if tokens else []
+        
+        elif state == State.READING_NAME_VALUE:
+            encouraged = []
+            for f in self.functions.keys():
+                if f.startswith(self.text_buffer):
+                    remainder = f.replace(self.text_buffer, "", 1)
+                    if remainder != "":
+                        tokens = tokenizer.encode(remainder, add_special_tokens=False)
+                        if tokens:
+                            encouraged.append(tokens[0])
+            
+            return list(set(encouraged))
+
+        elif state == State.EXPECT_PARAMETERS_KEY:
+            remainder = '", "parameters": {'.replace(self.text_buffer, "")
             tokens = tokenizer.encode(remainder, add_special_tokens=False)
             return [tokens[0]] if tokens else []
 
@@ -105,9 +129,21 @@ class JSONFormatConstraint:
                 self.text_buffer = ""
 
         elif self.state == State.READING_PROMPT_VALUE:
-            if self.target_prompt in self.text_buffer and '", "name": "' in self.text_buffer:
+            if self.target_prompt in self.text_buffer:
+                self.state = State.EXPECT_NAME_KEY
+                self.text_buffer = ""
+        
+        elif self.state == State.EXPECT_NAME_KEY:
+            if '", "name": "' in self.text_buffer:
                 self.state = State.READING_NAME_VALUE
                 self.text_buffer = ""
+        
+        elif self.state == State.READING_NAME_VALUE:
+            if self.text_buffer in self.functions:
+                    self.current_function = self.functions[self.text_buffer]
+                    self.state = State.EXPECT_PARAMETERS_KEY
+                    self.text_buffer = ""
+                
 
 
     def apply_constraint(self, token_logits: list[float]):

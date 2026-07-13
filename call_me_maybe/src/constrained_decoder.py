@@ -26,7 +26,7 @@ class ConstrainedDecoder:
         prompt_ids = model._tokenizer.encode(prompt, add_special_tokens=False)
         generated_ids = list(prompt_ids)
 
-        max_new_tokens = 20  # for dev | 100 - 150 for normal
+        max_new_tokens = 40  # for dev | 100 - 150 for normal
         constraint = self.constraint_engine
 
         result = ""
