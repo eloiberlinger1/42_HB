@@ -1,5 +1,6 @@
 MAIN = src/__main__.py
 STORAGE_PATH = /home/eberling/goinfre
+STORAGE_PATH = /workspaces/42_HB/call_me_maybe
 # STORAGE_PATH = /Users/eloi/Documents/42/projects/call_me_maybe
 VENV_PATH = $(STORAGE_PATH)/.venv
 # UV_CACHE_DIR is a default variable for UV package
@@ -14,6 +15,7 @@ all: install
 
 install:
 	@echo "Syncing environment with uv..."
+	@pip install uv
 	@$(UV) sync
 	@echo "Done."
 
