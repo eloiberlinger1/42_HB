@@ -16,4 +16,4 @@ class Tester:
         with open(self.testfile, 'r') as f:
             self.json_file = json.load(f)
 
-        return self.json_file[3]["prompt"]
+        return self.json_file[8]["prompt"]

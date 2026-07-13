@@ -45,7 +45,6 @@ class JSONFormatConstraint:
 
     def __init__(self, model, functions_file_path, prompt: str):
         self.state = State.WAIT_FOR_OPEN_BRACE
-        self.current_function_info = None
         self.target_prompt = prompt
 
         self.model = model
@@ -105,9 +104,30 @@ class JSONFormatConstraint:
             return list(set(encouraged))
 
         elif state == State.EXPECT_PARAMETERS_KEY:
+            # TODO : maybe associate each expected remainder directly in the state value ?
             remainder = '", "parameters": {'.replace(self.text_buffer, "")
             tokens = tokenizer.encode(remainder, add_special_tokens=False)
             return [tokens[0]] if tokens else []
+        
+        elif state == State.EXPECT_PARAM_COLON:
+            remainder = '"'.replace(self.text_buffer, "")
+            tokens = tokenizer.encode(remainder, add_special_tokens=False)
+            return [tokens[0]] if tokens else []
+
+        elif state == State.EXPECT_PARAM_KEY:
+                
+                print()
+                print()
+            
+                print(f"self.current_function = {self.current_function}")
+                print()
+                expected_keys = self.current_function["parameters"].keys()
+                print(f"expected_keys : {expected_keys}")
+                # the key should match the paramaters for the functions def
+
+                remainder = '"'.replace(self.text_buffer, "")
+                tokens = tokenizer.encode(remainder, add_special_tokens=False)
+                return [tokens[0]] if tokens else []
 
         return []
 
@@ -143,7 +163,21 @@ class JSONFormatConstraint:
                     self.current_function = self.functions[self.text_buffer]
                     self.state = State.EXPECT_PARAMETERS_KEY
                     self.text_buffer = ""
-                
+        
+        elif self.state == State.EXPECT_PARAMETERS_KEY:
+            if '", "parameters": {' in self.text_buffer:
+                self.state = State.EXPECT_PARAM_COLON
+                self.text_buffer = ""
+        
+        elif self.state == State.EXPECT_PARAM_COLON:
+            if '"' in self.text_buffer:
+                self.state = State.EXPECT_PARAM_KEY
+                self.text_buffer = ""
+
+        elif self.state == State.EXPECT_PARAM_KEY:
+            if 'paramaeterkey' in self.text_buffer:
+                self.state = State.next
+                self.text_buffer = ""        
 
 
     def apply_constraint(self, token_logits: list[float]):
