@@ -28,11 +28,7 @@ class JSONFormatConstraint:
     follows the JSON expected output format.
     """
 
-    def __init__(
-            self, model: Small_LLM_Model,
-            functions_file_path: str,
-            prompt: str
-        ):
+    def __init__(self, model: Small_LLM_Model, functions_file_path: str, prompt: str):
         self.state = State.WAIT_FOR_OPEN_BRACE
         self.target_prompt = prompt
 
@@ -53,9 +49,9 @@ class JSONFormatConstraint:
         Encode text and make sure to get a 2D list
         """
         tensor_2d: torch.Tensor = self.model.encode(text)
-        
+
         return cast(list[int], tensor_2d.squeeze(0).tolist())
-    
+
     def _get_current_param_type(self) -> str:
         """Get function parameter's type"""
         if self.current_function and "parameters" in self.current_function:
@@ -111,24 +107,17 @@ class JSONFormatConstraint:
 
         elif state == State.EXPECT_PARAM_KEY:
             if (
-                self.current_function is not None 
+                self.current_function is not None
                 and "parameters" in self.current_function
-            ):    
-                params = cast(
-                    dict[str, Any],
-                    self.current_function["parameters"]
-                    )
+            ):
+                params = cast(dict[str, Any], self.current_function["parameters"])
                 param_keys = params.keys()
 
                 encouraged = []
                 for k in param_keys:
                     expected_str = f'"{k}": '
                     if expected_str.startswith(self.text_buffer):
-                        remainder = expected_str.replace(
-                            self.text_buffer,
-                            "",
-                            1
-                        )
+                        remainder = expected_str.replace(self.text_buffer, "", 1)
                         if remainder:
                             tokens = self._encode_to_list(remainder)
                             if tokens:
@@ -199,19 +188,26 @@ class JSONFormatConstraint:
                 self.text_buffer = ""
 
         elif self.state == State.EXPECT_PARAM_KEY:
-            for k in self.current_function["parameters"].keys():
-                expected_str = f'"{k}": '
-                if expected_str in self.text_buffer:
-                    self.current_param_name = k
-                    self.state = State.READING_PARAM_VALUE
-                    self.text_buffer = ""
-                    break
+            curr_fn = self.current_function
+            if curr_fn is not None and "parameters" in curr_fn:
+                params = cast(dict[str, Any], curr_fn["parameters"])
+                for k in params.keys():
+                    expected_str = f'"{k}": '
+                    if expected_str in self.text_buffer:
+                        self.current_param_name = k
+                        self.state = State.READING_PARAM_VALUE
+                        self.text_buffer = ""
+                        break
 
         elif self.state == State.READING_PARAM_VALUE:
             param_type = self._get_current_param_type()
 
             if param_type == "string":
-                if self.text_buffer.startswith('"') and self.text_buffer.endswith('"') and len(self.text_buffer) > 1:
+                if (
+                    self.text_buffer.startswith('"')
+                    and self.text_buffer.endswith('"')
+                    and len(self.text_buffer) > 1
+                ):
                     self._transition_after_param_value()
 
             elif param_type in ["number", "integer"]:
@@ -258,7 +254,9 @@ class JSONFormatConstraint:
 
         last_token_text = self.model._tokenizer.decode([next_token_id])
         print(
-            f"Token choisi : '{last_token_text}' | Transition depuis l'état : {self.state}")
+            f"Token choisi : '{last_token_text}' | "
+            f"Transition depuis l'état : {self.state}"
+        )
 
         self.state_transition(last_token_text)
 
