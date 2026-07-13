@@ -1,3 +1,0 @@
-Syncing environment with uv...
-Requirement already satisfied: uv in /usr/local/python/3.12.1/lib/python3.12/site-packages (0.11.28)
-Done.

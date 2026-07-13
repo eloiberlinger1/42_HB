@@ -24,11 +24,10 @@ class State(Enum):
     EXPECT_NAME_KEY = auto()
     READING_NAME_VALUE = auto()
 
-    EXPECT_PARAMETERS_KEY = auto()
+    EXPECT_PARAMETERS_KEY = auto()  # literally expect ", "parameters": {
     EXPECT_PARAM_OPEN_BRACE = auto()
 
-    EXPECT_PARAM_KEY = auto()
-    EXPECT_PARAM_COLON = auto()
+    EXPECT_PARAM_KEY = auto()  # expects the parameter name of the function ex :"number"
     READING_PARAM_VALUE = auto()
     EXPECT_PARAM_COMMA_OR_CLOSE = auto()
 
@@ -58,6 +57,13 @@ class JSONFormatConstraint:
         self.functions = {f["name"]: f for f in self.defined_functions}
         self.text_buffer = ""
         self.current_function = ""
+
+    def _get_current_param_type(self) -> str:
+        """Get function parameter's type"""
+        if self.current_function and "parameters" in self.current_function:
+            param_info = self.current_function["parameters"].get(self.current_param_name, {})
+            return param_info.get("type", "string")
+        return "string"
 
     def get_encouraged_ids(self) -> list[int]:
         """
@@ -108,26 +114,26 @@ class JSONFormatConstraint:
             remainder = '", "parameters": {'.replace(self.text_buffer, "")
             tokens = tokenizer.encode(remainder, add_special_tokens=False)
             return [tokens[0]] if tokens else []
-        
-        elif state == State.EXPECT_PARAM_COLON:
-            remainder = '"'.replace(self.text_buffer, "")
-            tokens = tokenizer.encode(remainder, add_special_tokens=False)
-            return [tokens[0]] if tokens else []
 
         elif state == State.EXPECT_PARAM_KEY:
-                
-                print()
-                print()
-            
-                print(f"self.current_function = {self.current_function}")
-                print()
-                expected_keys = self.current_function["parameters"].keys()
-                print(f"expected_keys : {expected_keys}")
-                # the key should match the paramaters for the functions def
+            param_keys = self.current_function["parameters"].keys()
+            encouraged = []
+            for k in param_keys:
+                expected_str = f'"{k}": '
+                if expected_str.startswith(self.text_buffer):
+                    remainder = expected_str.replace(self.text_buffer, "", 1)
+                    if remainder:
+                        tokens = tokenizer.encode(remainder, add_special_tokens=False)
+                        if tokens: encouraged.append(tokens[0])
 
-                remainder = '"'.replace(self.text_buffer, "")
-                tokens = tokenizer.encode(remainder, add_special_tokens=False)
-                return [tokens[0]] if tokens else []
+            return list(set(encouraged))
+
+        elif state == State.READING_PARAM_VALUE:
+            param_type = self._get_current_param_type()
+
+            if param_type == "string":
+                if self.text_buffer == "":
+                    return tokenizer.encode('"', add_special_tokens=False)
 
         return []
 
@@ -140,7 +146,7 @@ class JSONFormatConstraint:
 
         if self.state == State.WAIT_FOR_OPEN_BRACE:
             if "{" in self.text_buffer:
-                self.state = State.EXPECT_PROMPT_KEY
+                self.state = State.EXPECT_PARAM_KEY
                 self.text_buffer = ""
 
         elif self.state == State.EXPECT_PROMPT_KEY:
@@ -168,17 +174,37 @@ class JSONFormatConstraint:
             if '", "parameters": {' in self.text_buffer:
                 self.state = State.EXPECT_PARAM_COLON
                 self.text_buffer = ""
-        
-        elif self.state == State.EXPECT_PARAM_COLON:
-            if '"' in self.text_buffer:
-                self.state = State.EXPECT_PARAM_KEY
-                self.text_buffer = ""
 
         elif self.state == State.EXPECT_PARAM_KEY:
-            if 'paramaeterkey' in self.text_buffer:
-                self.state = State.next
-                self.text_buffer = ""        
+            for k in self.current_function["parameters"].keys():
+                expected_str = f'"{k}": '
+                if expected_str in self.text_buffer:
+                    self.current_param_name = k
+                    self.state = State.READING_PARAM_VALUE
+                    self.text_buffer = ""
+                    break
 
+        elif self.state == State.READING_PARAM_VALUE:
+            param_type = self._get_current_param_type()
+
+            if param_type == "string":
+                if self.text_buffer.startswith('"') and self.text_buffer.endswith('"') and len(self.text_buffer) > 1:
+                    self._transition_after_param_value()
+            
+            elif param_type in ["number", "integer"]:
+                if "," in self.text_buffer or "}" in self.text_buffer:
+                    self._transition_after_param_value()
+
+    def _transition_after_param_value(self):
+        """Détermine si on attend un autre paramètre ou la fin du JSON."""
+        if "}" in self.text_buffer:
+            self.state = State.EXPECT_CLOSE_BRACE
+        elif "," in self.text_buffer:
+            self.state = State.EXPECT_PARAM_KEY
+        else:
+            self.state = State.EXPECT_PARAM_COMMA_OR_CLOSE
+        
+        self.text_buffer = ""
 
     def apply_constraint(self, token_logits: list[float]):
         """
@@ -204,7 +230,7 @@ class JSONFormatConstraint:
         
         self.state_transition(last_token_text)
 
-        print(f"Nouvel etat: {self.state}")        
+        print(f"Nouvel etat: {self.state}")
 
         return next_token_id
 
