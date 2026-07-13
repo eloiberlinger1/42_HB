@@ -11,28 +11,9 @@ Example of excepted format:
 
 """
 
-from enum import Enum, auto
+from .json_states import State
 import numpy as np
 import json
-
-
-class State(Enum):
-    WAIT_FOR_OPEN_BRACE = auto()
-    EXPECT_PROMPT_KEY = auto()
-    READING_PROMPT_VALUE = auto()
-
-    EXPECT_NAME_KEY = auto()
-    READING_NAME_VALUE = auto()
-
-    EXPECT_PARAMETERS_KEY = auto()  # literally expect ", "parameters": {
-    EXPECT_PARAM_OPEN_BRACE = auto()
-
-    EXPECT_PARAM_KEY = auto()  # expects the parameter name of the function ex :"number"
-    READING_PARAM_VALUE = auto()
-    EXPECT_PARAM_COMMA_OR_CLOSE = auto()
-
-    EXPECT_CLOSE_BRACE = auto()
-    DONE = auto()
 
 
 class JSONFormatConstraint:
@@ -146,7 +127,7 @@ class JSONFormatConstraint:
 
         if self.state == State.WAIT_FOR_OPEN_BRACE:
             if "{" in self.text_buffer:
-                self.state = State.EXPECT_PARAM_KEY
+                self.state = State.EXPECT_PROMPT_KEY
                 self.text_buffer = ""
 
         elif self.state == State.EXPECT_PROMPT_KEY:
@@ -166,9 +147,9 @@ class JSONFormatConstraint:
         
         elif self.state == State.READING_NAME_VALUE:
             if self.text_buffer in self.functions:
-                    self.current_function = self.functions[self.text_buffer]
-                    self.state = State.EXPECT_PARAMETERS_KEY
-                    self.text_buffer = ""
+                self.current_function = self.functions[self.text_buffer]
+                self.state = State.EXPECT_PARAMETERS_KEY
+                self.text_buffer = ""
         
         elif self.state == State.EXPECT_PARAMETERS_KEY:
             if '", "parameters": {' in self.text_buffer:
