@@ -43,6 +43,7 @@ class JSONFormatConstraint:
         self.functions = {f["name"]: f for f in self.defined_functions}
         self.text_buffer = ""
         self.current_function: dict[str, Any] | None = None
+        self.generated_params: set[str] = set()
 
     def _encode_to_list(self, text: str) -> list[int]:
         """
@@ -72,21 +73,25 @@ class JSONFormatConstraint:
         state = self.state
 
         if state == State.WAIT_FOR_OPEN_BRACE:
-            return self._encode_to_list("{")
+            tokens = self._encode_to_list("{")
+            return [tokens[0]] if tokens else []
 
         elif state == State.EXPECT_PROMPT_KEY:
             remainder = '"prompt": "'.replace(self.text_buffer, "")
-            return self._encode_to_list(remainder)
+            tokens = self._encode_to_list(remainder)
+            return [tokens[0]] if tokens else []
 
         elif state == State.READING_PROMPT_VALUE:
             full_expected = self.target_prompt
             remainder = full_expected.replace(self.text_buffer, "")
-            return self._encode_to_list(remainder)
+            tokens = self._encode_to_list(remainder)
+            return [tokens[0]] if tokens else []
 
         elif state == State.EXPECT_NAME_KEY:
             full_expected = '", "name": "'
             remainder = full_expected.replace(self.text_buffer, "")
-            return self._encode_to_list(remainder)
+            tokens = self._encode_to_list(remainder)
+            return [tokens[0]] if tokens else []
 
         elif state == State.READING_NAME_VALUE:
             encouraged = []
@@ -111,7 +116,9 @@ class JSONFormatConstraint:
                 and "parameters" in self.current_function
             ):
                 params = cast(dict[str, Any], self.current_function["parameters"])
-                param_keys = params.keys()
+                param_keys = [
+                    k for k in params.keys() if k not in self.generated_params
+                ]
 
                 encouraged = []
                 for k in param_keys:
@@ -130,13 +137,23 @@ class JSONFormatConstraint:
 
             # TODO : count the number of parameters
             encouraged = []
-            tokens_comma = self._encode_to_list(", ")
+            params = (
+                cast(dict[str, Any], self.current_function["parameters"])
+                if self.current_function
+                else {}
+            )
+            remaining_params = [
+                k for k in params.keys() if k not in self.generated_params
+            ]
+
+            if remaining_params:
+                tokens_comma = self._encode_to_list(", ")
+                if tokens_comma:
+                    encouraged.append(tokens_comma[0])
+
             tokens_close = self._encode_to_list("}")
-            if tokens_comma:
-                encouraged.append(tokens_comma[0])
             if tokens_close:
                 encouraged.append(tokens_close[0])
-            return encouraged
 
             return list(set(encouraged))
 
