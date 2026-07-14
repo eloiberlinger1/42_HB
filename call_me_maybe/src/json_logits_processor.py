@@ -1,19 +1,14 @@
 """
 Follow the generated tokens to guide the llm so it
 will choose JSON format characters when needed
-
-
-
 """
 
 from llm_sdk import Small_LLM_Model
-from typing import Any, cast
+from typing import cast
 from .json_state_manager import JSONStateManager
 import torch
 
-from .json_states import State
 import numpy as np
-import json
 
 
 class JSONLogitsProcessor:
@@ -33,7 +28,10 @@ class JSONLogitsProcessor:
         return tokens[0] if tokens else None
 
     def apply_constraint(self, token_logits: list[float]) -> int:
-        """Apply the constraint on the logits to force LLM to follow the expected output"""
+        """
+        Apply the constraint on the logits
+        to force LLM to follow the expected output
+        """
         expected_strings = self.state_manager.get_expected_strings()
 
         encouraged_ids = []

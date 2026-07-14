@@ -1,3 +1,7 @@
+"""
+Maybe refactor to apply to DRY ?
+"""
+
 from typing import Any, cast, List
 from .json_states import State
 from .functions_schema import FunctionSchema
@@ -98,31 +102,34 @@ class JSONStateManager:
 
         return []
 
+    #
+    #
+    #
+    #
+
+    def _static_transition(self, expected_string: str, new_state: State):
+        if expected_string in self.text_buffer:
+            self.state = new_state
+            self.text_buffer = self.text_buffer.split(expected_string, 1)[1]
+
     def transition(self, token_text: str) -> None:
         """Step the state ahead according to the decoded token"""
         if not token_text:
             return
+
         self.text_buffer += token_text
 
         if self.state == State.WAIT_FOR_OPEN_BRACE:
-            if "{" in self.text_buffer:
-                self.state = State.EXPECT_PROMPT_KEY
-                self.text_buffer = ""
+            self._static_transition("{", State.EXPECT_PROMPT_KEY)
 
         elif self.state == State.EXPECT_PROMPT_KEY:
-            if '"prompt": "' in self.text_buffer:
-                self.state = State.READING_PROMPT_VALUE
-                self.text_buffer = ""
+            self._static_transition('"prompt": "', State.READING_PROMPT_VALUE)
 
         elif self.state == State.READING_PROMPT_VALUE:
-            if self.target_prompt in self.text_buffer:
-                self.state = State.EXPECT_NAME_KEY
-                self.text_buffer = ""
+            self._static_transition(self.target_prompt, State.EXPECT_NAME_KEY)
 
         elif self.state == State.EXPECT_NAME_KEY:
-            if '", "name": "' in self.text_buffer:
-                self.state = State.READING_NAME_VALUE
-                self.text_buffer = ""
+            self._static_transition('", "name": "', State.READING_NAME_VALUE)
 
         elif self.state == State.READING_NAME_VALUE:
             if self.text_buffer in self.schema.get_all_names():
@@ -132,9 +139,7 @@ class JSONStateManager:
                 self.text_buffer = ""
 
         elif self.state == State.EXPECT_PARAMETERS_KEY:
-            if '", "parameters": {' in self.text_buffer:
-                self.state = State.EXPECT_PARAM_KEY
-                self.text_buffer = ""
+            self._static_transition('", "parameters": {', State.EXPECT_PARAM_KEY)
 
         elif self.state == State.EXPECT_PARAM_KEY:
             if self.current_function and "parameters" in self.current_function:
