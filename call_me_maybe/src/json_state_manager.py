@@ -1,7 +1,3 @@
-"""
-Maybe refactor to apply to DRY ?
-"""
-
 from typing import Any, cast, List
 from .json_states import State
 from .functions_schema import FunctionSchema
@@ -39,36 +35,51 @@ class JSONStateManager:
             return param_info.get("type", "string")
         return "string"
 
+    def _has_missing_parameters(self) -> bool:
+        if not self.current_function or "parameters" not in self.current_function:
+            return False
+        expected_params = set(self.current_function["parameters"].keys())
+        return len(expected_params - self.generated_params) > 0
+
     def get_expected_strings(self) -> List[str]:
-        """Retourne les sous-chaînes exactes qu'on espère voir le LLM générer."""
         state = self.state
+        buf = self.text_buffer
 
         if state == State.WAIT_FOR_OPEN_BRACE:
-            return ["{"]
+            if "{".startswith(buf):
+                return ["{"[len(buf) :]]
 
         elif state == State.EXPECT_PROMPT_KEY:
-            return ['"prompt": "'.replace(self.text_buffer, "")]
+            expected = '"prompt": "'
+            if expected.startswith(buf):
+                return [expected[len(buf) :]]
 
         elif state == State.READING_PROMPT_VALUE:
-            remainder = self.target_prompt.replace(self.text_buffer, "")
-            return [remainder] if remainder else []
+            expected = self.target_prompt
+            if expected.startswith(buf):
+                return [expected[len(buf) :]]
 
         elif state == State.EXPECT_NAME_KEY:
-            return ['", "name": "'.replace(self.text_buffer, "")]
+            expected = '", "name": "'
+            if expected.startswith(buf):
+                return [expected[len(buf) :]]
 
         elif state == State.READING_NAME_VALUE:
             encouraged = []
             for name in self.schema.get_all_names():
-                if name.startswith(self.text_buffer):
-                    remainder = name.replace(self.text_buffer, "", 1)
-                    if remainder:
-                        encouraged.append(remainder)
+                if name.startswith(buf):
+                    rem = name[len(buf) :]
+                    if rem:
+                        encouraged.append(rem)
             return encouraged
 
         elif state == State.EXPECT_PARAMETERS_KEY:
-            return ['", "parameters": {'.replace(self.text_buffer, "")]
+            expected = '", "parameters": {'
+            if expected.startswith(buf):
+                return [expected[len(buf) :]]
 
         elif state == State.EXPECT_PARAM_KEY:
+            buf_stripped = buf.lstrip()
             if self.current_function and "parameters" in self.current_function:
                 params = self.current_function["parameters"]
                 param_keys = [
@@ -78,27 +89,23 @@ class JSONStateManager:
                 encouraged = []
                 for k in param_keys:
                     expected_str = f'"{k}": '
-                    if expected_str.startswith(self.text_buffer):
-                        remainder = expected_str.replace(self.text_buffer, "", 1)
-                        if remainder:
-                            encouraged.append(remainder)
+                    if expected_str.startswith(buf_stripped):
+                        rem = expected_str[len(buf_stripped) :]
+                        if rem:
+                            encouraged.append(rem)
                 return encouraged
-            return []
 
         elif state == State.READING_PARAM_VALUE:
-            if self._get_current_param_type() == "string" and self.text_buffer == "":
+            if self._get_current_param_type() == "string" and buf == "":
                 return ['"']
-            return []
 
         elif state == State.EXPECT_PARAM_COMMA_OR_CLOSE:
-            encouraged = []
-            if self.current_function and "parameters" in self.current_function:
-                params = self.current_function["parameters"]
-                remaining = [k for k in params.keys() if k not in self.generated_params]
-                if remaining:
-                    encouraged.append(", ")
-            encouraged.append("}")
-            return encouraged
+            expected = ", " if self._has_missing_parameters() else "}"
+            buf_stripped = buf.lstrip()
+            if expected.startswith(buf_stripped):
+                rem = expected[len(buf_stripped) :]
+                if rem:
+                    return [rem]
 
         return []
 
@@ -119,62 +126,93 @@ class JSONStateManager:
 
         self.text_buffer += token_text
 
-        if self.state == State.WAIT_FOR_OPEN_BRACE:
-            self._static_transition("{", State.EXPECT_PROMPT_KEY)
+        while True:
+            initial_state = self.state
 
-        elif self.state == State.EXPECT_PROMPT_KEY:
-            self._static_transition('"prompt": "', State.READING_PROMPT_VALUE)
+            if self.state == State.WAIT_FOR_OPEN_BRACE:
+                self._static_transition("{", State.EXPECT_PROMPT_KEY)
 
-        elif self.state == State.READING_PROMPT_VALUE:
-            self._static_transition(self.target_prompt, State.EXPECT_NAME_KEY)
+            elif self.state == State.EXPECT_PROMPT_KEY:
+                self._static_transition('"prompt": "', State.READING_PROMPT_VALUE)
 
-        elif self.state == State.EXPECT_NAME_KEY:
-            self._static_transition('", "name": "', State.READING_NAME_VALUE)
+            elif self.state == State.READING_PROMPT_VALUE:
+                self._static_transition(self.target_prompt, State.EXPECT_NAME_KEY)
 
-        elif self.state == State.READING_NAME_VALUE:
-            if self.text_buffer in self.schema.get_all_names():
-                self.current_function = self.schema.get_function(self.text_buffer)
-                self.generated_params.clear()
-                self.state = State.EXPECT_PARAMETERS_KEY
-                self.text_buffer = ""
+            elif self.state == State.EXPECT_NAME_KEY:
+                self._static_transition('", "name": "', State.READING_NAME_VALUE)
 
-        elif self.state == State.EXPECT_PARAMETERS_KEY:
-            self._static_transition('", "parameters": {', State.EXPECT_PARAM_KEY)
-
-        elif self.state == State.EXPECT_PARAM_KEY:
-            if self.current_function and "parameters" in self.current_function:
-                for k in self.current_function["parameters"].keys():
-                    expected_str = f'"{k}": '
-                    if expected_str in self.text_buffer:
-                        self.current_param_name = k
-                        self.generated_params.add(k)
-                        self.state = State.READING_PARAM_VALUE
-                        self.text_buffer = ""
+            elif self.state == State.READING_NAME_VALUE:
+                for name in self.schema.get_all_names():
+                    if name in self.text_buffer:
+                        self.current_function = self.schema.get_function(name)
+                        self.generated_params.clear()
+                        self.state = State.EXPECT_PARAMETERS_KEY
+                        self.text_buffer = self.text_buffer.split(name, 1)[1]
                         break
 
-        elif self.state == State.READING_PARAM_VALUE:
-            param_type = self._get_current_param_type()
-            if param_type == "string":
-                if (
-                    self.text_buffer.startswith('"')
-                    and self.text_buffer.endswith('"')
-                    and len(self.text_buffer) > 1
-                    and not self.text_buffer.endswith('\\"')
-                ):
-                    self.state = State.EXPECT_PARAM_COMMA_OR_CLOSE
-                    self.text_buffer = ""
-            elif param_type in ["number", "integer"]:
+            elif self.state == State.EXPECT_PARAMETERS_KEY:
+                self._static_transition('", "parameters": {', State.EXPECT_PARAM_KEY)
+
+            elif self.state == State.EXPECT_PARAM_KEY:
+                if "}" in self.text_buffer:
+                    if not self._has_missing_parameters():
+                        self._static_transition("}", State.EXPECT_CLOSE_BRACE)
+                    else:
+                        self.text_buffer = self.text_buffer.replace("}", "")
+
+                if self.current_function and "parameters" in self.current_function:
+                    for k in self.current_function["parameters"].keys():
+                        expected_str = f'"{k}": '
+                        if expected_str in self.text_buffer:
+                            self.current_param_name = k
+                            self.generated_params.add(k)
+                            self.state = State.READING_PARAM_VALUE
+                            self.text_buffer = self.text_buffer.split(expected_str, 1)[
+                                1
+                            ]
+                            break
+
+            elif self.state == State.READING_PARAM_VALUE:
+                param_type = self._get_current_param_type()
+                if param_type == "string":
+                    if '"' in self.text_buffer:
+                        start_idx = self.text_buffer.find('"')
+                        escaped = False
+                        end_idx = -1
+                        for i in range(start_idx + 1, len(self.text_buffer)):
+                            if self.text_buffer[i] == "\\" and not escaped:
+                                escaped = True
+                            elif self.text_buffer[i] == '"' and not escaped:
+                                end_idx = i
+                                break
+                            else:
+                                escaped = False
+
+                        if end_idx != -1:
+                            self.state = State.EXPECT_PARAM_COMMA_OR_CLOSE
+                            self.text_buffer = self.text_buffer[end_idx + 1 :]
+
+                elif param_type in ["number", "integer"]:
+                    if "," in self.text_buffer:
+                        self.state = State.EXPECT_PARAM_KEY
+                        self.text_buffer = self.text_buffer.split(",", 1)[1]
+                    elif "}" in self.text_buffer:
+                        if not self._has_missing_parameters():
+                            self.state = State.EXPECT_CLOSE_BRACE
+                            self.text_buffer = self.text_buffer.split("}", 1)[1]
+                        else:
+                            self.text_buffer = self.text_buffer.replace("}", "")
+
+            elif self.state == State.EXPECT_PARAM_COMMA_OR_CLOSE:
                 if "," in self.text_buffer:
                     self.state = State.EXPECT_PARAM_KEY
-                    self.text_buffer = ""
+                    self.text_buffer = self.text_buffer.split(",", 1)[1]
                 elif "}" in self.text_buffer:
-                    self.state = State.EXPECT_CLOSE_BRACE
-                    self.text_buffer = ""
+                    if not self._has_missing_parameters():
+                        self.state = State.EXPECT_CLOSE_BRACE
+                        self.text_buffer = self.text_buffer.split("}", 1)[1]
+                    else:
+                        self.text_buffer = self.text_buffer.replace("}", "")
 
-        elif self.state == State.EXPECT_PARAM_COMMA_OR_CLOSE:
-            if ", " in self.text_buffer:
-                self.state = State.EXPECT_PARAM_KEY
-                self.text_buffer = ""
-            elif "}" in self.text_buffer:
-                self.state = State.EXPECT_CLOSE_BRACE
-                self.text_buffer = ""
+            if self.state == initial_state:
+                break
