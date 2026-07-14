@@ -4,7 +4,9 @@ Main llm loop and model initialization
 
 from .constrained_decoder import ConstrainedDecoder
 from .context_manager import ContextManager
-from .json_format_constraint import JSONFormatConstraint
+from .functions_schema import FunctionSchema
+from .json_logits_processor import JSONLogitsProcessor
+from .json_state_manager import JSONStateManager
 from llm_sdk import Small_LLM_Model
 
 from .test import Tester
@@ -22,9 +24,11 @@ def main():
     model = Small_LLM_Model()
 
     functions_path = "data/input/functions_definition.json"
-    json_formater = JSONFormatConstraint(model, functions_path, raw_prompt)
+    schema = FunctionSchema(functions_path)
+    state_manager = JSONStateManager(target_prompt=raw_prompt, schema=schema)
+    json_processor = JSONLogitsProcessor(model, state_manager)
 
-    decoder = ConstrainedDecoder(model, json_formater)
+    decoder = ConstrainedDecoder(model, json_processor)
 
     result = decoder.generate(prompt)
 
