@@ -26,6 +26,7 @@ class JSONStateManager:
         self.current_function: dict[str, Any] | None = None
         self.current_param_name = ""
         self.generated_params: set[str] = set()
+        self.is_done: bool = False
 
     def _get_current_param_type(self) -> str:
         """Get function parameter's type"""
@@ -223,6 +224,11 @@ class JSONStateManager:
                         self.text_buffer = self.text_buffer.split("}", 1)[1]
                     else:
                         self.text_buffer = self.text_buffer.replace("}", "")
+
+            elif self.state == State.EXPECT_CLOSE_BRACE:
+                if "}" in self.text_buffer:
+                    self.state = State.DONE
+                    self.text_buffer = self.text_buffer.split("}", 1)[1]
 
             if self.state == initial_state:
                 break
