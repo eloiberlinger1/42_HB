@@ -41,13 +41,25 @@ class JSONLogitsProcessor:
                 encouraged_ids.append(token_id)
 
         encouraged_ids = list(set(encouraged_ids))
-
         next_token_logits = np.array(token_logits)
-        mask = np.full_like(next_token_logits, -float("inf"))
 
         if not encouraged_ids:
+            if self.state_manager._has_missing_parameters():
+                while True:
+                    best_token_id = int(np.argmax(next_token_logits))
+                    best_token_text = self.model._tokenizer.decode([best_token_id])
+
+                    if "}" in best_token_text:
+                        next_token_logits[best_token_id] = -float("inf")
+                    else:
+                        next_token_id = best_token_id
+                        break
+
             next_token_id = int(np.argmax(next_token_logits))
+
         else:
+            mask = np.full_like(next_token_logits, -float("inf"))
+
             for i in encouraged_ids:
                 mask[i] = next_token_logits[i]
             next_token_id = int(np.argmax(mask))

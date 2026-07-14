@@ -106,6 +106,16 @@ class JSONStateManager:
                 rem = expected[len(buf_stripped) :]
                 if rem:
                     return [rem]
+            return [expected]
+
+        elif state == State.EXPECT_CLOSE_BRACE:
+            expected = "}"
+            buf_stripped = buf.lstrip()
+            if expected.startswith(buf_stripped):
+                rem = expected[len(buf_stripped) :]
+                if rem:
+                    return [rem]
+            return ["}"]
 
         return []
 
