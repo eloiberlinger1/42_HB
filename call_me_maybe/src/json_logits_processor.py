@@ -6,6 +6,7 @@ will choose JSON format characters when needed
 from llm_sdk import Small_LLM_Model
 from typing import cast
 from .json_state_manager import JSONStateManager
+from .json_states import State
 import torch
 
 import numpy as np
@@ -32,6 +33,8 @@ class JSONLogitsProcessor:
         Apply the constraint on the logits
         to force LLM to follow the expected output
         """
+        if self.state_manager.state == State.DONE:
+            return self.model._tokenizer.eos_token_id
         expected_strings = self.state_manager.get_expected_strings()
 
         encouraged_ids = []
