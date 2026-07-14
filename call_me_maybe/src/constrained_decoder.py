@@ -1,7 +1,9 @@
-from llm_sdk import (
-    Small_LLM_Model,
-)  # comment eviter de devoir repeter ca juste pour le typehint ?
-from .json_format_constraint import JSONFormatConstraint
+from __future__ import annotations
+from typing import TYPE_CHECKING
+from .json_logits_processor import JSONLogitsProcessor
+
+if TYPE_CHECKING:
+    from llm_sdk import Small_LLM_Model
 
 
 class ConstrainedDecoder:
@@ -10,11 +12,9 @@ class ConstrainedDecoder:
 
     """
 
-    def __init__(
-        self, model: Small_LLM_Model, constraint_engine: JSONFormatConstraint
-    ):
+    def __init__(self, model: Small_LLM_Model, logits_processor: JSONLogitsProcessor):
         self.model = model
-        self.constraint_engine = constraint_engine
+        self.logits_processor = logits_processor
 
     def generate(self, prompt: str, max_new_tokens: int = 150) -> str:
         """
@@ -23,25 +23,26 @@ class ConstrainedDecoder:
 
         model = self.model
 
-        prompt_ids = model._tokenizer.encode(prompt, add_special_tokens=False)
-        generated_ids = list(prompt_ids)
+        prompt_tensor = model.encode(prompt)
+        generated_ids = prompt_tensor.squeeze(0).tolist()
 
-        max_new_tokens = 100
-        constraint = self.constraint_engine
+        constraint = self.logits_processor
 
         result = ""
 
         for i in range(max_new_tokens):
+            # TODO : REMOVE PRINT STATEMENT
             print(f"Iteration {i}/{max_new_tokens}")
             print(f"result value: {result}")
 
             next_token_logits = model.get_logits_from_input_ids(generated_ids)
-
             next_token_id = constraint.apply_constraint(next_token_logits)
 
             generated_ids.append(next_token_id)
-            result += model._tokenizer.decode([next_token_id])
 
+            result += model.decode([next_token_id])
+
+            # -> Direct access to model._tokenizer.eos_token_id
             if next_token_id == model._tokenizer.eos_token_id:
                 break
 
