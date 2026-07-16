@@ -34,7 +34,7 @@ class JSONStateManager:
         if self.current_function and "parameters" in self.current_function:
             params = cast(dict[str, Any], self.current_function["parameters"])
             param_info = params.get(self.current_param_name, {})
-            return param_info.get("type", "string")
+            return str(param_info.get("type", "string"))
         return "string"
 
     def _has_missing_parameters(self) -> bool:
@@ -129,7 +129,11 @@ class JSONStateManager:
     #
     #
 
-    def _static_transition(self, expected_string: str, new_state: State):
+    def _static_transition(
+        self,
+        expected_string: str,
+        new_state: State
+    ) -> None:
         if expected_string in self.text_buffer:
             self.state = new_state
             self.text_buffer = self.text_buffer.split(expected_string, 1)[1]

@@ -5,8 +5,8 @@ class ContextManager:
 
     def __init__(
         self,
-        definitions_path="data/input/functions_definition.json"
-    ):
+        definitions_path: str = "data/input/functions_definition.json"
+    ) -> None:
         """
         Load all the functions from the functions file.
         """

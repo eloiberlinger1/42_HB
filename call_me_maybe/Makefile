@@ -48,8 +48,7 @@ clean:
 	@rm -rf $(STORAGE_PATH)/.cache/uv
 
 lint:
-	@echo "Running flake8"
-	@flake8 src/
-	@echo "Running mypy"
-	@mypy src/
-
+	@echo "Running flake8..."
+	@$(UV) run flake8 src
+	@echo "Running mypy..."
+	@$(UV) run mypy src --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs

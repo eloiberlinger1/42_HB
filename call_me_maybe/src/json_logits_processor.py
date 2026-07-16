@@ -40,7 +40,7 @@ class JSONLogitsProcessor:
         to force LLM to follow the expected output
         """
         if self.state_manager.state == State.DONE:
-            return self.model._tokenizer.eos_token_id
+            return int(self.model._tokenizer.eos_token_id)
         expected_strings = self.state_manager.get_expected_strings()
 
         encouraged_ids = []

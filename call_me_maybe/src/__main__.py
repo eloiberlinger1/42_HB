@@ -2,6 +2,9 @@
 Main llm loop and model initialization
 """
 
+from typing import Any
+
+
 import argparse
 import glob
 import json
@@ -54,7 +57,7 @@ class Main:
 
         result = decoder.generate(prompt)
         result_json = json.loads(result)
-        return result_json
+        return dict[Any, Any](result_json)
 
     def write_result(self, results: list) -> None:
 
@@ -69,7 +72,7 @@ class Main:
             print("Failed to save results :(")
             exit(1)
 
-    def run(self):
+    def run(self) -> None:
         try:
             with open(self.prompts_file, 'r') as f:
                 self.json_file = json.load(f)
