@@ -7,8 +7,9 @@ from llm_sdk import Small_LLM_Model
 from typing import cast
 from .json_state_manager import JSONStateManager
 from .json_states import State
-import torch
+from .logger import log
 
+import torch
 import numpy as np
 
 
@@ -69,11 +70,10 @@ class JSONLogitsProcessor:
 
         last_token_text = self.model._tokenizer.decode([next_token_id])
 
-        # TODO : REMOVE print statements for final version
-        print(
-            f"Token choisi : '{last_token_text}' | Transition depuis l'état : {self.state_manager.state}"
+        log(
+            f"Choosed token : '{last_token_text}' | Transition from state : {self.state_manager.state}"
         )
-        self.state_manager.transition(last_token_text)
-        print(f"Nouvel état : {self.state_manager.state}")
+        self.state_manager.transition(str(last_token_text))
+        log(f"New state : {self.state_manager.state}")
 
         return next_token_id

@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 from .json_logits_processor import JSONLogitsProcessor
+from .logger import log
 
 if TYPE_CHECKING:
     from llm_sdk import Small_LLM_Model
@@ -31,9 +32,8 @@ class ConstrainedDecoder:
         result = ""
 
         for i in range(max_new_tokens):
-            # TODO : REMOVE PRINT STATEMENT
-            print(f"Iteration {i}/{max_new_tokens}")
-            print(f"result value: {result}")
+            log(f"Iteration {i}/{max_new_tokens}")
+            log(f"result value: {result}")
 
             next_token_logits = model.get_logits_from_input_ids(generated_ids)
             next_token_id = constraint.apply_constraint(next_token_logits)
