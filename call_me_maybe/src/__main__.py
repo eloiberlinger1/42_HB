@@ -40,6 +40,23 @@ class Main:
         self.model = Small_LLM_Model()
         self.schema = FunctionSchema(self.functions_path)
 
+    def _cast_number_parameters(self, result_json: dict) -> None:
+        """Cast integer parameters to floats if the function schema expects a 'number'."""
+        fn_name = result_json.get("name")
+        parameters = result_json.get("parameters", {})
+        if not fn_name or not parameters:
+            return
+
+        fn_def = self.schema.get_function(fn_name)
+        if not fn_def or "parameters" not in fn_def:
+            return
+
+        for p_name, p_def in fn_def["parameters"].items():
+            if p_def.get("type") == "number" and p_name in parameters:
+                val = parameters[p_name]
+                if isinstance(val, (int, float)):
+                    parameters[p_name] = float(val)
+
     def _run_prompt(self, raw_prompt: str) -> dict:
         context_manager = ContextManager()
         prompt = context_manager.get_prompt(raw_prompt)
@@ -57,6 +74,9 @@ class Main:
 
         result = decoder.generate(prompt)
         result_json = json.loads(result)
+
+        self._cast_number_parameters(result_json)
+
         return dict[Any, Any](result_json)
 
     def write_result(self, results: list) -> None:

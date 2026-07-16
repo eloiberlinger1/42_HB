@@ -1,3 +1,4 @@
+import json
 from typing import Any, List, cast
 
 from .functions_schema import FunctionSchema
@@ -21,6 +22,7 @@ class JSONStateManager:
     def __init__(self, target_prompt: str, schema: FunctionSchema):
         self.state = State.WAIT_FOR_OPEN_BRACE
         self.target_prompt = target_prompt
+        self.escaped_prompt = json.dumps(target_prompt)[1:-1]
         self.schema = schema
 
         self.text_buffer = ""
@@ -60,7 +62,7 @@ class JSONStateManager:
                 return [expected[len(buf):]]
 
         elif state == State.READING_PROMPT_VALUE:
-            expected = self.target_prompt
+            expected = self.escaped_prompt
             if expected.startswith(buf):
                 return [expected[len(buf):]]
 
@@ -159,7 +161,7 @@ class JSONStateManager:
 
             elif self.state == State.READING_PROMPT_VALUE:
                 self._static_transition(
-                    self.target_prompt,
+                    self.escaped_prompt,
                     State.EXPECT_NAME_KEY
                 )
 

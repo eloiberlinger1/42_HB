@@ -9,7 +9,7 @@ export UV_PROJECT_ENVIRONMENT = $(VENV_PATH)
 export UV_LINK_MODE = copy
 UV = uv
 
-.PHONY: all install run clean help lint
+.PHONY: all install run clean help lint debug fclean
 
 all: install
 
@@ -43,11 +43,20 @@ run: install
 	@$(UV) run python -m src $(ARGS)
 
 clean:
-	@echo "Tidying up..."
+	@echo "Cleaning temporary files and caches..."
+	@rm -rf .mypy_cache
+	@rm -rf .pytest_cache
+	@find . -type d -name "__pycache__" -exec rm -rf {} +
+	@find . -type f -name "*.pyc" -delete
+	@echo "Cleanup complete!"
+
+fclean: clean
+	@echo "Deep cleaning virtual environment and uv cache..."
 	@rm -rf $(VENV_PATH)
 	@rm -rf $(STORAGE_PATH)/.cache/uv
+	@echo "Deep cleanup complete!"
 
-lint:
+lint: install
 	@echo "Running flake8..."
 	@$(UV) run flake8 src
 	@echo "Running mypy..."
