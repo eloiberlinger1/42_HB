@@ -9,6 +9,9 @@ from .json_logits_processor import JSONLogitsProcessor
 from .json_state_manager import JSONStateManager
 from llm_sdk import Small_LLM_Model
 import json
+import os
+import glob
+import argparse
 
 
     
@@ -20,13 +23,14 @@ class Main:
         - handle the input file from the user, ensure it follow the right format etc...
     """
 
-    def __init__(self):
-        self.prompts_file = "data/input/function_calling_tests.json"
-        self.output_file = "data/output/function_calling_results.json"
-        self.functions_path = "data/input/functions_definition.json"
+    def __init__(self, prompts_file: str, output_file: str, functions_path: str):
+        self.prompts_file = prompts_file
+        self.output_file = output_file
+        self.functions_path = functions_path
         self.model = Small_LLM_Model()
         self.schema = FunctionSchema(self.functions_path)
-        
+
+
 
     def _run_prompt(self, raw_prompt: str) -> dict:
         context_manager = ContextManager()
@@ -45,6 +49,11 @@ class Main:
         return result_json
         
     def write_result(self, results: list) -> None:
+
+        output_dir = os.path.dirname(self.output_file)
+        if output_dir:
+            os.makedirs(output_dir, exist_ok=True)
+
         try:
             with open(self.output_file, 'w', encoding='utf-8') as f:
                 json.dump(results, f, indent=4)
@@ -70,6 +79,27 @@ class Main:
         self.write_result(results)
 
 
+def get_default_file(keyword: str, fallback: str) -> str:
+    search_pattern = os.path.join("data", "input", f"*{keyword}*.json")
+    files_found = glob.glob(search_pattern)
+    
+    if files_found:
+        return files_found[0]
+    return fallback
+
 if __name__ == "__main__":
-    main = Main()
+
+    default_input = get_default_file("calling", "data/input/function_calling_tests.json")
+    default_functions = get_default_file("definition", "data/input/functions_definition.json")
+    default_output = "data/output/function_calling_results.json"
+
+    parser = argparse.ArgumentParser(description="Call Me Maybe - Constrained Decoding for LLM")
+    parser.add_argument("--input", type=str, default=default_input, help="File containing prompts")
+    parser.add_argument("--functions_definition", type=str, default=default_functions, help="Path to the definition of the functions to use")
+    parser.add_argument("--output", type=str, default=default_output, help="Output file")
+    
+    args = parser.parse_args()
+
+    main = Main(prompts_file=args.input, output_file=args.output, functions_path=args.functions_definition)
     main.run()
+    
