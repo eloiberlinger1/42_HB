@@ -9,7 +9,7 @@ export UV_PROJECT_ENVIRONMENT = $(VENV_PATH)
 export UV_LINK_MODE = copy
 UV = uv
 
-.PHONY: all install run clean help
+.PHONY: all install run clean help lint
 
 all: install
 
@@ -42,3 +42,10 @@ clean:
 	@echo "Tidying up..."
 	@rm -rf $(VENV_PATH)
 	@rm -rf $(STORAGE_PATH)/.cache/uv
+
+lint:
+	@echo "Running flake8"
+	@flake8 src/
+	@echo "Running mypy"
+	@mypy src/
+

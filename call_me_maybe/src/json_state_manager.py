@@ -1,6 +1,7 @@
-from typing import Any, cast, List
-from .json_states import State
+from typing import Any, List, cast
+
 from .functions_schema import FunctionSchema
+from .json_states import State
 
 
 class JSONStateManager:
@@ -37,7 +38,10 @@ class JSONStateManager:
         return "string"
 
     def _has_missing_parameters(self) -> bool:
-        if not self.current_function or "parameters" not in self.current_function:
+        if (
+            not self.current_function
+            or "parameters" not in self.current_function
+        ):
             return False
         expected_params = set(self.current_function["parameters"].keys())
         return len(expected_params - self.generated_params) > 0
@@ -48,28 +52,28 @@ class JSONStateManager:
 
         if state == State.WAIT_FOR_OPEN_BRACE:
             if "{".startswith(buf):
-                return ["{"[len(buf) :]]
+                return ["{"[len(buf):]]
 
         elif state == State.EXPECT_PROMPT_KEY:
             expected = '"prompt": "'
             if expected.startswith(buf):
-                return [expected[len(buf) :]]
+                return [expected[len(buf):]]
 
         elif state == State.READING_PROMPT_VALUE:
             expected = self.target_prompt
             if expected.startswith(buf):
-                return [expected[len(buf) :]]
+                return [expected[len(buf):]]
 
         elif state == State.EXPECT_NAME_KEY:
             expected = '", "name": "'
             if expected.startswith(buf):
-                return [expected[len(buf) :]]
+                return [expected[len(buf):]]
 
         elif state == State.READING_NAME_VALUE:
             encouraged = []
             for name in self.schema.get_all_names():
                 if name.startswith(buf):
-                    rem = name[len(buf) :]
+                    rem = name[len(buf):]
                     if rem:
                         encouraged.append(rem)
             return encouraged
@@ -77,7 +81,7 @@ class JSONStateManager:
         elif state == State.EXPECT_PARAMETERS_KEY:
             expected = '", "parameters": {'
             if expected.startswith(buf):
-                return [expected[len(buf) :]]
+                return [expected[len(buf):]]
 
         elif state == State.EXPECT_PARAM_KEY:
             buf_stripped = buf.lstrip()
@@ -91,7 +95,7 @@ class JSONStateManager:
                 for k in param_keys:
                     expected_str = f'"{k}": '
                     if expected_str.startswith(buf_stripped):
-                        rem = expected_str[len(buf_stripped) :]
+                        rem = expected_str[len(buf_stripped):]
                         if rem:
                             encouraged.append(rem)
                 return encouraged
@@ -104,7 +108,7 @@ class JSONStateManager:
             expected = ", " if self._has_missing_parameters() else "}"
             buf_stripped = buf.lstrip()
             if expected.startswith(buf_stripped):
-                rem = expected[len(buf_stripped) :]
+                rem = expected[len(buf_stripped):]
                 if rem:
                     return [rem]
             return [expected]
@@ -113,7 +117,7 @@ class JSONStateManager:
             expected = "}"
             buf_stripped = buf.lstrip()
             if expected.startswith(buf_stripped):
-                rem = expected[len(buf_stripped) :]
+                rem = expected[len(buf_stripped):]
                 if rem:
                     return [rem]
             return ["}"]
@@ -144,13 +148,22 @@ class JSONStateManager:
                 self._static_transition("{", State.EXPECT_PROMPT_KEY)
 
             elif self.state == State.EXPECT_PROMPT_KEY:
-                self._static_transition('"prompt": "', State.READING_PROMPT_VALUE)
+                self._static_transition(
+                    '"prompt": "',
+                    State.READING_PROMPT_VALUE
+                )
 
             elif self.state == State.READING_PROMPT_VALUE:
-                self._static_transition(self.target_prompt, State.EXPECT_NAME_KEY)
+                self._static_transition(
+                    self.target_prompt,
+                    State.EXPECT_NAME_KEY
+                )
 
             elif self.state == State.EXPECT_NAME_KEY:
-                self._static_transition('", "name": "', State.READING_NAME_VALUE)
+                self._static_transition(
+                    '", "name": "',
+                    State.READING_NAME_VALUE
+                )
 
             elif self.state == State.READING_NAME_VALUE:
                 for name in self.schema.get_all_names():
@@ -162,7 +175,10 @@ class JSONStateManager:
                         break
 
             elif self.state == State.EXPECT_PARAMETERS_KEY:
-                self._static_transition('", "parameters": {', State.EXPECT_PARAM_KEY)
+                self._static_transition(
+                    '", "parameters": {',
+                    State.EXPECT_PARAM_KEY
+                )
 
             elif self.state == State.EXPECT_PARAM_KEY:
                 if "}" in self.text_buffer:
@@ -171,16 +187,20 @@ class JSONStateManager:
                     else:
                         self.text_buffer = self.text_buffer.replace("}", "")
 
-                if self.current_function and "parameters" in self.current_function:
+                if (
+                    self.current_function
+                    and "parameters" in self.current_function
+                ):
                     for k in self.current_function["parameters"].keys():
                         expected_str = f'"{k}": '
                         if expected_str in self.text_buffer:
                             self.current_param_name = k
                             self.generated_params.add(k)
                             self.state = State.READING_PARAM_VALUE
-                            self.text_buffer = self.text_buffer.split(expected_str, 1)[
+                            self.text_buffer = self.text_buffer.split(
+                                expected_str,
                                 1
-                            ]
+                            )[1]
                             break
 
             elif self.state == State.READING_PARAM_VALUE:
@@ -201,7 +221,7 @@ class JSONStateManager:
 
                         if end_idx != -1:
                             self.state = State.EXPECT_PARAM_COMMA_OR_CLOSE
-                            self.text_buffer = self.text_buffer[end_idx + 1 :]
+                            self.text_buffer = self.text_buffer[end_idx + 1:]
 
                 elif param_type in ["number", "integer"]:
                     if "," in self.text_buffer:
@@ -210,9 +230,12 @@ class JSONStateManager:
                     elif "}" in self.text_buffer:
                         if not self._has_missing_parameters():
                             self.state = State.EXPECT_CLOSE_BRACE
-                            self.text_buffer = self.text_buffer.split("}", 1)[1]
+                            self.text_buffer = self.text_buffer.split(
+                                "}",
+                                1)[1]
                         else:
-                            self.text_buffer = self.text_buffer.replace("}", "")
+                            self.text_buffer = self.text_buffer.replace(
+                                "}", "")
 
             elif self.state == State.EXPECT_PARAM_COMMA_OR_CLOSE:
                 if "," in self.text_buffer:

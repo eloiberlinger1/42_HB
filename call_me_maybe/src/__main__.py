@@ -6,8 +6,6 @@ import argparse
 import glob
 import json
 import os
-from tabnanny import verbose
-
 from llm_sdk import Small_LLM_Model
 
 from .constrained_decoder import ConstrainedDecoder

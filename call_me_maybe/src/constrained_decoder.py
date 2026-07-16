@@ -1,5 +1,7 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
+
 from .json_logits_processor import JSONLogitsProcessor
 from .logger import log
 
@@ -13,7 +15,11 @@ class ConstrainedDecoder:
 
     """
 
-    def __init__(self, model: Small_LLM_Model, logits_processor: JSONLogitsProcessor):
+    def __init__(
+        self,
+        model: Small_LLM_Model,
+        logits_processor: JSONLogitsProcessor
+    ):
         self.model = model
         self.logits_processor = logits_processor
 

@@ -12,7 +12,7 @@ class State(Enum):
     EXPECT_PARAMETERS_KEY = auto()  # literally expect ", "parameters": {
     EXPECT_PARAM_OPEN_BRACE = auto()
 
-    EXPECT_PARAM_KEY = auto()  # expects the parameter name of the function ex :"number"
+    EXPECT_PARAM_KEY = auto()  # parameter name of the function ex :"number"
     READING_PARAM_VALUE = auto()
     EXPECT_PARAM_COMMA_OR_CLOSE = auto()
 

@@ -3,7 +3,10 @@ import json
 
 class ContextManager:
 
-    def __init__(self, definitions_path="data/input/functions_definition.json"):
+    def __init__(
+        self,
+        definitions_path="data/input/functions_definition.json"
+    ):
         """
         Load all the functions from the functions file.
         """
