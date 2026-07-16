@@ -59,6 +59,7 @@ class Main:
                 json.dump(results, f, indent=4)
         except Exception:
             print("Failed to save results :(")
+            exit(1)
 
     def run(self):
         try:
@@ -66,6 +67,7 @@ class Main:
                 self.json_file = json.load(f)
         except Exception:
             print("Failed to open inputs file :(")
+            exit(1)
 
         results = []
 
@@ -75,22 +77,34 @@ class Main:
 
             except Exception:
                 print("An error occured. Make sure your file respect required format")
+                exit(1)
         
         self.write_result(results)
 
 
 def get_default_file(keyword: str, fallback: str) -> str:
+    """
+    Looks for input files
+    We expect the names for the prompts file contains 
+        "calling" and "definition" for functions definition
+    """
     search_pattern = os.path.join("data", "input", f"*{keyword}*.json")
     files_found = glob.glob(search_pattern)
     
     if files_found:
         return files_found[0]
+    else:
+        raise Exception
     return fallback
 
 if __name__ == "__main__":
 
-    default_input = get_default_file("calling", "data/input/function_calling_tests.json")
-    default_functions = get_default_file("definition", "data/input/functions_definition.json")
+    try:
+        default_input = get_default_file("calling", "data/input/function_calling_tests.json")
+        default_functions = get_default_file("definition", "data/input/functions_definition.json")
+    except Exception:
+        print("\nNo input file found\n")
+        exit(1)
     default_output = "data/output/function_calling_results.json"
 
     parser = argparse.ArgumentParser(description="Call Me Maybe - Constrained Decoding for LLM")
