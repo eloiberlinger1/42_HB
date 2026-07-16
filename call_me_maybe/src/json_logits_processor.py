@@ -78,8 +78,8 @@ class JSONLogitsProcessor:
         last_token_text = self.model._tokenizer.decode([next_token_id])
 
         log(
-            f"Choosed token : '{last_token_text}'",
-            " | Transition from state : {self.state_manager.state}"
+            f"Choosed token : '{last_token_text}'"
+            + " | Transition from state : {self.state_manager.state}"
         )
         self.state_manager.transition(str(last_token_text))
         log(f"New state : {self.state_manager.state}")

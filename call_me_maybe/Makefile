@@ -13,6 +13,10 @@ UV = uv
 
 all: install
 
+debug: install
+	@echo "Running debug mode (pdb)..."
+	@$(UV) run python -m pdb -m src $(ARGS)
+
 help:
 	@echo "\
 	\n\

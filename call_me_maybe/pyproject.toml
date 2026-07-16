@@ -9,6 +9,13 @@ dependencies = [
     "huggingface-hub>=0.20.0",
 ]
 
+[tool.mypy]
+exclude = ["llm_sdk"]
+
+[[tool.mypy.overrides]]
+module = "llm_sdk.*"
+ignore_errors = true
+follow_imports = "skip"
 
 [build-system]
 requires = ["hatchling"]
