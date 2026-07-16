@@ -1,72 +1,94 @@
-This project has been created as part of the 42 curriculum by eberling.
-
-## “Description” section that clearly presents the project, including its goal and a
-brief overview.
-• An “Instructions” section containing any relevant information about compilation,
-installation, and/or execution.
-• A “Resources” section listing classic references related to the topic (documen-
-tation, articles, tutorials, etc.), as well as a description of how AI was used —
-specifying for which tasks and which parts of the project.
-➠ Additional sections may be required depending on the project (e.g., usage
-examples, feature list, technical choices, etc.).
-Any required additions will be explicitly listed below.
-For this project, the README.md must also include:
-• Algorithm explanation: Describe your constrained decoding approach in detail
-• Design decisions: Explain key choices in your implementation
-• Performance analysis: Discuss accuracy, speed, and reliability of your solution
-• Challenges faced: Document difficulties encountered and how you solved them
-• Testing strategy: Describe how you validated your implementation
-• Example usage: Provide clear examples of running your program
-
-
-
-Created by eberling for the 42 curriculum.
+*This project has been created as part of the 42 curriculum by eberling.*
 
 ## Description
-[Insert a brief overview of the project here. What does it do? What is the main objective?]
+This project, **Call Me Maybe**, implements a robust function-calling tool for Large Language Models (LLMs) using **constrained decoding**. In small language models (like the 0.6B parameter `Qwen/Qwen3-0.6B` model), generating structured outputs such as valid JSON schema is highly unreliable. This system guides the model token-by-token using a custom finite state machine, guaranteeing that the output is always 100% syntactically valid JSON matching the exact schema definition provided.
 
----
+The system translates natural language requests (e.g., "What is the sum of 2 and 3?") into precise function calls with typed arguments (e.g., `{"name": "fn_add_numbers", "parameters": {"a": 2.0, "b": 3.0}}`).
 
 ## Instructions
-### Compilation
-[Include command to compile, e.g., `make`]
+
+### Installation
+This project manages its dependencies using `uv`. Make sure you have `uv` installed, then run:
+```bash
+make install
+```
+This command will create a local virtual environment and install all required packages (including `numpy` and `pydantic` as specified by the subject).
 
 ### Execution
-[Include command to run, e.g., `./program_name [args]`]
+To run the main program using the default paths:
+```bash
+make run
+```
+You can also execute the script with custom paths using:
+```bash
+uv run python -m src --functions_definition <path_to_definitions> --input <path_to_inputs> --output <path_to_outputs>
+```
+
+### Formatting and Linting
+To check the code for syntax, style (flake8), and type safety (mypy), run:
+```bash
+make lint
+```
 
 ---
 
 ## Algorithm Explanation
-[Describe your constrained decoding approach in detail. Explain the logic, data structures, and how you ensure the constraints are met during the process.]
+The core of this project is **Constrained Decoding** powered by a Finite State Machine (FSM):
+1. **FSM State Management (`JSONStateManager`)**: The FSM tracks the current token position in the expected JSON schema. It transitions through states such as:
+   - `WAIT_FOR_OPEN_BRACE`
+   - `EXPECT_PROMPT_KEY` / `READING_PROMPT_VALUE`
+   - `EXPECT_NAME_KEY` / `READING_NAME_VALUE` (restricts choices to available function names)
+   - `EXPECT_PARAMETERS_KEY`
+   - `EXPECT_PARAM_KEY` / `READING_PARAM_VALUE` (enforces correct data types: strings, numbers, integers)
+   - `EXPECT_CLOSE_BRACE`
+2. **Logit Masking (`JSONLogitsProcessor`)**: At each token generation step, the `JSONLogitsProcessor` fetches the list of allowed strings/characters from the `JSONStateManager`. It encodes these candidates into token IDs, creates a mask for the vocabulary logits, setting all invalid token logits to `-inf`, and forces the model to sample only from the valid token subset.
+3. **Loop Control (`ConstrainedDecoder`)**: Generates tokens iteratively, updating the generation context and feeding the generated token back to the FSM until the `State.DONE` or the EOS token is reached.
 
 ---
 
 ## Design Decisions
-[Explain key choices made in your implementation. Why did you choose specific data structures, libraries, or architectural patterns?]
-
----
-
-## Performance Analysis
-* **Accuracy:** [How precise is your solution?]
-* **Speed:** [Discuss time complexity and real-world execution speed.]
-* **Reliability:** [How does the program handle edge cases or malformed input?]
-
----
-
-## Challenges Faced
-[Document difficulties encountered during development and the specific steps you took to overcome them.]
-
----
-
-## Testing Strategy
-[Describe your methodology for validating the implementation. Mention unit tests, stress tests, or specific test cases used.]
+* **State Machine for Token Validation**: Instead of using regex or parsing partial JSON, a character-based FSM was chosen because it allows us to precisely know what token is expected next and build exact prefix lists for the tokenizer.
+* **Separation of LLM and Processor**: The decoding loop is fully decoupled from the state validation logic, making the code testable and easy to modify.
+* **Minimal Dependencies**: The project avoids forbidden external libraries (like `transformers` or `pytorch` in the client code) by strictly using the provided `llm_sdk` wrapper class.
 
 ---
 
 ## Example Usage
-[Provide clear, copy-pasteable examples of how to run your program and what the expected output looks like.]
 
+Run the program:
 ```bash
-$ ./your_program input_file
-# Expected output:
-# [Result here]
+uv run python -m src \
+  --functions_definition data/input/functions_definition.json \
+  --input data/input/function_calling_tests.json \
+  --output data/output/function_calling_results.json
+```
+
+**Input prompt (e.g. `function_calling_tests.json`)**:
+```json
+[
+  {
+    "prompt": "What is the sum of 2 and 3?"
+  }
+]
+```
+
+**Output result (`function_calling_results.json`)**:
+```json
+[
+  {
+    "prompt": "What is the sum of 2 and 3?",
+    "name": "fn_add_numbers",
+    "parameters": {
+      "a": 2.0,
+      "b": 3.0
+    }
+  }
+]
+```
+
+---
+
+## Resources
+* Hugging Face Transformers documentation: [https://huggingface.co/docs/transformers](https://huggingface.co/docs/transformers)
+* BPE and WordPiece Tokenization concepts.
+* **AI Usage**: Gemini for designing, having a better understanding of the project's requirement, writing documentation, debugging 
