@@ -8,33 +8,68 @@ from .functions_schema import FunctionSchema
 from .json_logits_processor import JSONLogitsProcessor
 from .json_state_manager import JSONStateManager
 from llm_sdk import Small_LLM_Model
+import json
 
-from .test import Tester
 
+    
+class Main:
+    """
+    Darft just in order to test
+    Later tasks :
+        - Rename class as tests loader or smth
+        - handle the input file from the user, ensure it follow the right format etc...
+    """
 
-def main():
+    def __init__(self):
+        self.prompts_file = "data/input/function_calling_tests.json"
+        self.output_file = "data/output/function_calling_results.json"
+        self.functions_path = "data/input/functions_definition.json"
+        self.model = Small_LLM_Model()
+        self.schema = FunctionSchema(self.functions_path)
+        
 
-    # By default pick the first question.
-    test = Tester()
-    raw_prompt = test.gettest()
+    def _run_prompt(self, raw_prompt: str) -> dict:
+        context_manager = ContextManager()
+        prompt = context_manager.get_prompt(raw_prompt)
 
-    context_manager = ContextManager()
-    prompt = context_manager.get_prompt(raw_prompt)
+        model = self.model
 
-    model = Small_LLM_Model()
+        schema = self.schema
+        state_manager = JSONStateManager(target_prompt=raw_prompt, schema=schema)
+        json_processor = JSONLogitsProcessor(model, state_manager)
 
-    functions_path = "data/input/functions_definition.json"
-    schema = FunctionSchema(functions_path)
-    state_manager = JSONStateManager(target_prompt=raw_prompt, schema=schema)
-    json_processor = JSONLogitsProcessor(model, state_manager)
+        decoder = ConstrainedDecoder(model, json_processor)
 
-    decoder = ConstrainedDecoder(model, json_processor)
+        result = decoder.generate(prompt)
+        result_json = json.loads(result)
+        return result_json
+        
+    def write_result(self, results: list) -> None:
+        try:
+            with open(self.output_file, 'w', encoding='utf-8') as f:
+                json.dump(results, f, indent=4)
+        except Exception:
+            print("Failed to save results :(")
 
-    result = decoder.generate(prompt)
+    def run(self):
+        try:
+            with open(self.prompts_file, 'r') as f:
+                self.json_file = json.load(f)
+        except Exception:
+            print("Failed to open inputs file :(")
 
-    print("Finish")
-    print(result)
+        results = []
+
+        for p in self.json_file:
+            try:
+                results.append(self._run_prompt(p['prompt']))
+
+            except Exception:
+                print("An error occured. Make sure your file respect required format")
+        
+        self.write_result(results)
 
 
 if __name__ == "__main__":
-    main()
+    main = Main()
+    main.run()
