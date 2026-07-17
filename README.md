@@ -16,3 +16,4 @@
 
 - **[python_modules](python_modules/)** - Python programming modules and exercises from the new core curicullum of 42 programm.
 
+- **[call_me_maybe](call_me_maybe/)** - Implementation of a function-calling tool for Large Language Models (LLMs) using constrained decoding to ensure syntactically valid JSON outputs.
