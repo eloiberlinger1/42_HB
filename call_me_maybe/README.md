@@ -1,5 +1,29 @@
 *This project has been created as part of the 42 curriculum by eberling.*
 
+## Output preview (with --verbose)
+<img width="940" height="230" alt="sortie" src="https://github.com/user-attachments/assets/33641c34-e6f0-4f59-9e54-294dbbd55c43" />
+
+```
+New state : State.READING_PROMPT_VALUE         <----- Each token is generated according to a part of the JSON format
+Iteration 12/150
+result value: {"prompt": "What is the square root of       <----      Here is the result showing while the LLM generating
+Choosed token : '1' | Transition from state : {self.state_manager.state}      <------    We encourage more tokens corresponding to the characters we expect to have
+New state : State.READING_PROMPT_VALUE
+Iteration 13/150
+result value: {"prompt": "What is the square root of 1
+Choosed token : '6' | Transition from state : {self.state_manager.state}
+New state : State.READING_PROMPT_VALUE
+Iteration 14/150
+result value: {"prompt": "What is the square root of 16
+Choosed token : '?' | Transition from state : {self.state_manager.state}
+New state : State.EXPECT_NAME_KEY
+```
+
+
+We encourage the tokens corresponding to json format like "{" in vocab below would be Token id *90* : etc...
+
+Qwen/Qwen3-0.6B vocab file  ->  [Qwen/Qwen3-0.6B vocab](https://huggingface.co/Qwen/Qwen3-0.6B/raw/main/vocab.json)
+
 ## Description
 This project, **Call Me Maybe**, implements a robust function-calling tool for Large Language Models (LLMs) using **constrained decoding**. In small language models (like the 0.6B parameter `Qwen/Qwen3-0.6B` model), generating structured outputs such as valid JSON schema is highly unreliable. This system guides the model token-by-token using a custom finite state machine, guaranteeing that the output is always 100% syntactically valid JSON matching the exact schema definition provided.
 
