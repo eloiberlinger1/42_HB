@@ -75,6 +75,13 @@ The core of this project is **Constrained Decoding** powered by a Finite State M
 * **Separation of LLM and Processor**: The decoding loop is fully decoupled from the state validation logic, making the code testable and easy to modify.
 * **Minimal Dependencies**: The project avoids forbidden external libraries (like `transformers` or `pytorch` in the client code) by strictly using the provided `llm_sdk` wrapper class.
 
+
+## Challenges Faced
+The hardest part of this project was to respect the strict subject requirements and organize the code while keeping a clean codebase. Surprisingly, the easiest part for me was to get the first output from the LLM and make the first restrictions to the token generation.
+
+## Testing Strategy
+For testing, I basically tested all the input files provided from the subject and checked the output manually to ensure the generated JSON strictly matched the expected schemas and definitions.
+
 ---
 
 ## Example Usage
