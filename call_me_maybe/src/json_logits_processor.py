@@ -56,7 +56,7 @@ class JSONLogitsProcessor:
             if self.state_manager._has_missing_parameters():
                 while True:
                     best_token_id = int(np.argmax(next_token_logits))
-                    best_token_text = self.model._tokenizer.decode(
+                    best_token_text = self.model.decode(
                         [best_token_id]
                     )
 
@@ -75,7 +75,7 @@ class JSONLogitsProcessor:
                 mask[i] = next_token_logits[i]
             next_token_id = int(np.argmax(mask))
 
-        last_token_text = self.model._tokenizer.decode([next_token_id])
+        last_token_text = self.model.decode([next_token_id])
 
         log(
             f"Choosed token : '{last_token_text}'"
