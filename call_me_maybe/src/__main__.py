@@ -41,7 +41,10 @@ class Main:
         self.schema = FunctionSchema(self.functions_path)
 
     def _cast_number_parameters(self, result_json: dict) -> None:
-        """Cast integer parameters to floats if the function schema expects a 'number'."""
+        """
+        Cast integer parameters to floats if
+        the function schema expects a 'number'.
+        """
         fn_name = result_json.get("name")
         parameters = result_json.get("parameters", {})
         if not fn_name or not parameters:
