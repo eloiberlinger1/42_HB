@@ -1,5 +1,0 @@
-importlib
-pandas
-numpy
-matplotlib
-requests
