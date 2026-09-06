@@ -1,4 +1,5 @@
 MAIN = src/__main__.py
+MAP ?= maps/easy.txt
 
 # ON 42 PC
 STORAGE_PATH = /home/eberling/goinfre
@@ -20,7 +21,7 @@ all: install
 
 debug: install
 	@echo "Running debug mode (pdb)..."
-	@$(UV) run python -m pdb -m src $(ARGS)
+	@$(UV) run python -m pdb -m src
 
 help:
 	@echo "\
@@ -43,7 +44,7 @@ run: install
 	@echo "Installing dependencies..."
 	@$(UV) sync
 	@echo "Environment ready."
-	@$(UV) run python -m src $(ARGS)
+	@$(UV) run python -m src $(MAP)
 
 dev: run
 

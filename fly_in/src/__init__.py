@@ -1,5 +1,6 @@
-from .parser import Parser
+from .parsing import MapParser, CLIParser
 
 __all__ = [
-    "Parser",
+    "MapParser",
+    "CLIParser",
 ]

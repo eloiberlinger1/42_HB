@@ -1,9 +1,23 @@
 import re
+import argparse
 from pathlib import Path
 from typing import Dict, Any, Tuple
 
 
-class Parser:
+class CLIParser():
+
+    def parse_input(self) -> Path:
+        """
+        For now input parsing only focuses on letting the user pick a map
+        """
+        parser = argparse.ArgumentParser(description="Fly-in drone simulation")
+        parser.add_argument("map_file", type=Path, help="Path to map file")
+        args = parser.parse_args()
+
+        return args.map_file
+
+
+class MapParser:
     def __init__(self, file_path: Path):
         self.file_path = file_path
         self.nb_drones = 0
