@@ -82,15 +82,28 @@ class Application:
         print(24 * "\n")
 
         # get user input for specific maps
-        cli_parser = CLIParser()
-        map = cli_parser.parse_input()
+        try:
+            cli_parser = CLIParser()
+            map_file = cli_parser.parse_input()
+
+        except Exception as e:
+            print(f"Error during treatment of user input see below : \n\n {e}")
 
         # parse the file
-        map_parser = MapParser(map)
-        raw_data = map_parser.parse()
+        try:
+            map_parser = MapParser(map_file)
+            raw_data = map_parser.parse()
+
+        except Exception as e:
+            print(f"Error during parsing of map file see below : \n\n {e}")
+            exit()
 
         # create business logic objects
-        graph = self._build_graph(raw_data)
+        try:
+            graph = self._build_graph(raw_data)
+        except Exception as e:
+            print(f"Error during instanciation of the Graph. See below \n\n {e}")
+            exit()
 
         print(graph)
 

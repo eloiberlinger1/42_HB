@@ -32,6 +32,8 @@ help:
 	- make lint       Check code files for mypy and flake8 conventions\n\
 	- make clean      Clean the installation files\n\
 	\n\
+	Parameters : MAP=<path to a specific map>
+	\n\
 	"
 
 install:
