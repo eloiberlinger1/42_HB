@@ -1,5 +1,5 @@
 MAIN = src/__main__.py
-MAP ?= maps/easy.txt
+MAP ?= maps/easy/01_linear_path.txt
 
 # ON 42 PC
 STORAGE_PATH = /home/eberling/goinfre
