@@ -1,8 +1,8 @@
-import argparse
 from pathlib import Path
 
 from .parsing import MapParser, CLIParser
 from .objects import Drone, Graph, Connection, Zone
+from .simulation import SimulationEngine
 
 from typing import Dict, Any
 
@@ -22,28 +22,39 @@ class Application:
         zones_dict: Dict[str, Zone] = {}
         start_zone_name = None
 
-        # 1. Instanciation des zones
-        for name, metadata in raw_zones.items():
-            is_start = metadata.get("type_def") == "start_hub"
+        # 1. Instanciation of zones
+        for name, zone_info in raw_zones.items():
+            type_def = zone_info.get("type_def")
+            is_start = type_def == "start_hub"
+            is_end = type_def == "end_hub"
+
             if is_start:
                 start_zone_name = name
 
+            meta = zone_info.get("metadata", {})
+            zone_type = meta.get("zone", "normal")
+
+            raw_max_drones = meta.get("max_drones")
+            max_drones = int(raw_max_drones) if raw_max_drones is not None else 1
+            color = meta.get("color")
+
             zone = Zone(
                 name=name,
-                x=metadata.get("x"),
-                y=metadata.get("y"),
-                zone_type=metadata.get("zone_type", "normal"),
-                max_drones=metadata.get("max_drones", 1),
-                color=metadata.get("color"),
+                x=zone_info.get("x"),
+                y=zone_info.get("y"),
+                zone_type=zone_type,
+                max_drones=max_drones,
+                color=color,
                 is_start=is_start,
-                is_end=metadata.get("is_end", False),
+                is_end=is_end,
             )
+
             zones_dict[name] = zone
 
-        if not start_zone_name and nb_drones > 0:
-            raise ValueError("start_hub not found in the input file")
+            if not start_zone_name and nb_drones > 0:
+                raise ValueError("start_hub not found in the input file")
 
-        # 2. Instanciation des connexions
+        # 2. Instanciation of connexions
         connections_list = []
         for conn_data in raw_connections:
             z1_name = conn_data.get("from")
@@ -59,9 +70,13 @@ class Application:
                 zone2=zones_dict[z2_name],
                 max_link_capacity=conn_data.get("max_link_capacity", 1),
             )
+
+            zones_dict[z1_name].adjacent_zones[z2_name] = connection
+            zones_dict[z2_name].adjacent_zones[z1_name] = connection
+
             connections_list.append(connection)
 
-        # 3. Instanciation des drones
+        # 3. Instanciation of drones
         drones_list = []
         for i in range(nb_drones):
             drone = Drone(drone_id=f"D{i+1}", current_position=start_zone_name)
@@ -107,6 +122,9 @@ class Application:
             exit()
 
         print(graph)
+
+        engine = SimulationEngine(graph)
+        engine.run()
 
 
 if __name__ == "__main__":

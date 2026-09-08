@@ -30,7 +30,7 @@ class Zone(BaseModel):
     x: int
     y: int
     zone_type: Literal["normal", "blocked", "restricted", "priority"] = "normal"
-    adjacent_zones: list = []
+    adjacent_zones: Dict[str, "Connection"] = Field(default_factory=dict)
     max_drones: int = Field(default=1, gt=0)
     color: Optional[str] = None
     is_start: bool = False
@@ -54,7 +54,7 @@ class Drone(BaseModel):
 
     drone_id: str
     current_position: str
-    state: Literal["WAITING", "IN_TRANSIT", "IDLE"] = "WAITING"
+    state: Literal["WAITING", "IN_TRANSIT", "ARRIVED"] = "WAITING"
     turns_remaining: int = 0
 
 
@@ -65,7 +65,7 @@ class Graph(BaseModel):
 
     nb_drones: int
     zones: Dict[str, Zone] = {}
-    connections: list[Connection] = []
+    connections: list["Connection"] = []
     drones: list[Drone] = []
 
     def __str__(self) -> str:
