@@ -4,7 +4,7 @@ from pathlib import Path
 from .parsing import MapParser, CLIParser
 from .objects import Drone, Graph, Connection, Zone
 
-from typing import Dict
+from typing import Dict, Any
 
 
 class Application:
@@ -13,7 +13,7 @@ class Application:
 
         self.path: Path = Path("maps/easy/01_linear_path.txt")
 
-    def _build_graph(self, raw_data):
+    def _build_graph(self, raw_data: Dict[str, Any]) -> Graph:
 
         nb_drones = raw_data.get("nb_drones", 0)
         raw_zones = raw_data.get("zones", {})
@@ -64,7 +64,7 @@ class Application:
         # 3. Instanciation des drones
         drones_list = []
         for i in range(nb_drones):
-            drone = Drone(drone_id=f"D_{i}", current_position=start_zone_name)
+            drone = Drone(drone_id=f"D{i+1}", current_position=start_zone_name)
             drones_list.append(drone)
 
         return Graph(
@@ -80,6 +80,7 @@ class Application:
         """
 
         print(24 * "\n")
+        print("Fly-In       eberling\n\n")
 
         # get user input for specific maps
         try:

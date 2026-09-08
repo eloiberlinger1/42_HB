@@ -30,6 +30,7 @@ class Zone(BaseModel):
     x: int
     y: int
     zone_type: Literal["normal", "blocked", "restricted", "priority"] = "normal"
+    adjacent_zones: list = []
     max_drones: int = Field(default=1, gt=0)
     color: Optional[str] = None
     is_start: bool = False
@@ -53,6 +54,8 @@ class Drone(BaseModel):
 
     drone_id: str
     current_position: str
+    state: Literal["WAITING", "IN_TRANSIT", "IDLE"] = "WAITING"
+    turns_remaining: int = 0
 
 
 class Graph(BaseModel):

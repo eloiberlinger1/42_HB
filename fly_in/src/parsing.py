@@ -1,10 +1,10 @@
 import re
 import argparse
 from pathlib import Path
-from typing import Dict, Any, Tuple
+from typing import Dict, Any
 
 
-class CLIParser():
+class CLIParser:
 
     def parse_input(self) -> Path:
         """
