@@ -10,7 +10,9 @@ from typing import Dict, Any
 class Application:
 
     def __init__(self) -> None:
-
+        """
+        Initialize the Application class
+        """
         self.path: Path = Path("maps/easy/01_linear_path.txt")
 
     def _build_graph(self, raw_data: Dict[str, Any]) -> Graph:
@@ -51,8 +53,8 @@ class Application:
 
             zones_dict[name] = zone
 
-            if not start_zone_name and nb_drones > 0:
-                raise ValueError("start_hub not found in the input file")
+        if not start_zone_name and nb_drones > 0:
+            raise ValueError("start_hub not found in the input file")
 
         # 2. Instanciation of connexions
         connections_list = []

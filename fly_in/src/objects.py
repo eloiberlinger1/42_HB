@@ -18,7 +18,7 @@ Use pydantic for values verification
 """
 
 from pydantic import BaseModel, Field
-from typing import Literal, Optional, Dict
+from typing import Literal, Optional, Dict, List
 
 
 class Zone(BaseModel):
@@ -58,6 +58,21 @@ class Drone(BaseModel):
     turns_remaining: int = 0
 
 
+class Path(BaseModel):
+    """
+    Represents a path to be found.
+    """
+
+    nodes: List[str]
+    turn_cost: int = 0
+    assigned_drones: List[str] = Field(default_factory=list)
+
+    @property
+    def length(self) -> int:
+        """Number of nodes in the path"""
+        return len(self.nodes)
+
+
 class Graph(BaseModel):
     """
     Represents the global map for the execution of the app
@@ -68,6 +83,7 @@ class Graph(BaseModel):
     connections: list["Connection"] = []
     drones: list[Drone] = []
 
+    # TODO : REMOVE this before submit or comment
     def __str__(self) -> str:
         """
         Briefly vibe coded nice display of the final data.
