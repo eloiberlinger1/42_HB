@@ -67,10 +67,14 @@ class Application:
                     f"Trying to bound two not existing zones {z1_name} -> {z2_name}"
                 )
 
+            meta = conn_data.get("metadata", {})
+            raw_capacity = meta.get("max_link_capacity")
+            capacity = int(raw_capacity) if raw_capacity is not None else 1
+
             connection = Connection(
                 zone1=zones_dict[z1_name],
                 zone2=zones_dict[z2_name],
-                max_link_capacity=conn_data.get("max_link_capacity", 1),
+                max_link_capacity=capacity,
             )
 
             zones_dict[z1_name].adjacent_zones[z2_name] = connection
