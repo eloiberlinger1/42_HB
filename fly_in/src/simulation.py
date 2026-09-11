@@ -11,7 +11,7 @@ class SimulationEngine:
         self.graph = graph
 
     def _find_shortest_path(
-        self, excluded_zones: Set[str] = None
+        self, excluded_zones: Set[str] | None = None
     ) -> Optional[List[str]]:
         """
         Finds the shortest path using BFS.
@@ -102,7 +102,8 @@ class SimulationEngine:
 
         for drone in self.graph.drones:
             best_index = min(
-                range(len(paths)), key=lambda i: paths[i].turn_cost + path_counts[i]
+                range(len(paths)),
+                key=lambda i: paths[i].turn_cost + path_counts[i]
             )
             drone.path = paths[best_index].nodes
             drone.path_index = 0
@@ -153,9 +154,15 @@ class SimulationEngine:
             target_zone_name = drone.path[drone.path_index + 1]
             target_zone = self.graph.zones[target_zone_name]
 
-            # sort the zones to avoid collision if another goes in opposite direction
-            link_key = tuple(sorted([current_zone_name, target_zone_name]))
-            conn = self.graph.zones[current_zone_name].adjacent_zones[target_zone_name]
+            # sort the zones to avoid collision
+            # link_key = tuple(sorted([current_zone_name, target_zone_name]))
+            link_key = (
+                (current_zone_name, target_zone_name)
+                if current_zone_name <= target_zone_name
+                else (target_zone_name, current_zone_name)
+            )
+            zone = self.graph.zones[current_zone_name]
+            conn = zone.adjacent_zones[target_zone_name]
             current_link_usage = link_traffic.get(link_key, 0)
 
             if current_link_usage >= conn.max_link_capacity:

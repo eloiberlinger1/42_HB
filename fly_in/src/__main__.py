@@ -1,10 +1,9 @@
 from pathlib import Path
+from typing import Any, Dict
 
-from .parsing import MapParser, CLIParser
-from .objects import Drone, Graph, Connection, Zone
+from .objects import Connection, Drone, Graph, Zone
+from .parsing import CLIParser, MapParser
 from .simulation import SimulationEngine
-
-from typing import Dict, Any
 
 
 class Application:
@@ -22,7 +21,6 @@ class Application:
         raw_connections = raw_data.get("connections", [])
 
         zones_dict: Dict[str, Zone] = {}
-        start_zone_name = None
 
         # 1. Instanciation of zones
         for name, zone_info in raw_zones.items():
@@ -37,7 +35,10 @@ class Application:
             zone_type = meta.get("zone", "normal")
 
             raw_max_drones = meta.get("max_drones")
-            max_drones = int(raw_max_drones) if raw_max_drones is not None else 1
+            if raw_max_drones is not None:
+                max_drones = int(raw_max_drones)
+            else:
+                max_drones = 1
             color = meta.get("color")
 
             zone = Zone(
@@ -64,7 +65,8 @@ class Application:
 
             if z1_name not in zones_dict or z2_name not in zones_dict:
                 raise KeyError(
-                    f"Trying to bound two not existing zones {z1_name} -> {z2_name}"
+                    "Trying to bound two not existing",
+                    f" zones {z1_name} -> {z2_name}"
                 )
 
             meta = conn_data.get("metadata", {})
@@ -114,6 +116,8 @@ class Application:
         try:
             map_parser = MapParser(map_file)
             raw_data = map_parser.parse()
+            if not raw_data:
+                raise ValueError("invalid raw_data value")
 
         except Exception as e:
             print(f"Error during parsing of map file see below : \n\n {e}")
@@ -123,7 +127,8 @@ class Application:
         try:
             graph = self._build_graph(raw_data)
         except Exception as e:
-            print(f"Error during instanciation of the Graph. See below \n\n {e}")
+            print("Error during instanciation of the Graph.:",
+                  f" See below \n\n {e}")
             exit()
 
         engine = SimulationEngine(graph)

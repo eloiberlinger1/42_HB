@@ -1,7 +1,7 @@
-import re
 import argparse
+import re
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
 
 
 class CLIParser:
@@ -14,7 +14,7 @@ class CLIParser:
         parser.add_argument("map_file", type=Path, help="Path to map file")
         args = parser.parse_args()
 
-        return args.map_file
+        return Path(args.map_file)
 
 
 class MapParser:
@@ -22,11 +22,11 @@ class MapParser:
         self.file_path = file_path
         self.nb_drones = 0
         self.zones: Dict[str, Dict[str, Any]] = {}
-        self.connections = []
+        self.connections: list[dict] = []
 
     def _parse_metadata(self, metadata_str: str) -> Dict[str, str]:
         """Extract all the [key=value] format in the input file"""
-        metadata = {}
+        metadata: dict[Any, Any] = {}
         if not metadata_str:
             return metadata
         matches = re.findall(r"([a-zA-Z0-9_]+)=([a-zA-Z0-9_-]+)", metadata_str)
@@ -114,5 +114,9 @@ class MapParser:
 
         zone1, zone2 = rest.split("-", 1)
         self.connections.append(
-            {"from": zone1.strip(), "to": zone2.strip(), "metadata": metadata}
+            {
+                "from": zone1.strip(),
+                "to": zone2.strip(),
+                "metadata": metadata
+            }
         )

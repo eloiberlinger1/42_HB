@@ -1,5 +1,6 @@
+from typing import Dict, List, Literal, Optional
+
 from pydantic import BaseModel, Field
-from typing import Literal, Optional, Dict, List
 
 
 class Zone(BaseModel):
@@ -10,7 +11,12 @@ class Zone(BaseModel):
     name: str
     x: int
     y: int
-    zone_type: Literal["normal", "blocked", "restricted", "priority"] = "normal"
+    zone_type: Literal[
+        "normal",
+        "blocked",
+        "restricted",
+        "priority"
+    ] = "normal"
     adjacent_zones: Dict[str, "Connection"] = Field(default_factory=dict)
     max_drones: int = Field(default=1, gt=0)
     color: Optional[str] = None
@@ -88,20 +94,23 @@ class Graph(BaseModel):
     #             tags.append("END")
     #         tag_str = f" [{', '.join(tags)}]" if tags else ""
     #         lines.append(
-    #             f"   • {name:<15} | type: {zone.zone_type:<8} | max_drones: {zone.max_drones}{tag_str}"
+    #             "   • {name:<15} | type: {zone.zone_type:<8} | max_drones: ",
+    #             f"{zone.max_drones}{tag_str}"
     #         )
 
     #     lines.append(f"\n Connections ({len(self.connections)}):")
     #     for conn in self.connections:
     #         lines.append(
-    #             f"   • {conn.zone1.name} ──( cap: {conn.max_link_capacity} )──> {conn.zone2.name}"
+    #             f"   • {conn.zone1.name} ──( cap: {conn.max_link_capacity}"
+    #             f" )──> {conn.zone2.name}"
     #         )
 
     #     lines.append(f"\n Drones ({len(self.drones)}):")
     #     start_zone = next(
     #         (name for name, z in self.zones.items() if z.is_start), "unknown"
     #     )
-    #     lines.append(f"   • {len(self.drones)} initialized at start hub ({start_zone})")
+    #     lines.append(f"   • {len(self.drones)} initialized at ",
+    #       "start hub ({start_zone})")
     #     lines.append("=" * 45 + "\n")
 
     #     return "\n".join(lines)
