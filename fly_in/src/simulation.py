@@ -6,7 +6,7 @@ from .objects import Graph, Path
 
 class SimulationEngine:
 
-    def __init__(self, graph: Graph):
+    def __init__(self, graph: Graph) -> None:
 
         self.graph = graph
 
@@ -62,7 +62,7 @@ class SimulationEngine:
             cost += 2 if zone.zone_type == "restricted" else 1
         return cost
 
-    def _calculate_paths(self):
+    def _calculate_paths(self) -> List[Path]:
         """
         According to the Graph, calculate all possible paths
         """
@@ -89,19 +89,122 @@ class SimulationEngine:
 
         discovered_paths.sort(key=lambda p: p.turn_cost)
 
-        for i, p in enumerate(discovered_paths, 1):
-            print(f"  Chemin {i} : {p}")
-
         return discovered_paths
 
-    def run(self) -> None:
-        # t = 0
-        # graph = self.graph
-        self._calculate_paths()
+    def _dispatch_drones(self, paths: List[Path]) -> None:
+        """
+        Assign drones to the best path
+        """
 
-        # while (all drones not at end zone):
-        # while t != 10:
-        #     t += 1
-        #     print(f"Round : {t}")
-        #     print("Something happens")
-        #     print()
+        path_counts = []
+        for i in range(len(paths)):
+            path_counts.append(0)
+
+        for drone in self.graph.drones:
+            best_index = min(
+                range(len(paths)), key=lambda i: paths[i].turn_cost + path_counts[i]
+            )
+            drone.path = paths[best_index].nodes
+            drone.path_index = 0
+            path_counts[best_index] += 1
+
+    def _get_zone_occupancy(self) -> dict[str, int]:
+        """Count how many drones actually occupy the zone"""
+        occupancy: dict[str, int] = {name: 0 for name in self.graph.zones}
+        for d in self.graph.drones:
+            if d.state not in ["ARRIVED", "IN_TRANSIT"] and d.current_position:
+                occupancy[d.current_position] += 1
+        return occupancy
+
+    def step(self) -> List[str]:
+        """
+        Run one tick of the simulation
+        Returns the list of movements
+        """
+        moves_result: List[str] = []
+        occupancy = self._get_zone_occupancy()
+
+        link_traffic: dict[tuple[str, str], int] = {}
+
+        for drone in self.graph.drones:
+            if drone.state == "IN_TRANSIT":
+                drone.turns_remaining -= 1
+                if drone.turns_remaining == 0:
+                    target_zone_name = drone.path[drone.path_index]
+                    drone.current_position = target_zone_name
+                    drone.state = "WAITING"
+                    occupancy[target_zone_name] += 1
+                    moves_result.append(f"{drone.drone_id}-{target_zone_name}")
+
+        active_drones = [
+            d
+            for d in self.graph.drones
+            if d.state != "ARRIVED" and d.state != "IN_TRANSIT"
+        ]
+
+        # Sort waiting drones from the most advanced to the less advanced
+        active_drones.sort(key=lambda d: d.path_index, reverse=True)
+
+        for drone in active_drones:
+            if drone.path_index + 1 >= len(drone.path):
+                continue
+
+            current_zone_name = drone.path[drone.path_index]
+            target_zone_name = drone.path[drone.path_index + 1]
+            target_zone = self.graph.zones[target_zone_name]
+
+            # sort the zones to avoid collision if another goes in opposite direction
+            link_key = tuple(sorted([current_zone_name, target_zone_name]))
+            conn = self.graph.zones[current_zone_name].adjacent_zones[target_zone_name]
+            current_link_usage = link_traffic.get(link_key, 0)
+
+            if current_link_usage >= conn.max_link_capacity:
+                continue
+
+            is_target_end = target_zone.is_end
+            if (
+                not is_target_end
+                and occupancy[target_zone_name] >= target_zone.max_drones
+            ):
+                # zone is full
+                continue
+
+            link_traffic[link_key] = current_link_usage + 1
+
+            if not self.graph.zones[current_zone_name].is_start:
+                occupancy[current_zone_name] -= 1
+
+            drone.path_index += 1
+
+            if target_zone.zone_type == "restricted":
+                drone.state = "IN_TRANSIT"
+                drone.turns_remaining = 1
+                conn_name = f"{current_zone_name}-{target_zone_name}"
+                moves_result.append(f"{drone.drone_id}-{conn_name}")
+
+            else:
+                drone.current_position = target_zone_name
+                if is_target_end:
+                    drone.state = "ARRIVED"
+                else:
+                    occupancy[target_zone_name] += 1
+                moves_result.append(f"{drone.drone_id}-{target_zone_name}")
+
+        return moves_result
+
+    def run(self) -> None:
+        print(f"Starting simulation for {self.graph.nb_drones} drones")
+
+        paths = self._calculate_paths()
+        if not paths:
+            print("No valid path found.")
+            return
+        self._dispatch_drones(paths)
+        turn_count = 0
+        while any(d.state != "ARRIVED" for d in self.graph.drones):
+            turn_count += 1
+            moves = self.step()
+            if moves:
+                print(" ".join(moves))
+
+        print(f"\nFinished simulation in {turn_count} turns.")

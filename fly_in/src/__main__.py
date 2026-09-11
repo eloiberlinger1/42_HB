@@ -85,7 +85,6 @@ class Application:
             drones_list.append(drone)
 
         return Graph(
-            nb_drones=nb_drones,
             zones=zones_dict,
             connections=connections_list,
             drones=drones_list,
@@ -122,8 +121,6 @@ class Application:
         except Exception as e:
             print(f"Error during instanciation of the Graph. See below \n\n {e}")
             exit()
-
-        print(graph)
 
         engine = SimulationEngine(graph)
         engine.run()

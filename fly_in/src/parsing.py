@@ -18,7 +18,7 @@ class CLIParser:
 
 
 class MapParser:
-    def __init__(self, file_path: Path):
+    def __init__(self, file_path: Path) -> None:
         self.file_path = file_path
         self.nb_drones = 0
         self.zones: Dict[str, Dict[str, Any]] = {}
