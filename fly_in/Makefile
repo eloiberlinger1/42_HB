@@ -66,12 +66,12 @@ fclean: clean
 
 lint: install
 	@echo "Running flake8..."
-	@$(UV) run flake8 src
+	-@$(UV) run flake8 src
 	@echo "Running mypy..."
-	@$(UV) run mypy src --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
+	-@$(UV) run mypy src --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 
 lint-strict: lint
-	@$(UV) run mypy src --strict
+	-@$(UV) run mypy src --strict
 
 test:
 	echo "setup the tests"

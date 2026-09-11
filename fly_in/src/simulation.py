@@ -193,6 +193,10 @@ class SimulationEngine:
         return moves_result
 
     def run(self) -> None:
+        """
+        Run the simulation.
+        -> Will call step() unltil all drones are not in state ARRIVED.
+        """
         print(f"Starting simulation for {self.graph.nb_drones} drones")
 
         paths = self._calculate_paths()
