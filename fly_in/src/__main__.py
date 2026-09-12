@@ -108,6 +108,7 @@ class Application:
         try:
             cli_parser = CLIParser()
             map_file = cli_parser.parse_input()
+            print(f"Simulating map: {map_file}\n")
 
         except Exception as e:
             print(f"Error during treatment of user input see below : \n\n {e}")

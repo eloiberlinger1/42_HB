@@ -60,5 +60,6 @@ make help
 
 - I used AI mostly to write down the pathfinding and parsing algorithms.
 - To understand the code snippets I found on the internet / that AI gave me.
+- Listing of all possible colors from the maps/ folder and generation of dict mapping color to it's corresponding hex code.
 
 Also, to preview the objects I defined in a nice way, I like to copy the raw output of an object, give it to AI, and ask it to represent this raw Python object output in a more readable way.

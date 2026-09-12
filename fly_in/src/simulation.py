@@ -1,7 +1,7 @@
 from collections import deque
 from typing import List, Optional, Set
 
-from .colors import *
+from .colors import get_color, RESET
 from .objects import Graph, Path
 
 
@@ -136,7 +136,10 @@ class SimulationEngine:
                     drone.current_position = target_zone_name
                     drone.state = "WAITING"
                     occupancy[target_zone_name] += 1
-                    moves_result.append(f"{drone.drone_id}-{target_zone_name}")
+                    
+                    color = get_color(self.graph.zones[target_zone_name].color)
+                    move_str = f"{drone.drone_id}-{target_zone_name}"
+                    moves_result.append(f"{color}{move_str}{RESET}" if color else move_str)
 
         active_drones = [
             d
@@ -188,7 +191,10 @@ class SimulationEngine:
                 drone.state = "IN_TRANSIT"
                 drone.turns_remaining = 1
                 conn_name = f"{current_zone_name}-{target_zone_name}"
-                moves_result.append(f"{drone.drone_id}-{conn_name}")
+                
+                color = get_color(target_zone.color)
+                move_str = f"{drone.drone_id}-{conn_name}"
+                moves_result.append(f"{color}{move_str}{RESET}" if color else move_str)
 
             else:
                 drone.current_position = target_zone_name
@@ -196,7 +202,10 @@ class SimulationEngine:
                     drone.state = "ARRIVED"
                 else:
                     occupancy[target_zone_name] += 1
-                moves_result.append(f"{drone.drone_id}-{target_zone_name}")
+                    
+                color = get_color(target_zone.color)
+                move_str = f"{drone.drone_id}-{target_zone_name}"
+                moves_result.append(f"{color}{move_str}{RESET}" if color else move_str)
 
         return moves_result
 
