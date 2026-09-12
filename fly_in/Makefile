@@ -2,11 +2,11 @@ MAIN = src/__main__.py
 MAP ?= maps/easy/01_linear_path.txt
 
 # ON 42 PC
-#STORAGE_PATH = /home/eberling/goinfre
+STORAGE_PATH = /home/eberling/goinfre
 # Github Workspaces
 # STORAGE_PATH = /workspaces/42_HB/fly_in
 # On MAC
- STORAGE_PATH = /Users/eloi/Documents/42/projects/fly_in
+#STORAGE_PATH = /Users/eloi/Documents/42/projects/fly_in
 
 VENV_PATH = $(STORAGE_PATH)/.venv
 # UV_CACHE_DIR is a default variable for UV package
