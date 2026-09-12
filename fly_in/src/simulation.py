@@ -1,6 +1,7 @@
 from collections import deque
 from typing import List, Optional, Set
 
+from .colors import *
 from .objects import Graph, Path
 
 
