@@ -1,3 +1,4 @@
+import sys
 from collections import deque
 from typing import List, Optional, Set
 
@@ -103,8 +104,7 @@ class SimulationEngine:
 
         for drone in self.graph.drones:
             best_index = min(
-                range(len(paths)),
-                key=lambda i: paths[i].turn_cost + path_counts[i]
+                range(len(paths)), key=lambda i: paths[i].turn_cost + path_counts[i]
             )
             drone.path = paths[best_index].nodes
             drone.path_index = 0
@@ -123,10 +123,23 @@ class SimulationEngine:
         Run one tick of the simulation
         Returns the list of movements
         """
+
         moves_result: List[str] = []
         occupancy = self._get_zone_occupancy()
 
         link_traffic: dict[tuple[str, str], int] = {}
+
+        if "--capacity-info" in sys.argv:
+            for z_name, occ in occupancy.items():
+                if occ > 0:
+                    z = self.graph.zones[z_name]
+                    print(f"Zone {z_name}: {occ}/{z.max_drones} drones")
+
+            for (z1, z2), occ in link_traffic.items():
+                conn = self.graph.zones[z1].adjacent_zones[z2]
+                print(
+                    f"Connection {z1}-{z2}: {occ}/{conn.max_link_capacity} capacity used"
+                )
 
         for drone in self.graph.drones:
             if drone.state == "IN_TRANSIT":
@@ -136,10 +149,13 @@ class SimulationEngine:
                     drone.current_position = target_zone_name
                     drone.state = "WAITING"
                     occupancy[target_zone_name] += 1
-                    
+
                     color = get_color(self.graph.zones[target_zone_name].color)
                     move_str = f"{drone.drone_id}-{target_zone_name}"
-                    moves_result.append(f"{color}{move_str}{RESET}" if color else move_str)
+                    if color:
+                        moves_result.append(f"{color}{move_str}{RESET}")
+                    else:
+                        moves_result.append(f"{move_str}")
 
         active_drones = [
             d
@@ -191,10 +207,13 @@ class SimulationEngine:
                 drone.state = "IN_TRANSIT"
                 drone.turns_remaining = 1
                 conn_name = f"{current_zone_name}-{target_zone_name}"
-                
+
                 color = get_color(target_zone.color)
                 move_str = f"{drone.drone_id}-{conn_name}"
-                moves_result.append(f"{color}{move_str}{RESET}" if color else move_str)
+                if color:
+                    moves_result.append(f"{color}{move_str}{RESET}")
+                else:
+                    moves_result.append(f"{move_str}")
 
             else:
                 drone.current_position = target_zone_name
@@ -202,10 +221,13 @@ class SimulationEngine:
                     drone.state = "ARRIVED"
                 else:
                     occupancy[target_zone_name] += 1
-                    
+
                 color = get_color(target_zone.color)
                 move_str = f"{drone.drone_id}-{target_zone_name}"
-                moves_result.append(f"{color}{move_str}{RESET}" if color else move_str)
+                if color:
+                    moves_result.append(f"{color}{move_str}{RESET}")
+                else:
+                    moves_result.append(f"{move_str}")
 
         return moves_result
 

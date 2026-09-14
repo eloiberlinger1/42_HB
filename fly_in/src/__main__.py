@@ -21,6 +21,7 @@ class Application:
         raw_connections = raw_data.get("connections", [])
 
         zones_dict: Dict[str, Zone] = {}
+        start_zone_name = None
 
         # 1. Instanciation of zones
         for name, zone_info in raw_zones.items():
@@ -29,6 +30,11 @@ class Application:
             is_end = type_def == "end_hub"
 
             if is_start:
+                if start_zone_name is not None:
+                    raise ValueError(
+                        "Multiple start_hubs found: ",
+                        f"{start_zone_name} and {name}"
+                    )
                 start_zone_name = name
 
             meta = zone_info.get("metadata", {})
@@ -41,16 +47,23 @@ class Application:
                 max_drones = 1
             color = meta.get("color")
 
-            zone = Zone(
-                name=name,
-                x=zone_info.get("x"),
-                y=zone_info.get("y"),
-                zone_type=zone_type,
-                max_drones=max_drones,
-                color=color,
-                is_start=is_start,
-                is_end=is_end,
-            )
+            try:
+                zone = Zone(
+                    name=name,
+                    x=zone_info.get("x"),
+                    y=zone_info.get("y"),
+                    zone_type=zone_type,
+                    max_drones=max_drones,
+                    color=color,
+                    is_start=is_start,
+                    is_end=is_end,
+                )
+            except Exception as e:
+                line_num = zone_info.get("line", "unknown")
+                raise ValueError(
+                    f"Line {line_num}: Error ",
+                    f"during zone instantiation -> {e}"
+                )
 
             zones_dict[name] = zone
 
@@ -73,11 +86,18 @@ class Application:
             raw_capacity = meta.get("max_link_capacity")
             capacity = int(raw_capacity) if raw_capacity is not None else 1
 
-            connection = Connection(
-                zone1=zones_dict[z1_name],
-                zone2=zones_dict[z2_name],
-                max_link_capacity=capacity,
-            )
+            try:
+                connection = Connection(
+                    zone1=zones_dict[z1_name],
+                    zone2=zones_dict[z2_name],
+                    max_link_capacity=capacity,
+                )
+            except Exception as e:
+                line_num = conn_data.get("line", "unknown")
+                raise ValueError(
+                    f"Line {line_num}: Error ",
+                    f"during connection instantiation -> {e}"
+                )
 
             zones_dict[z1_name].adjacent_zones[z2_name] = connection
             zones_dict[z2_name].adjacent_zones[z1_name] = connection
@@ -86,9 +106,14 @@ class Application:
 
         # 3. Instanciation of drones
         drones_list = []
-        for i in range(nb_drones):
-            drone = Drone(drone_id=f"D{i+1}", current_position=start_zone_name)
-            drones_list.append(drone)
+        if start_zone_name is not None:
+            for i in range(nb_drones):
+                drone_id = f"D{i+1}"
+                drone = Drone(
+                    drone_id=drone_id,
+                    current_position=start_zone_name
+                )
+                drones_list.append(drone)
 
         return Graph(
             zones=zones_dict,

@@ -8,7 +8,7 @@ Fly-In is about creating an environment to run a simulation of moving drones thr
 **Overview:**  
 This project doesn't include a graphical representation and only returns in the terminal the moves each drone makes according to the constraints defined in the map file.
 
-You can run the program with `make run` and use a specific map by using `MAP=<path>`.
+You can run the program with `"make run"` and use a specific map by using `"MAP=<path>"` parameter.
 
 ## Algorithm Choices
 

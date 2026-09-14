@@ -12,7 +12,7 @@ class CLIParser:
         """
         parser = argparse.ArgumentParser(description="Fly-in drone simulation")
         parser.add_argument("map_file", type=Path, help="Path to map file")
-        args = parser.parse_args()
+        args, unknown = parser.parse_known_args()
 
         return Path(args.map_file)
 
@@ -22,7 +22,7 @@ class MapParser:
         self.file_path = file_path
         self.nb_drones = 0
         self.zones: Dict[str, Dict[str, Any]] = {}
-        self.connections: list[dict] = []
+        self.connections: list[dict[Any, Any]] = []
 
     def _parse_metadata(self, metadata_str: str) -> Dict[str, str]:
         """Extract all the [key=value] format in the input file"""
@@ -34,7 +34,7 @@ class MapParser:
             metadata[key] = value
         return metadata
 
-    def parse(self) -> None | Dict:
+    def parse(self) -> Dict[Any, Any] | None:
         """Read file, validate syntax and extract data"""
         if not self.file_path.exists():
             raise FileNotFoundError(f"File {self.file_path} not found.")
@@ -53,10 +53,10 @@ class MapParser:
                         line.startswith(prefix)
                         for prefix in ["start_hub:", "end_hub:", "hub:"]
                     ):
-                        self._parse_zone_line(line)
+                        self._parse_zone_line(line, line_num)
 
                     elif line.startswith("connection:"):
-                        self._parse_connection_line(line)
+                        self._parse_connection_line(line, line_num)
 
                     else:
                         raise ValueError(f"Line {line_num}: Error -> {line}")
@@ -70,7 +70,7 @@ class MapParser:
             "connections": self.connections,
         }
 
-    def _parse_zone_line(self, line: str) -> None:
+    def _parse_zone_line(self, line: str, line_num: int) -> None:
         parts = line.split(":", 1)
         zone_type_str = parts[0].strip()  # start_hub, end_hub ou hub
         rest = parts[1].strip()
@@ -90,14 +90,18 @@ class MapParser:
 
         name, x_str, y_str = tokens[0], tokens[1], tokens[2]
 
+        if name in self.zones:
+            raise ValueError(f"Duplicate zone found: {name}")
+
         self.zones[name] = {
             "type_def": zone_type_str,
             "x": int(x_str),
             "y": int(y_str),
             "metadata": metadata,
+            "line": line_num,
         }
 
-    def _parse_connection_line(self, line: str) -> None:
+    def _parse_connection_line(self, line: str, line_num: int) -> None:
         parts = line.split(":", 1)
         rest = parts[1].strip()
 
@@ -113,10 +117,20 @@ class MapParser:
             raise ValueError(f"Invalid connexion format : {rest}")
 
         zone1, zone2 = rest.split("-", 1)
+        z1 = zone1.strip()
+        z2 = zone2.strip()
+
+        for conn in self.connections:
+            if (conn["from"] == z1 and conn["to"] == z2) or (
+                conn["from"] == z2 and conn["to"] == z1
+            ):
+                raise ValueError(f"Duplicate connection found: {z1}-{z2}")
+
         self.connections.append(
             {
-                "from": zone1.strip(),
-                "to": zone2.strip(),
-                "metadata": metadata
+                "from": z1,
+                "to": z2,
+                "metadata": metadata,
+                "line": line_num,
             }
         )

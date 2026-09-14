@@ -23,18 +23,21 @@ debug: install
 	@echo "Running debug mode (pdb)..."
 	@$(UV) run python -m pdb -m src
 
+
+define HELP_TEXT
+=========== HELP ===========
+- make install    Install all requirements
+- make run        Install and run the programm with default parameters
+- make lint       Check code files for mypy and flake8 conventions
+- make clean      Clean the installation files
+
+Parameters : MAP=<path to a specific map>
+endef
+
+export HELP_TEXT
+
 help:
-	@echo "\
-	\n\
-	=========== HELP ===========\n\
-	- make install    Install all requirements\n\
-	- make run        Install and run the programm with default parameters\n\
-	- make lint       Check code files for mypy and flake8 conventions\n\
-	- make clean      Clean the installation files\n\
-	\n\
-	Parameters : MAP=<path to a specific map>
-	\n\
-	"
+	@echo "$$HELP_TEXT"
 
 install:
 	@echo "Syncing environment with uv..."
