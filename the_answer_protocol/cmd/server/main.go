@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net"
 	"os"
+	"tap-server/internal/network"
 )
 
 func main() {
@@ -24,6 +25,8 @@ func main() {
 	defer listener.Close()
 
 	slog.Info("TCP server started", "port", port)
+
+	hub := network.NewHub()
 
 	for {
 
@@ -57,6 +60,8 @@ func handleConnection(conn net.Conn) {
 		slog.Info("Message received", "addr", remoteAddr, "payload", line)
 		fmt.Fprintf(conn, "recu: %s\n", remoteAddr)
 	}
+
+	if err := scanner.Err(); err != nil
 
 	slog.Info("Client disconnected", "addr", remoteAddr)
 
