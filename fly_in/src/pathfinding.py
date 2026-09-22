@@ -119,4 +119,7 @@ class PathFinding:
 
         discovered_paths.sort(key=lambda p: p.turn_cost)
 
+        # for p in discovered_paths:
+        #     print(p)
+
         return discovered_paths
