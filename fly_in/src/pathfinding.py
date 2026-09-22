@@ -1,35 +1,54 @@
-from collections import deque
+import heapq
 from typing import List, Optional, Set
-from .objects import Graph, Path
+from .objects import Path, Dict
 
 
 class PathFinding:
 
     def __init__(self, graph):
         self.graph = graph
+        self.start_zone = next(
+            (z for z in self.graph.zones.values() if z.is_start), None
+        )
+        self.end_zone = next((z for z in self.graph.zones.values() if z.is_end), None)
+
+    def _get_zone_traversal_cost(self, zone):
+        if zone.zone_type == "priority":
+            return 1
+        return 10
 
     def find_shortest_path(
         self, excluded_zones: Set[str] | None = None
     ) -> Optional[List[str]]:
         """
-        Finds the shortest path using BFS.
+        Finds the shortest path using Djikstra.
         Ignores 'blocked' zones and already discovered paths
         """
-        if excluded_zones is None:
-            excluded_zones = set()
-        start_zone = next(z for z in self.graph.zones.values() if z.is_start)
-        end_zone = next(z for z in self.graph.zones.values() if z.is_end)
+        excluded = excluded_zones or set()
 
-        queue: deque[tuple[str, List[str]]] = deque(
-            [(start_zone.name, [start_zone.name])]
-        )
-        visited = {start_zone.name}
+        start_zone = self.start_zone
+        end_zone = self.end_zone
 
+        if not start_zone or not end_zone:
+            return None
+        if start_zone.zone_type == "blocked" or end_zone.zone_type == "blocked":
+            return None
+        if start_zone.name == end_zone.name:
+            return [start_zone.name]
+
+        queue: List[tuple[float, str]] = [(0.0, start_zone.name)]
+        distances: Dict[str, float] = {start_zone.name: 0.0}
+        came_from: Dict[str, Optional[str]] = {start_zone.name: None}
+
+        # Djikstra implementation
         while queue:
-            current_name, path = queue.popleft()
+            current_cost, current_name = heapq.heappop(queue)
 
             if current_name == end_zone.name:
-                return path
+                return self._reconstruct_path(came_from, end_zone.name)
+
+            if current_cost > distances[current_name]:
+                continue
 
             current_zone = self.graph.zones[current_name]
 
@@ -39,16 +58,29 @@ class PathFinding:
                 # Ignore blocked and excluded zones
                 if neighbor.zone_type == "blocked":
                     continue
-                if neighbor_name in excluded_zones and not (
-                    neighbor.is_start or neighbor.is_end
-                ):
+                if neighbor_name in excluded:
                     continue
 
-                if neighbor_name not in visited:
-                    visited.add(neighbor_name)
-                    queue.append((neighbor_name, path + [neighbor_name]))
+                step_cost = self._get_zone_traversal_cost(neighbor)
+                new_cost = current_cost + step_cost
+
+                if new_cost < distances.get(neighbor_name, float("inf")):
+                    distances[neighbor_name] = new_cost
+                    came_from[neighbor_name] = current_name
+                    heapq.heappush(queue, (new_cost, neighbor_name))
 
         return None
+
+    def _reconstruct_path(
+        self, came_from: Dict[str, Optional[str]], end_name: str
+    ) -> List[str]:
+        path = []
+        curr: Optional[str] = end_name
+        while curr is not None:
+            path.append(curr)
+            curr = came_from[curr]
+        path.reverse()
+        return path
 
     def calculate_path_cost(self, nodes: List[str]) -> int:
         """
