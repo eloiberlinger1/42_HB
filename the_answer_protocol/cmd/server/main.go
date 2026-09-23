@@ -27,6 +27,7 @@ func main() {
 	slog.Info("TCP server started", "port", port)
 
 	hub := network.NewHub()
+	go hub.Run()
 
 	for {
 
@@ -37,13 +38,13 @@ func main() {
 		}
 
 		// Goroutine
-		go handleConnection(conn)
+		go handleConnection(conn, hub)
 
 	}
 
 }
 
-func handleConnection(conn net.Conn) {
+func handleConnection(conn net.Conn, hub *network.Hub) {
 
 	defer conn.Close()
 
@@ -60,8 +61,6 @@ func handleConnection(conn net.Conn) {
 		slog.Info("Message received", "addr", remoteAddr, "payload", line)
 		fmt.Fprintf(conn, "recu: %s\n", remoteAddr)
 	}
-
-	if err := scanner.Err(); err != nil
 
 	slog.Info("Client disconnected", "addr", remoteAddr)
 
