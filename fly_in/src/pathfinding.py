@@ -18,7 +18,9 @@ class PathFinding:
         return 10
 
     def find_shortest_path(
-        self, excluded_zones: Set[str] | None = None
+        self,
+        excluded_zones: Set[str] | None = None,
+        zone_penalties: Dict[str, float] | None = None
     ) -> Optional[List[str]]:
         """
         Finds the shortest path using Djikstra.
@@ -62,6 +64,8 @@ class PathFinding:
                     continue
 
                 step_cost = self._get_zone_traversal_cost(neighbor)
+                if zone_penalties:
+                    step_cost += zone_penalties.get(neighbor_name, 0.0)
                 new_cost = current_cost + step_cost
 
                 if new_cost < distances.get(neighbor_name, float("inf")):
@@ -99,27 +103,33 @@ class PathFinding:
         discovered_paths: List[Path] = []
         zone_usage: dict[str, int] = {name: 0 for name in self.graph.zones}
         excluded_zones: set[str] = set()
+        zone_penalties: dict[str, float] = {}
+        seen_paths: set[tuple[str, ...]] = set()
 
         while True:
-            nodes = self.find_shortest_path(excluded_zones=excluded_zones)
+            nodes = self.find_shortest_path(
+                excluded_zones=excluded_zones,
+                zone_penalties=zone_penalties
+            )
             if not nodes:
                 break
 
-            cost = self.calculate_path_cost(nodes)
-            path_obj = Path(nodes=nodes, turn_cost=cost)
-            discovered_paths.append(path_obj)
+            path_tuple = tuple(nodes)
+            if path_tuple not in seen_paths:
+                seen_paths.add(path_tuple)
+                cost = self.calculate_path_cost(nodes)
+                path_obj = Path(nodes=nodes, turn_cost=cost)
+                discovered_paths.append(path_obj)
 
             for zone_name in nodes:
                 zone = self.graph.zones[zone_name]
                 if zone.is_start or zone.is_end:
                     continue
                 zone_usage[zone_name] += 1
+                zone_penalties[zone_name] = zone_penalties.get(zone_name, 0.0) + 1.0
                 if zone_usage[zone_name] >= zone.max_drones:
                     excluded_zones.add(zone_name)
 
         discovered_paths.sort(key=lambda p: p.turn_cost)
-
-        # for p in discovered_paths:
-        #     print(p)
 
         return discovered_paths

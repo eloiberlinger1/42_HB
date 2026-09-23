@@ -14,7 +14,7 @@ You can run the program with `"make run"` and use a specific map by using `"MAP=
 
 For this project, I implemented only a pathfinding algorithm. For space/time management with drones, I just send as many drones as possible to the paths I found previously, and it is enough to fulfill the project requirements.
 
-I implemented BFS for pathfinding as this is the simplest and most intuitive. The way it looks for the path is by spreading to all possible ways through the map, and when it finds the end, it adds the path to a list of paths.
+I implemented Djikstra for pathfinding as this is the simplest and most intuitive. The way it looks for the path is by spreading to all possible ways through the map, and when it finds the end, it adds the path to a list of paths.
 
 In most of the maps given with the subject, the algorithm only finds one path. Then I send all these drones to the paths found. If more than one path is found, I check the usage / total capacity of a path and send the drones to the one that has the lowest usage.
 
