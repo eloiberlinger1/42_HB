@@ -41,7 +41,7 @@ class Drone(BaseModel):
 
     drone_id: str
     current_position: str
-    state: Literal["WAITING", "IN_TRANSIT", "ARRIVED"] = "WAITING"
+    state: Literal["WAITING", "IN_TRANSIT", "ARRIVED", "WAITING_RESTRICTED"] = "WAITING"
     path: List[str] = Field(default_factory=list)
     path_index: int = 0
     turns_remaining: int = 0

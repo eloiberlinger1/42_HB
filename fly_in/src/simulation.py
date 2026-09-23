@@ -50,18 +50,6 @@ class SimulationEngine:
 
         link_traffic: dict[tuple[str, str], int] = {}
 
-        if "--capacity-info" in sys.argv:
-            for z_name, occ in occupancy.items():
-                if occ > 0:
-                    z = self.graph.zones[z_name]
-                    print(f"Zone {z_name}: {occ}/{z.max_drones} drones")
-
-            for (z1, z2), occ in link_traffic.items():
-                conn = self.graph.zones[z1].adjacent_zones[z2]
-                print(
-                    f"Connection {z1}-{z2}: {occ}/{conn.max_link_capacity} capacity used"
-                )
-
         for drone in self.graph.drones:
             if drone.state == "IN_TRANSIT":
                 drone.turns_remaining -= 1
@@ -77,11 +65,16 @@ class SimulationEngine:
                         moves_result.append(f"{color}{move_str}{RESET}")
                     else:
                         moves_result.append(f"{move_str}")
+            elif drone.state == "WAITING_RESTRICTED":
+                if drone.turns_remaining == 0:
+                    drone.state = "WAITING"
+                else:
+                    drone.turns_remaining -= 1
 
         active_drones = [
             d
             for d in self.graph.drones
-            if d.state != "ARRIVED" and d.state != "IN_TRANSIT"
+            if d.state not in ("ARRIVED", "IN_TRANSIT", "WAITING_RESTRICTED")
         ]
 
         # Sort waiting drones from the most advanced to the less advanced
@@ -125,12 +118,16 @@ class SimulationEngine:
             drone.path_index += 1
 
             if target_zone.zone_type == "restricted":
-                drone.state = "IN_TRANSIT"
+                drone.state = "WAITING_RESTRICTED"
                 drone.turns_remaining = 1
-                conn_name = f"{current_zone_name}-{target_zone_name}"
+                drone.current_position = target_zone_name
+                if is_target_end:
+                    drone.state = "ARRIVED"
+                else:
+                    occupancy[target_zone_name] += 1
 
                 color = get_color(target_zone.color)
-                move_str = f"{drone.drone_id}-{conn_name}"
+                move_str = f"{drone.drone_id}-{target_zone_name}"
                 if color:
                     moves_result.append(f"{color}{move_str}{RESET}")
                 else:
