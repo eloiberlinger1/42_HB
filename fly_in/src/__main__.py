@@ -40,6 +40,9 @@ class Application:
             meta = zone_info.get("metadata", {})
             zone_type = meta.get("zone", "normal")
 
+            if is_start or is_end:
+                zone_type = "normal"
+
             raw_max_drones = meta.get("max_drones")
             if raw_max_drones is not None:
                 max_drones = int(raw_max_drones)
