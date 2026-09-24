@@ -35,7 +35,11 @@ class SimulationEngine:
         """Count how many drones actually occupy the zone"""
         occupancy: dict[str, int] = {name: 0 for name in self.graph.zones}
         for d in self.graph.drones:
-            if d.state not in ["ARRIVED", "IN_TRANSIT"] and d.current_position:
+            if d.state == "ARRIVED":
+                continue
+            if d.state == "WAITING_RESTRICTED" and d.turns_remaining > 0:
+                continue
+            if d.current_position:
                 occupancy[d.current_position] += 1
         return occupancy
 
@@ -51,21 +55,15 @@ class SimulationEngine:
         link_traffic: dict[tuple[str, str], int] = {}
 
         for drone in self.graph.drones:
-            if drone.state == "IN_TRANSIT":
-                drone.turns_remaining -= 1
-                if drone.turns_remaining == 0:
-                    target_zone_name = drone.path[drone.path_index]
-                    drone.current_position = target_zone_name
-                    drone.state = "WAITING"
-                    occupancy[target_zone_name] += 1
+            if drone.state == "WAITING_RESTRICTED":
+                if drone.turns_remaining > 0:
+                    u = drone.path[drone.path_index - 1]
+                    v = drone.path[drone.path_index]
+                    link_key = (u, v) if u <= v else (v, u)
+                    link_traffic[link_key] = link_traffic.get(link_key, 0) + 1
 
-                    color = get_color(self.graph.zones[target_zone_name].color)
-                    move_str = f"{drone.drone_id}-{target_zone_name}"
-                    if color:
-                        moves_result.append(f"{color}{move_str}{RESET}")
-                    else:
-                        moves_result.append(f"{move_str}")
-            elif drone.state == "WAITING_RESTRICTED":
+        for drone in self.graph.drones:
+            if drone.state == "WAITING_RESTRICTED":
                 if drone.turns_remaining == 0:
                     drone.state = "WAITING"
                 else:
@@ -74,7 +72,7 @@ class SimulationEngine:
         active_drones = [
             d
             for d in self.graph.drones
-            if d.state not in ("ARRIVED", "IN_TRANSIT", "WAITING_RESTRICTED")
+            if d.state not in ("ARRIVED", "WAITING_RESTRICTED")
         ]
 
         # Sort waiting drones from the most advanced to the less advanced
@@ -123,8 +121,6 @@ class SimulationEngine:
                 drone.current_position = target_zone_name
                 if is_target_end:
                     drone.state = "ARRIVED"
-                else:
-                    occupancy[target_zone_name] += 1
 
                 color = get_color(target_zone.color)
                 move_str = f"{drone.drone_id}-{target_zone_name}"

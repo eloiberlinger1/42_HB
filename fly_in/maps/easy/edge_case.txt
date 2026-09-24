@@ -1,0 +1,14 @@
+# Easy Level 1: Simple linear path
+nb_drones: 2
+
+start_hub: start 0 0 [color=green]
+hub: branch1 1 -1 [color=blue]
+hub: branch2 1 1 [color=blue]
+hub: buffer 2 0 [zone=restricted color=blue]
+end_hub: goal 3 0 [color=red]
+
+connection: start-branch1
+connection: start-branch2
+connection: branch1-buffer
+connection: branch2-buffer
+connection: buffer-goal

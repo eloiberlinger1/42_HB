@@ -106,7 +106,9 @@ class PathFinding:
         zone_penalties: dict[str, float] = {}
         seen_paths: set[tuple[str, ...]] = set()
 
-        while True:
+        # Limit number of paths to avoid infinite loops when not excluding zones
+        max_paths = max(10, len(self.graph.drones) * 2)
+        for _ in range(max_paths):
             nodes = self.find_shortest_path(
                 excluded_zones=excluded_zones,
                 zone_penalties=zone_penalties
@@ -128,7 +130,7 @@ class PathFinding:
                 zone_usage[zone_name] += 1
                 zone_penalties[zone_name] = zone_penalties.get(zone_name, 0.0) + 1.0
                 if zone_usage[zone_name] >= zone.max_drones:
-                    excluded_zones.add(zone_name)
+                    pass # We only rely on zone_penalties to encourage path diversity
 
         discovered_paths.sort(key=lambda p: p.turn_cost)
 

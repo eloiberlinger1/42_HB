@@ -11,12 +11,7 @@ class Zone(BaseModel):
     name: str
     x: int
     y: int
-    zone_type: Literal[
-        "normal",
-        "blocked",
-        "restricted",
-        "priority"
-    ] = "normal"
+    zone_type: Literal["normal", "blocked", "restricted", "priority"] = "normal"
     adjacent_zones: Dict[str, "Connection"] = Field(default_factory=dict)
     max_drones: int = Field(default=1, gt=0)
     color: Optional[str] = None
@@ -41,7 +36,7 @@ class Drone(BaseModel):
 
     drone_id: str
     current_position: str
-    state: Literal["WAITING", "IN_TRANSIT", "ARRIVED", "WAITING_RESTRICTED"] = "WAITING"
+    state: Literal["WAITING", "ARRIVED", "WAITING_RESTRICTED"] = "WAITING"
     path: List[str] = Field(default_factory=list)
     path_index: int = 0
     turns_remaining: int = 0
