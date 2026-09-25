@@ -1,4 +1,5 @@
 from .objects import Graph
+from .pathfinding import Pathfinding
 
 
 class Simulation:
