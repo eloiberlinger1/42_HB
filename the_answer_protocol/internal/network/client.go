@@ -10,6 +10,8 @@ type Client struct {
 
 func NewClient(conn net.Conn, name string) *Client {
 	return &Client{
-		conn: make(conn conn),
+		conn: conn,
+		send: make(chan string),
+		name: "undefined",
 	}
 }
