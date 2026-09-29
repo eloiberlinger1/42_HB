@@ -3,7 +3,7 @@ from typing import Any, Dict
 
 from .objects import Connection, Drone, Graph, Zone
 from .parsing import CLIParser, MapParser
-from .simulation import SimulationEngine
+from .simulation import Simulation
 
 
 class Application:
@@ -32,13 +32,15 @@ class Application:
             if is_start:
                 if start_zone_name is not None:
                     raise ValueError(
-                        "Multiple start_hubs found: ",
-                        f"{start_zone_name} and {name}"
+                        "Multiple start_hubs found: ", f"{start_zone_name} and {name}"
                     )
                 start_zone_name = name
 
             meta = zone_info.get("metadata", {})
             zone_type = meta.get("zone", "normal")
+
+            if is_start or is_end:
+                zone_type = "normal"
 
             raw_max_drones = meta.get("max_drones")
             if raw_max_drones is not None:
@@ -61,8 +63,7 @@ class Application:
             except Exception as e:
                 line_num = zone_info.get("line", "unknown")
                 raise ValueError(
-                    f"Line {line_num}: Error ",
-                    f"during zone instantiation -> {e}"
+                    f"Line {line_num}: Error ", f"during zone instantiation -> {e}"
                 )
 
             zones_dict[name] = zone
@@ -78,8 +79,7 @@ class Application:
 
             if z1_name not in zones_dict or z2_name not in zones_dict:
                 raise KeyError(
-                    "Trying to bound two not existing",
-                    f" zones {z1_name} -> {z2_name}"
+                    "Trying to bound two not existing", f" zones {z1_name} -> {z2_name}"
                 )
 
             meta = conn_data.get("metadata", {})
@@ -88,15 +88,15 @@ class Application:
 
             try:
                 connection = Connection(
-                    zone1=zones_dict[z1_name],
-                    zone2=zones_dict[z2_name],
+                    zone1_name=z1_name,
+                    zone2_name=z2_name,
                     max_link_capacity=capacity,
                 )
             except Exception as e:
                 line_num = conn_data.get("line", "unknown")
                 raise ValueError(
                     f"Line {line_num}: Error ",
-                    f"during connection instantiation -> {e}"
+                    f"during connection instantiation -> {e}",
                 )
 
             zones_dict[z1_name].adjacent_zones[z2_name] = connection
@@ -109,10 +109,7 @@ class Application:
         if start_zone_name is not None:
             for i in range(nb_drones):
                 drone_id = f"D{i+1}"
-                drone = Drone(
-                    drone_id=drone_id,
-                    current_position=start_zone_name
-                )
+                drone = Drone(drone_id=drone_id, current_position=start_zone_name)
                 drones_list.append(drone)
 
         return Graph(
@@ -153,11 +150,10 @@ class Application:
         try:
             graph = self._build_graph(raw_data)
         except Exception as e:
-            print("Error during instanciation of the Graph.:",
-                  f" See below \n\n {e}")
+            print("Error during instanciation of the Graph.:", f" See below \n\n {e}")
             exit()
 
-        engine = SimulationEngine(graph)
+        engine = Simulation(graph)
         engine.run()
 
 
