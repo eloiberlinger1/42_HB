@@ -67,6 +67,8 @@ func handleConnection(conn net.Conn, hub *network.Hub) {
 
 		if len(parts) == 2 && parts[0] == "CONNECT" {
 			break
+		} else if parts[0] == "HELP" {
+			fmt.Fprintln(conn, "List of available commands \n\n CONNECT <username>: Connect to the hub\n")
 		}
 
 		fmt.Fprintln(conn, "ERR invalid_command")
